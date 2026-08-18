@@ -80,7 +80,6 @@
 <div id="cards"></div>
 
 
-<div class="foot" id="foot"></div>
 
 <script>
 /* ---------------------------------------------------------------
@@ -103,7 +102,7 @@ var T = {
     dayShort:['Чт 20','Пт 21','Сб 22','Нд 23','Пн 24'],
     next:'НАСТУПНИЙ',
     today:'СЬОГОДНІ',
-    foot:'Дані карт © учасники OpenStreetMap<br>Оновлено 18 серпня 2026',
+    foot:'',
     days:[
       { d:'Чт 20 серп · День 1',
         t:'Приїзд і національне свято на річці',
@@ -138,7 +137,7 @@ var T = {
     dayShort:['Thu 20','Fri 21','Sat 22','Sun 23','Mon 24'],
     next:'NEXT UP',
     today:'TODAY',
-    foot:'Map data © OpenStreetMap contributors<br>Updated 18 August 2026',
+    foot:'',
     days:[
       { d:'Thu 20 Aug · Day 1',
         t:'Arrival, and the national holiday on the river',
@@ -194,7 +193,7 @@ function render(){
   document.getElementById('h1').innerHTML = L.h1;
   document.getElementById('sub').innerHTML = L.sub;
   document.getElementById('who').innerHTML = L.who;
-  document.getElementById('foot').innerHTML = L.foot;
+
 
   Array.prototype.forEach.call(document.querySelectorAll('#seg button'), function(b){
     b.classList.toggle('on', b.dataset.lang === lang);

@@ -63,8 +63,8 @@
   .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
   .leaflet-popup-content b{color:#1f6f8b}
   .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
-  .langbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
-  .langbar a.home{font-size:12.5px;font-weight:700;color:#2f6fb0;text-decoration:none;padding:6px 2px}
+  .langbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;position:sticky;top:0;z-index:900;background:#fbfaf7;padding:10px 0 9px;border-bottom:1px solid #e8e2d8;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .langbar a.home{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;color:#1b2430;text-decoration:none;padding:7px 12px 7px 9px;border:1px solid #e2ddd4;border-radius:8px;background:#fff;line-height:1}.langbar a.home:active{background:#f2ede4}.langbar a.home svg{flex:0 0 auto}
   .langbar .seg{display:flex;border:1px solid #e2ddd4;border-radius:8px;overflow:hidden;background:#fff;flex:0 0 auto}
   .langbar .seg b,.langbar .seg a{font-size:12px;font-weight:800;letter-spacing:.4px;padding:7px 12px;text-decoration:none;color:#6b7785}
   .langbar .seg b{background:#1b2430;color:#fff}
@@ -110,7 +110,7 @@
 <body>
 <div id="wrap">
   <div id="side">
-  <div class="langbar"><a class="home" href="index.html">← всі дні</a><span class="seg"><b>УКР</b><a href="day2-aug21-map-en.html">ENG</a></span></div>
+  <div class="langbar"><a class="home" href="index.html"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#1b2430" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>всі дні</a><span class="seg"><b>УКР</b><a href="day2-aug21-map-en.html">ENG</a></span></div>
     <h1>День 2 &mdash; п’ятниця, 21 серпня 2026, Будапешт</h1>
     <div class="sub">День головних хітів, пройдений однією лінією: <b>Parliament (Парламент)</b> (безкоштовно, без бронювання) &rarr; річка &rarr; <b>Castle hill (Замкова гора)</b> &rarr; обід під власними дверима &rarr; руїн-бари VII району &rarr; <b>купальня Rudas (Рудаш)</b> &rarr; <b>захід сонця з Gell&eacute;rt-hegy (гора Геллерт)</b> &rarr; вечеря на боці Buda (Буда).</div>
     <div class="stat">
@@ -451,9 +451,9 @@ var M4_BAR=[[47.48340,19.05240],[47.48450,19.05320],[47.48620,19.05480],[47.4883
 var W_BAR=[[47.48830,19.05740],[47.48870,19.05840],[47.48905,19.05960],[47.48940,19.06160],[47.49040,19.06125],[47.49140,19.06085],[47.49250,19.06045],[47.49380,19.05990],[47.49460,19.06060],[47.49540,19.06120],[47.49620,19.06180],[47.49700,19.06250],[47.49780,19.06350],[47.49850,19.06470],[47.49920,19.06600],[47.49980,19.06720]];
 
 /* ---------------- map ---------------- */
-var map=L.map('map',{scrollWheelZoom:true}).setView([47.4985,19.0530],13);
+var map=L.map('map',{scrollWheelZoom:true,attributionControl:false}).setView([47.4985,19.0530],13);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+  {maxZoom:19}).addTo(map);
 
 function ic(p){
   if(p.cat==='wc'){
