@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Будапешт + Відень">
 <meta name="theme-color" content="#1b2430">
+<meta name="description" content="Будапешт і Відень, 20–24 серпня 2026: карта на кожен день, пішохідні маршрути, метро, ціни та безкоштовні події.">
 <title>Будапешт і Відень — 20–24 серпня 2026</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -46,7 +47,20 @@
   .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
   .chips span{font-size:10.5px;font-weight:700;background:#f2ede4;border:1px solid #e2ddd4;
               border-radius:20px;padding:3px 9px;color:#4b5560}
+  h2{font-size:10.5px;letter-spacing:1.2px;color:#8a93a8;text-transform:uppercase;
+     margin:26px 0 9px;font-weight:800}
+  .files{background:#fff;border:1px solid #e2ddd4;border-radius:13px;overflow:hidden}
+  .files a{display:flex;justify-content:space-between;gap:12px;align-items:center;
+           padding:12px 14px;text-decoration:none;color:#1b2430;font-size:13px;font-weight:600;
+           border-bottom:1px solid #f0ece4}
+  .files a:last-child{border-bottom:none}
+  .files a:active{background:#f2ede4}
+  .files i{font-style:normal;font-size:11px;color:#8a93a8;font-weight:700;text-align:right;flex:0 0 auto}
+  .note{background:#eaf2f8;border:1px solid #b8d3e6;border-radius:12px;padding:12px 13px;
+        font-size:12.5px;line-height:1.55;margin-top:18px}
+  .note b{color:#1b2430}
   .foot{font-size:11.5px;color:#a3abb8;margin-top:26px;line-height:1.5;text-align:center}
+  @media(min-width:700px){ body{padding:32px 20px 70px} h1{font-size:27px} }
 </style>
 </head>
 <body>
@@ -64,6 +78,7 @@
 
 <div class="days" id="days"></div>
 <div id="cards"></div>
+
 
 <div class="foot" id="foot"></div>
 
@@ -93,24 +108,25 @@ var T = {
       { d:'Чт 20 серп · День 1',
         t:'Приїзд і національне свято на річці',
         m:'Паркуємось на Kelenföld, M4 до центру, і весь вечір на пішохідній набережній Буди: вулиця їжі біля Várkert Bazár, потім шоу о 21:00 навпроти Парламенту з Bem rakpart.',
-        c:['9 зупинок','3,3 км пішки','феєрверк 21:00','банкомати й обмін'] },
+        c:['9 пунктів','3,3 км пішки','шоу 21:00 і 22:00','банкомати й обмін'] },
       { d:'Пт 21 серп · День 2',
         t:'Парламент, Замкова гора і Геллерт на заході сонця',
-        m:'Сніданок у Великому ринковому залі, день відкритих дверей у Парламенті, «Черевики на Дунаї», Рибальський бастіон і церква Матяша, обід у disznótoros, потім гора Геллерт на захід сонця і вечеря на Bartók Béla út.',
-        c:['17 зупинок','11,6 км пішки','ТРЦ на випадок спеки','ділянки метро позначено'] },
+        m:'Сніданок у Великому ринковому залі, день відкритих дверей у Парламенті, «Черевики на Дунаї», Рибальський бастіон і церква Матяша, обід у disznótoros, руїн-бар Szimpla, купальня Rudas із басейном на даху — і гора Геллерт на захід сонця.',
+        c:['17 пунктів','~11,2 км пішки','Rudas ~12,000 HUF','відрізки метро позначено'] },
       { d:'Сб 22 серп · День 3',
         t:'Будапешт → Відень',
-        m:'Забираємо авто, траса M1, далі центр Відня пішки від Reschgasse: Kärntner Straße, Штефансдом, Graben, Kohlmarkt, Гофбург — і фестиваль увечері.',
-        c:['15 зупинок','6,5 км пішки','обмеження висоти в паркінгу'] },
+        m:'Забираємо авто, траса M1, паркінг у Meidling — і єдине погоже пообіддя: Naschmarkt із суботнім блошиним ринком, Innere Stadt пішки, безкоштовний парад ретроавто на Ring — і Пратер увечері, де ці машини фінішують: Riesenrad і Schweizerhaus.',
+        c:['15 пунктів','243 км за кермом','~5 км пішки','обмеження висоти в паркінгу'] },
       { d:'Нд 23 серп · День 4',
         t:'Шенбрунн, Глорієтта і неділя, коли нічого не працює',
-        m:'Ранній виїзд до Шенбрунна перед натовпом і спекою, підйом до Глорієтти, джаз-бранч, Музей історії мистецтв, Café Sperl, потім Kirtag.',
-        c:['12 зупинок','магазини зачинені — один виняток','ділянки U-Bahn позначено'] },
+        m:'Ранній виїзд до Шенбрунна перед натовпом, підйом до Глорієтти, 200 олдтаймерів Vienna Classic Days біля Ратуші, барокова зала Prunksaal, Café Sperl — і Kirtag у винних селах, останній вечір.',
+        c:['12 пунктів','~4,6 км пішки','Classic Days: безкоштовно','Kirtag: останній день'] },
       { d:'Пн 24 серп · День 5',
         t:'Дві години в Братиславі, потім довга дорога додому',
         m:'Один прийом їжі в номері о 05:15, виїзд із Відня о 06:00. Порожнє старе місто о 07:10, брама замку о 08:00, від’їзд до 09:00. Усе після цього свідомо не нанесено на карту.',
-        c:['4 зупинки','1,7 км пішки','€10–23 разом','виїзд до 09:00'] }
-    ]
+        c:['4 пункти','1,7 км пішки','€10–23 разом','виїзд до 09:00'] }
+    ],
+    x:1
   },
   en: {
     htmlLang:'en',
@@ -127,24 +143,25 @@ var T = {
       { d:'Thu 20 Aug · Day 1',
         t:'Arrival, and the national holiday on the river',
         m:'Park at Kelenföld, M4 in, then the whole evening on the car-free Buda quay: the food street at Várkert Bazár, then the 21:00 show opposite Parliament from Bem rakpart.',
-        c:['9 stops','3.3 km on foot','fireworks 21:00','ATMs + exchange'] },
+        c:['9 stops','3.3 km on foot','show at 21:00 and 22:00','ATMs + exchange'] },
       { d:'Fri 21 Aug · Day 2',
         t:'Parliament, the Castle hill, and Gellért at sunset',
-        m:'Breakfast in the Great Market Hall, Parliament open day, Shoes on the Danube, Fisherman’s Bastion and Matthias Church, lunch at a disznótoros, then Gellért Hill for sunset and dinner on Bartók Béla út.',
-        c:['17 stops','11.6 km on foot','malls for the heat','metro legs badged'] },
+        m:'Breakfast in the Great Market Hall, Parliament open day, Shoes on the Danube, Fisherman’s Bastion and Matthias Church, lunch at a disznótoros, the Szimpla ruin bar, the Rudas rooftop pool — then Gellért Hill for sunset.',
+        c:['17 stops','~11.2 km on foot','Rudas ~12,000 HUF','metro legs badged'] },
       { d:'Sat 22 Aug · Day 3',
         t:'Budapest → Vienna',
-        m:'Collect the car, the M1, then the Vienna centre on foot from Reschgasse: Kärntner Straße, Stephansdom, Graben, Kohlmarkt, Hofburg — and the festival in the evening.',
-        c:['15 stops','6.5 km on foot','garage height warning'] },
+        m:'Collect the car, the M1, park in Meidling — then the only good-weather afternoon: the Naschmarkt with its Saturday flea market, the Innere Stadt on foot, a free vintage-car parade on the Ring — and the Prater in the evening, where those cars finish: the Riesenrad and the Schweizerhaus.',
+        c:['15 stops','243 km driving','~5 km on foot','garage height warning'] },
       { d:'Sun 23 Aug · Day 4',
         t:'Schönbrunn, the Gloriette, and a Sunday where nothing is open',
-        m:'Out early to Schönbrunn before the crowds and the heat, up to the Gloriette, jazz brunch, the Kunsthistorisches, Café Sperl, then the Kirtag.',
-        c:['12 stops','shops shut — one exception','U-Bahn legs badged'] },
+        m:'Out early to Schönbrunn before the crowds, up to the Gloriette, 200 classic cars at the Rathaus for Vienna Classic Days, the Baroque State Hall, Café Sperl, then the Kirtag on its last night.',
+        c:['12 stops','~4.6 km on foot','Classic Days: free','Kirtag: final day'] },
       { d:'Mon 24 Aug · Day 5',
         t:'Two hours in Bratislava, then the long way home',
         m:'One meal in the room at 05:15, out of Vienna at 06:00. The deserted old town at 07:10, the castle gates at 08:00, away by 09:00. Everything after that is deliberately not mapped.',
         c:['4 stops','1.7 km on foot','€10–23 all in','leave by 09:00'] }
-    ]
+    ],
+    x:1
   }
 };
 
@@ -214,6 +231,7 @@ function render(){
       '<div class="chips">' + d.c.map(function(c){ return '<span>'+c+'</span>'; }).join('') + '</div>';
     wrap.appendChild(a);
   });
+
 }
 
 document.getElementById('seg').addEventListener('click', function(e){

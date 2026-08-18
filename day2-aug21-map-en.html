@@ -63,7 +63,32 @@
   .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
   .leaflet-popup-content b{color:#1f6f8b}
   .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
-  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+  .langbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+  .langbar a.home{font-size:12.5px;font-weight:700;color:#2f6fb0;text-decoration:none;padding:6px 2px}
+  .langbar .seg{display:flex;border:1px solid #e2ddd4;border-radius:8px;overflow:hidden;background:#fff;flex:0 0 auto}
+  .langbar .seg b,.langbar .seg a{font-size:12px;font-weight:800;letter-spacing:.4px;padding:7px 12px;text-decoration:none;color:#6b7785}
+  .langbar .seg b{background:#1b2430;color:#fff}
+  .langbar .seg a:active{background:#f2ede4}
+  @media(max-width:900px){
+    html,body{height:auto}
+    #wrap{flex-direction:column;height:auto}
+    #map{width:100%;height:56vh;min-height:320px;order:1;position:sticky;top:0;z-index:700;
+         border-bottom:1px solid #e2ddd4}
+    #side{width:100%;min-width:0;height:auto;overflow:visible;border-right:none;border-bottom:none;
+          padding:14px 14px 48px;order:2}
+    h1{font-size:22px} .sub{font-size:13.5px}
+    .row{padding:11px 8px} .n{font-size:15px} .d{font-size:12.5px} .t{font-size:12.5px}
+    .stat div{font-size:12px} .stat b{font-size:15px}
+    button{padding:14px;font-size:14.5px}
+    .warn{font-size:13px} .key{font-size:12.5px} h2{font-size:11px}
+    .leaflet-popup-content{width:auto!important;max-width:calc(100vw - 80px)!important;font-size:12.5px}
+    .leaflet-control-layers{font-size:12px;max-height:38vh;overflow-y:auto}
+    .focusbar{font-size:12px;max-width:60vw}
+  }
+  @media(max-width:560px){
+    #map{height:48vh;min-height:260px}
+    .stat{gap:5px} .stat div{padding:5px 8px}
+  }
 
   @media print{
     @page{size:A4 landscape;margin:8mm}
@@ -85,8 +110,9 @@
 <body>
 <div id="wrap">
   <div id="side">
+  <div class="langbar"><a class="home" href="index.html">← all days</a><span class="seg"><a href="day2-aug21-map.html">УКР</a><b>ENG</b></span></div>
     <h1>Day 2 &mdash; Friday 21 August</h1>
-    <div class="sub">The greatest-hits day, walked in a line: <b>Parliament</b> (free, no booking) &rarr; the river &rarr; <b>Castle Hill</b> &rarr; lunch at your own front door &rarr; an indoor hour through the worst heat &rarr; Andr&aacute;ssy &uacute;t &rarr; <b>sunset from Gell&eacute;rt Hill</b> &rarr; dinner on the Buda side.</div>
+    <div class="sub">The greatest-hits day, walked in a line: <b>Parliament</b> (free, no booking) &rarr; the river &rarr; <b>Castle Hill</b> &rarr; lunch at your own front door &rarr; the 7th-district ruin bars &rarr; <b>the Rudas baths</b> &rarr; <b>sunset from Gell&eacute;rt Hill</b> &rarr; dinner on the Buda side.</div>
     <div class="stat">
       <div>on foot<b>~11.2 km</b></div>
       <div>walking time<b>~2 h 23</b></div>
@@ -94,18 +120,17 @@
       <div>cost a head<b>~9,000 Ft</b></div>
       <div>Parliament<b>free</b></div>
     </div>
-    <button onclick="doPrint()">Save as PDF / print &mdash; one landscape page, map included</button>
     <div class="key" id="key"></div>
     <div id="list"></div>
     <div class="warn" style="background:#f4f6f9;border-color:#ccd4e0"><b>Reading the map, and lighting up one leg at a time.</b> <b>Dashed = you walk</b>, and <b>each walking leg has its own colour</b> so consecutive legs never blur into one another &mdash; the badge on the line matches its colour and names the two stops it joins. <b>Solid = you ride</b>, in the transport line's real colour &mdash; and now <b>badged exactly the same way</b>: the line, and the two stops that leg joins.<br><b>Click any line and it lights up on its own</b> &mdash; everything else dims, the map zooms to it, and a bar appears top-left with a <b>show the whole day</b> button. Click the same line again to undo it.<br><b>Click a numbered stop in the list</b> and every leg touching that stop lights up &mdash; so clicking <b>11</b> shows you how you arrive at 11 and how you leave it, together.</div>
     <div class="warn red"><b>Today is not a working day in Hungary.</b> 21 August is an <i>&aacute;thelyezett pihen&#337;nap</i> &mdash; a transferred rest day &mdash; so the whole country is off Thursday to Sunday. Consequences: <b>every popular sight has the domestic long-weekend crowd</b>, <b>BKK runs a weekend timetable</b> so add 10 minutes to each hop, and offices and banks are shut. Shops <i>do</i> open, on roughly Saturday hours.</div>
     <div class="warn"><b>The 09:15 queue is the whole plan.</b> Parliament's free open day has no ticket, no registration and no time slot &mdash; you turn up and queue, and so does the rest of the country on a day off. Airport-style security, <b>no large bags and no cloakroom</b>, so leave everything at the hotel. Sealed non-glass bottles are fine, and you'll want one. <i>Listings disagree on whether it closes at 16:00 or 18:00 &mdash; irrelevant if you're in the queue at 09:15.</i></div>
-    <div class="warn" style="background:#fdf0e8;border-color:#f0c8a8"><b>31 &deg;C, and the plan is built around it.</b> The 15:45 indoor hour is not optional padding &mdash; it's there to get you off the street through the worst of it. Gell&eacute;rt Hill is deliberately at 19:15, when the air finally drops.<br>
+    <div class="warn" style="background:#fdf0e8;border-color:#f0c8a8"><b>The afternoon is built around water, not shade.</b> Ruin bars at 15:45, then the Rudas rooftop pool from 17:00 &mdash; you are out of the street heat and in the Danube view at the same time. Gell&eacute;rt Hill is deliberately at 19:15, when the air finally drops, and Rudas sits at the bottom of it.<br>
     <b>Four malls are now pinned as cold-air escapes</b>, all open today on Saturday-style hours (they were shut yesterday for the holiday): <b>Westend</b> at Nyugati is the best placed, 900 m from Oktogon &middot; <b>Mammut</b> at Sz&eacute;na t&eacute;r is the Buda one, 15 min from the Vienna Gate if the Castle gets you &middot; <b>Corvin Plaza</b> is closest to the hotel &middot; <b>Arena</b> is the furthest and probably unnecessary. All four give you <b>free clean toilets, free wifi, ATMs and a supermarket</b> &mdash; which solves the 200-forint-coin problem for an hour.<br>
     <b>And three free tricks:</b> the <b>M4 is air-conditioned</b>, trains and stations both &middot; <b>Fakan&aacute;l</b> is the only cooled spot inside the Market Hall &middot; every museum on the list is cold and dark. Refill bottles at the drinking fountains in City Park and on Castle Hill, and at the free water points the city set up at Keleti, Nyugati and D&eacute;li.</div>
     <div class="warn" style="background:#eef0f6;border-color:#c2c8dc"><b>How to read the lines &mdash; it is now ONE unbroken chain from 0 to 17.</b><br>
     <b>Dashed teal = you walk.</b> Badged with the two stops it joins: <b>0&rarr;1</b>, <b>2&rarr;3</b>, and so on.<br>
-    <b>Solid colour = you ride</b>, in the line's real colour, and <b>badged the same way as the walking legs</b> &mdash; the move, the line, and the two stops it joins: <b>A1 M4 &middot; 1&rarr;K&aacute;lvin</b>, <b>A2 M3 &middot; K&aacute;lvin&rarr;De&aacute;k</b>, <b>A3 M2 &middot; De&aacute;k&rarr;2</b>, <b>B</b> funicular <b>7&rarr;8</b>, <b>C M1</b>, <b>D1&ndash;D2</b>, <b>E</b>, <b>F</b> tram 47/49.<br>
+    <b>Solid colour = you ride</b>, in the line's real colour, and <b>badged the same way as the walking legs</b> &mdash; the move, the line, and the two stops it joins: <b>A1 M4 &middot; 1&rarr;K&aacute;lvin</b>, <b>A2 M3 &middot; K&aacute;lvin&rarr;De&aacute;k</b>, <b>A3 M2 &middot; De&aacute;k&rarr;2</b>, <b>B</b> funicular <b>7&rarr;8</b>, <b>C</b> bus 7 <b>13&rarr;14</b>, <b>E</b>, <b>F</b> tram 47/49.<br>
     Follow the line and you can trace the whole day without guessing.<br><br>
     <b>So, 1 &rarr; 2 in full:</b> stop 1 is the station under the hotel. <b>A1 M4</b> one stop east to K&aacute;lvin t&eacute;r &middot; change &middot; <b>A2 M3</b> two stops north-west to De&aacute;k Ferenc t&eacute;r &middot; change &middot; <b>A3 M2</b> one stop to Kossuth Lajos t&eacute;r &middot; then the dashed <b>1&rarr;2</b> leg, 150 m across the square to the queue. <b>Three trains, two changes, one short walk, ~15 min</b> &mdash; add 10 for the weekend timetable. It looks like a dog-leg on the map because it is one: you go east to K&aacute;lvin before turning north.<br><br>
     <b>Where a tunnel is used twice</b> (M3 and M4, morning and evening) <b>the later leg is drawn 60 m to one side</b>, so D1&ndash;D3 don't hide underneath A1&ndash;A3.<br><br>
@@ -191,12 +216,12 @@ var STOPS=[
  {n:"12",cat:"food",t:"14:45",dist:"5 min from the bridge",name:"LUNCH — Belvárosi Disznótoros, Károlyi u. 10",lat:47.49150,lon:19.05830,
   price:"~2,500–4,000 HUF a head",pay:"CASH easiest",
   d:"<b>Not the market again.</b> You shopped there at breakfast and dropped it in the room — so the middle of the day is free for something you haven't done.<br><br>Elisabeth Bridge lands you at Fővám tér; walk five minutes north-east into the Belváros. <b>Belvárosi Disznótoros is a meat counter you point at.</b> Grilled sausage, pork knuckle, roast, <i>hurkakáposzta</i>, pickles and bread — you say how much, they cut it and weigh it, you eat standing at a shared table. No English menu, no ceremony, and it's what Hungarians actually eat at lunchtime.<br><br><b>Fast, which matters when you've been walking since 07:45</b> and have the indoor hour next.<br><br><b>Two alternatives pinned:</b> <b>Gerlóczy</b> for a calm sit-down six minutes away, or <b>Baltazár</b> if you'd rather eat up on Castle Hill before descending. And <b>Ruszwurm</b> for the <i>krémes</i> while you're still on the hill.<br><br><b>Money:</b> ~2,500–4,000 Ft for a full plate. <i>Pin approximate — Károlyi utca, near Ferenciek tere.</i>"},
- {n:"13",cat:"sight",t:"15:45",dist:"1.3 km · 16 min",name:"THE INDOOR HOUR — Dohány Street Synagogue",lat:47.49561,lon:19.06088,
-  price:"~8,000–10,000 HUF · estimate",pay:"card ok",
-  d:"<b>Pick one of three, and this is the default.</b> The largest synagogue in Europe and the second largest in the world — Moorish Revival, 1859, seats 3,000. Ticket normally includes the <b>Jewish Museum</b>, the <b>Heroes' Temple</b> and the memorial garden with Imre Varga's weeping willow, whose leaves carry victims' names.<br><br>Walk up Múzeum körút and Károly körút from the market, 1.3 km. <b>Two alternatives are on the map</b> — House of Terror, and the Basilica dome terrace.<br><br><b>Money:</b> this is the priciest ticket of the trip, roughly 8,000–10,000 HUF, and it's the one attraction where you should check the current price before committing. Head covering provided for men."},
- {n:"14",cat:"sight",t:"17:00",dist:"1.1 km · 14 min",name:"Opera House → Andrássy út → the M1",lat:47.50281,lon:19.05782,
-  price:"street free · M1 on your card",pay:"—",
-  d:"Walk up through the Jewish Quarter to the <b>Hungarian State Opera</b> (1884, Miklós Ybl — worth it from the outside alone), then <b>Andrássy út</b>: Budapest's Champs-Élysées, plane trees, embassies and the villa quarter.<br><br>At <b>Oktogon</b> drop into the <b>M1 'Millennium' line</b> — opened 1896, <b>the oldest underground on the continent after London</b>, a UNESCO site, and the little wooden-panelled stations are the attraction, not the ride. Three stops to Hősök tere.<br><br><b>Money:</b> the walk is free; the M1 is on your travelcard."},
+ {n:"13",cat:"event",t:"15:45",dist:"600 m · 8 min",name:"SZIMPLA KERT — the first ruin bar, and by day you can actually see it",lat:47.49730,lon:19.06356,
+  price:"entry FREE",pay:"card ok",
+  d:"<b>Kazinczy utca 14. At four in the afternoon this is less a bar than an object you can walk around.</b> Szimpla opened in 2002 in a half-derelict building waiting for demolition: two floors of rooms around a roofless courtyard, walls papered in whatever came to hand, a bathtub instead of a sofa, a Trabant in the middle of the room with people sitting in it.<br><br><b>It isn\u2019t a period pastiche.</b> The entire ruin-bar genre started here, and half the 7th district is still repeating the idea. After nine you can\u2019t move in it; by day you can walk every room, go upstairs, and see how the thing is put together.<br><br><b>You don\u2019t have to order anything.</b> If you want to &mdash; a <i>fr\u00f6ccs</i> (wine with soda, ~1,200 HUF) or a lemonade. Nobody comes here for the coffee.<br><br><b>The quarter around it:</b> Kazinczy and Dob utca are solid ruin bars, El\u00e1t\u00f3 Kert and Fogash\u00e1z 200 m away, and <b>Karav\u00e1n</b> &mdash; a street-food yard &mdash; is right next door if lunch has worn off.<br><br><b>Money:</b> free to walk in; a drink 1,200&ndash;2,000 HUF."},
+ {n:"14",cat:"sight",t:"17:00",dist:"bus 7 · 12 min",name:"RUDAS — Turkish baths with the rooftop panorama pool",lat:47.48889,lon:19.04861,
+  price:"~12,000 HUF a head",pay:"card ok",
+  d:"<b>A bath house from 1550 &mdash; and a round pool on the roof looking straight down the Danube at the Erzs\u00e9bet Bridge and the whole of Pest.</b> Rudas sits directly under Gell\u00e9rt Hill, so you soak, get out, and walk up for sunset without touching transport.<br><br><b>One thing to know about Fridays:</b> the historic domed hall &mdash; the octagonal pool under the 1550 cupola &mdash; is <b>men only on Fridays</b> (women only on Tuesdays, mixed at weekends). The <b>wellness section with the rooftop panorama pool is co-ed every day</b>, and that is the ticket you buy.<br><br><b>Open 06:00&ndash;22:00</b>, with night bathing 22:00&ndash;03:00 on Fridays and Saturdays on a separate ticket. A 2026 day ticket runs about <b>12,000 HUF</b> (~&euro;30). It is the most expensive item of the day and the only one here worth paying for.<br><br><b>Bring:</b> swimwear, flip-flops, a towel (rental exists but costs more). A locker is included; swimwear is required in all mixed areas.<br><br><b>Why not the Gell\u00e9rt:</b> the Gell\u00e9rt baths are <b>closed for renovation until 2028</b>. Sz\u00e9chenyi is just as good but sits at the other end of the city &mdash; it would eat the evening.<br><br><b>Next:</b> 900 m south along the embankment to Szent Gell\u00e9rt t\u00e9r, and up the hill to the Citadella from there.<br><br><b>Money:</b> ~12,000 HUF a head."},
  {n:"15",cat:"view",t:"19:15",dist:"3 lines + a 20 min climb",name:"GELLÉRT HILL — sunset from the Citadella",lat:47.48685,lon:19.03970,
   price:"free",pay:"—",
   d:"<b>The one panorama that contains the whole city</b> — every bridge, both banks, Parliament, the Castle. <b>Sunset 19:50</b>, and by then the air is finally bearable.<br><br><b>Getting there:</b> M1 from Hősök tere to Deák Ferenc tér, M3 to Kálvin tér, M4 to Szent Gellért tér — then <b>climb, about 20 minutes and it's steep</b>. Take water. The Liberty Statue and the Citadella are at the top; the terraces just below the statue are the best spot and less crowded than the summit.<br><br><b>Lower-effort alternative:</b> Fisherman's Bastion at dusk, or just the Danube promenade with the Castle lit.<br><br><b>Money:</b> free."},
@@ -208,7 +233,7 @@ var STOPS=[
 var ALTS=[
  {cat:"alt",t:"15:45 · swap",name:"Indoor hour B — House of Terror",lat:47.50694,lon:19.06529,
   price:"~4,000–5,000 HUF · estimate",pay:"card ok",
-  d:"Andrássy út 60 — the building the Nazi Arrow Cross and then the Communist secret police actually used, including the cellar cells. <b>Heavy and excellent</b>, and about half the price of the synagogue. Choose this if you want history over architecture. It's also right on your Andrássy út route, so it costs you no walking at all."},
+  d:"Andrássy út 60 — the building the Nazi Arrow Cross and then the Communist secret police actually used, including the cellar cells. <b>Heavy and excellent</b>, and about half the price of the baths. Choose this if you want history over water and ruin bars. It's also right on your Andrássy út route, so it costs you no walking at all."},
  {cat:"alt",t:"15:45 · swap",name:"Indoor hour C — St Stephen's Basilica dome",lat:47.50086,lon:19.05392,
   price:"~3,000–4,000 HUF · estimate",pay:"card ok",
   d:"The cheapest of the three and the one with a view: the <b>panorama terrace up in the dome is the best central viewpoint in Pest</b>, reached by lift or 300-odd steps. The nave is free to enter; the dome and treasury are ticketed. Choose this if you'd rather have a viewpoint than a museum — but note you already have Gellért Hill tonight."},
@@ -310,7 +335,7 @@ var MALLS=[
   d:"Large mall by Keleti station, <b>M2 Puskás Ferenc Stadion</b>. Listed for completeness rather than because you should go — it's the furthest off your route of the four, and Westend does the same job closer.<br><br><b>Worth it only if</b> you end up out at Heroes' Square with 40 minutes and 33 °C, in which case it's two M2 stops away."},
  {cat:"mall",t:"free + cold",name:"Air conditioning without a mall — three tricks",lat:47.48750,lon:19.05900,
   price:"free",pay:"—",
-  d:"<b>You don't have to go to a mall to get out of the heat.</b><br><br><b>1 · The M4 line is air-conditioned</b> — trains and the deep stations both. Fővám tér, Szent Gellért tér and Kálvin tér are noticeably cooler than the street, and you're in and out of them all day.<br><br><b>2 · Fakanál, on the market gallery</b>, is <b>the only air-conditioned spot in the whole Market Hall</b> — worth knowing if the hall is stifling at breakfast.<br><br><b>3 · Every museum on the list is cooled</b>, which is the real argument for the 15:45 indoor hour: the Synagogue, House of Terror and the Basilica are all cold, dark and quiet in the worst hour of the day.<br><br><b>Also free:</b> drinking fountains in City Park and around Castle Hill, and Budapest set up free water points at Keleti, Nyugati and Déli stations for the heatwave."}
+  d:"<b>You don't have to go to a mall to get out of the heat.</b><br><br><b>1 · The M4 line is air-conditioned</b> — trains and the deep stations both. Fővám tér, Szent Gellért tér and Kálvin tér are noticeably cooler than the street, and you're in and out of them all day.<br><br><b>2 · Fakanál, on the market gallery</b>, is <b>the only air-conditioned spot in the whole Market Hall</b> — worth knowing if the hall is stifling at breakfast.<br><br><b>3 · Every museum on the list is cooled</b>, which is the real argument if you'd rather be under a roof than in Szimpla at 15:45: House of Terror and the Basilica are cold, dark and quiet in the worst hour of the day.<br><br><b>Also free:</b> drinking fountains in City Park and around Castle Hill, and Budapest set up free water points at Keleti, Nyugati and Déli stations for the heatwave."}
 ];
 var FOODX=[
  {cat:"food",t:"dinner · Buda",name:"Hadik Kávéház — Bartók Béla út 36",lat:47.47900,lon:19.04500,
@@ -336,7 +361,7 @@ var FOODX=[
   d:"<b>Directly on your 17:00 Andrássy út walk, opposite the Opera.</b> A proper old Budapest coffee house — mirrors, marble, chandeliers, cake counter — and far less of a queue than the famous ones.<br><br><b>Use it as the pause between the indoor hour and Heroes' Square</b>, when you have been walking since 07:45 and it is still 30 °C outside."},
  {cat:"food",t:"café · calm",name:"Gerlóczy Kávéház — Gerlóczy u. 1",lat:47.49430,lon:19.05590,
   price:"~2,500–4,500 Ft",pay:"card ok",
-  d:"<b>The one to know if you want quiet.</b> A small Parisian-style café-restaurant on a leafy square behind the old town hall, five minutes off Váci utca and a world away from it. Good breakfast, good coffee, actual locals and business lunches.<br><br>Between the market and the Jewish Quarter, so it fits as a stop on the 15:45 walk if the synagogue queue is long."},
+  d:"<b>The one to know if you want quiet.</b> A small Parisian-style café-restaurant on a leafy square behind the old town hall, five minutes off Váci utca and a world away from it. Good breakfast, good coffee, actual locals and business lunches.<br><br>Between the market and the Jewish Quarter, so it fits as a stop on the 15:45 walk if Szimpla is already too full."},
  {cat:"food",t:"café · the grand one",name:"New York Café — Erzsébet krt 9–11",lat:47.49930,lon:19.07050,
   price:"~4,000–7,000 Ft a head",pay:"card",
   d:"<b>Absurd and worth seeing once.</b> Gilt, frescoes, marble columns and a balcony — routinely called the most beautiful café in the world, and priced accordingly. Expect a queue and a room full of phones.<br><br><b>Go for the room, not the cake.</b> A coffee and one slice is enough to have been there. It is a short walk from Oktogon, so it slots in before the M1 at 17:15 if you would rather have this than Művész."},
@@ -402,7 +427,10 @@ var FUNI=[[47.49828,19.03957],[47.49760,19.03880],[47.49700,19.03850]];
 var W_CASTLE=[[47.49700,19.03850],[47.49770,19.03790],[47.49850,19.03720],[47.49930,19.03650],[47.50010,19.03580],[47.50090,19.03520],[47.50170,19.03480],[47.50230,19.03470],[47.50242,19.03497],[47.50215,19.03470],[47.50201,19.03443],[47.50190,19.03480],[47.50120,19.03540],[47.50040,19.03600],[47.49950,19.03655],[47.49870,19.03700],[47.49790,19.03790],[47.49700,19.03880],[47.49640,19.03935],[47.49604,19.03972],[47.49540,19.04030],[47.49470,19.04110],[47.49400,19.04200],[47.49336,19.04280],[47.49280,19.04360],[47.49220,19.04470],[47.49170,19.04550],[47.49190,19.04720],[47.49215,19.04900],[47.49235,19.05090],[47.49250,19.05270],[47.49275,19.05420],[47.49300,19.05570],[47.49310,19.05740],[47.49250,19.05790],[47.49190,19.05815],[47.49150,19.05830]];
 var TRAM_1112=[[47.49336,19.04280],[47.49170,19.04550],[47.48900,19.04760],[47.48620,19.04980],[47.48420,19.05130],[47.48340,19.05240]];
 var M4_1112=[[47.48340,19.05240],[47.48620,19.05480],[47.48830,19.05740]];
-var W_PM=[[47.49150,19.05830],[47.49230,19.05800],[47.49300,19.05800],[47.49380,19.05880],[47.49440,19.05970],[47.49510,19.06030],[47.49556,19.06070],[47.49561,19.06088],[47.49630,19.06060],[47.49700,19.06010],[47.49790,19.05950],[47.49880,19.05890],[47.49960,19.05840],[47.50040,19.05800],[47.50120,19.05790],[47.50210,19.05785],[47.50281,19.05782],[47.50330,19.05900],[47.50390,19.06030],[47.50450,19.06170],[47.50490,19.06280],[47.50525,19.06376]];
+var W_PM=[[47.49150,19.05830],[47.49230,19.05880],[47.49330,19.05960],[47.49430,19.06060],[47.49530,19.06160],[47.49620,19.06250],[47.49700,19.06320],[47.49730,19.06356]];
+var W_FER=[[47.49730,19.06356],[47.49640,19.06250],[47.49540,19.06100],[47.49450,19.05920],[47.49380,19.05750],[47.49330,19.05590]];
+var BUS7=[[47.49330,19.05590],[47.49230,19.05330],[47.49120,19.05100],[47.48990,19.04930],[47.48889,19.04861]];
+var W_RUD=[[47.48889,19.04861],[47.48780,19.04930],[47.48660,19.05000],[47.48540,19.05090],[47.48430,19.05170],[47.48340,19.05240]];
 var M1=[[47.50525,19.06376],[47.50680,19.06720],[47.50900,19.07100],[47.51150,19.07420],[47.51475,19.07789]];
 var W_PARK=[[47.51475,19.07789],[47.51460,19.08000],[47.51442,19.08206]];
 var M1_PM=[[47.50525,19.06376],[47.50400,19.06000],[47.50250,19.05700],[47.49900,19.05500],[47.49750,19.05460]];
@@ -550,7 +578,11 @@ walkChain(W_MARKET,[0,1],['Out of the market, 150 m along Vámház körút to th
 walkLeg(W_PARL,'<b>This is the bit that was missing.</b> You come up out of <b>Kossuth Lajos tér</b> station and the queue is 150 m north across the square. That short hop is how you get from stop 1 to stop 2 — the metro does the distance, this does the last 150 m.','1 \u2192 2 (after the metro)');
 walkChain(W_MORN,[2,3,4,5,6,7]);
 walkChain(W_CASTLE,[8,9,10,11,12],null);
-walkChain(W_PM,[12,13,14]);
+walkChain(W_PM,[12,13],['From K\u00e1rolyi u. northeast into the 7th, to <b>Szimpla Kert</b>.']);
+walkLeg(W_FER,'Szimpla \u2192 <b>Ferenciek tere</b>, 750 m southwest \u2014 the bus over the bridge goes from here.','13 \u2192 14');
+walkLeg(W_RUD,'Rudas \u2192 <b>Szent Gell\u00e9rt t\u00e9r</b>, 900 m along the embankment, then up the hill.','14 \u2192 15');
+var MC={M1:'#f6c623',M2:'#e8332a',M3:'#0d4ea3',M4:'#41a62a',T47:'#f5c400',B7:'#1a6aa8'};
+metro(BUS7,'B7','<b>Bus 7 (or 8E / 110 / 112) — Ferenciek tere → D\u00f6brentei t\u00e9r</b>, one stop across the <b>Erzs\u00e9bet Bridge</b>, five minutes. You get off directly in front of Rudas. Covered by your 72-hour card. <i>The same trip on foot is 1.4 km over the bridge, which is no hardship if the day has been kind.</i>','C',60,'13 \u2192 14',[13,14]);
 walkLeg(W_HILL,'Szent Gellért tér → up to the <b>Citadella</b>. <b>Steep, about 20 minutes</b>, and the one real climb of the trip. Take water.','\u2192 15 (the climb)');
 walkLeg(W_DINE,'Down the south-west face of the hill to <b>Bartók Béla út</b> — the fix for the evening. Twelve minutes, downhill, and you land among cafés instead of on a metro platform.','15 \u2192 16 (downhill to dinner)');
 walkLeg(W_M4,'After dinner: 600 m north-east to <b>Szent Gellért tér</b> for the M4 home. Trams 47/49 run this street if you\'d rather ride.','16 \u2192 M4 home',[16]);
@@ -558,7 +590,6 @@ walkLeg(W_M4,'After dinner: 600 m north-east to <b>Szent Gellért tér</b> for t
 L.polyline(W_BAR,{color:'#8a93a8',weight:4,opacity:.75,dashArray:'3,8'}).addTo(G.alt)
  .bindPopup('<b>OPTIONAL &middot; the ruin bars after all</b><br>Fővám tér → District VII, <b>1.7 km / 21 min</b> on foot. From the hill that means descend (20 min) + M4 (2) + this walk — about <b>45 minutes</b>, after a day with 11 km in it.<br><br>Worth it only if the ruin bars are the point of your evening rather than dinner. Mazel Tov, Gettó Gulyás, Kőleves and the bars are all still pinned.');
 
-var MC={M1:'#f6c623',M2:'#e8332a',M3:'#0d4ea3',M4:'#41a62a',T47:'#f5c400'};
 /* shift a whole leg sideways, so a tunnel ridden twice draws as two parallel lines */
 function _off(pts,metres){
   if(!metres) return pts;
@@ -592,9 +623,6 @@ reg(L.polyline(FUNI,{color:'#8a5a12',weight:6,opacity:.92,dashArray:'7,5'}).addT
 /* ---- C · 17:15 Andrássy út to Heroes' Square ---- */
 
 /* ---- D · ~19:00 across town to Gellért Hill ---- */
-metro(M1_PM,'M1','<b>Oktogon → Deák Ferenc tér</b>, 2 stops on the <b>1896 Millennium line</b> — oldest metro on the continent after London, UNESCO-listed, and the little wooden-panelled stations are the attraction rather than the ride. <i>Two stops is enough to have done it.</i>','C',60,'14 \u2192 De\u00e1k',[14,15]);
-metro(M3_PM,'M3','<b>Deák Ferenc tér → Kálvin tér</b>, 2 stops. Change at Deák, direction Kőbánya-Kispest. <i>Same tunnel as A2, drawn alongside it.</i>','D1',60,'De\u00e1k \u2192 K\u00e1lvin',[14,15]);
-metro(M4_PM,'M4','<b>Kálvin tér → Szent Gellért tér</b>, 2 stops (Fővám tér between — you pass your own hotel, so drop the shopping now). Change at Kálvin, direction Kelenföld. Then the 20-minute climb.','D2',60,'K\u00e1lvin \u2192 Szent Gell\u00e9rt',[14,15]);
 /* ---- E · 20:30 hotel, then the bars ---- */
 metro(TRAM47,'T47','<b>TRAM 47 or 49 — Bartók Béla út → Fővám tér.</b> <b>This is the answer to getting home: one vehicle, no changes, about 8 minutes.</b> The tram runs the length of Bartók Béla út, crosses <b>Liberty Bridge</b>, and stops at Fővám tér — 100 m from your door. Boards from the street you had dinner on.<br><br>Covered by your 72-hour travelcard. <i>Riverside services are disrupted until 24 Aug, so glance at the notice on the stop; if 47/49 are diverted, walk 680 m to Szent Gellért tér and take the M4 instead.</i>','F',null,'16 \u2192 hotel',[16]);
 walkLeg(W_HOME2,'<b>Or walk the whole way home</b> — up Bartók Béla út, through Szent Gellért tér and over <b>Liberty Bridge</b>, which lands at your door. Flat, lit, riverside, and a good last look at the city.','16 \u2192 home on foot');
@@ -643,17 +671,6 @@ function put(arr,grp,key){
 put(STOPS,'route','s'); put(BFAST,'food','b'); put(FOODX,'eat','x'); put(MALLS,'mall','g'); put(ATMS,'money','m'); put(ENT,'ent','e'); put(SHOPS,'shop','p');
 put(WC,'wc','w'); put(ALTS,'alt','a');
 Object.keys(G).forEach(function(k){G[k].addTo(map)});
-L.control.layers(null,{
-  "THE DAY 0&rarr;16 &mdash; walking + metro, one chain":G.route,
-  "Breakfast &amp; the market":G.food,
-  "Lunch, dinner, caf&eacute;s &amp; takeaway":G.eat,
-  "Malls &amp; air conditioning":G.mall,
-  "ATMs &amp; exchange":G.money,
-  "Events on 21 Aug":G.ent,
-  "Shops open today":G.shop,
-  "Toilets":G.wc,
-  "Swaps &amp; warnings":G.alt
-},{collapsed:false}).addTo(map);
 
 document.getElementById('key').innerHTML=
  '<span>'+gl('sight',COL.sight,15)+' sight</span>'+
@@ -711,14 +728,8 @@ rows(ENT,'e','What else is on, 21 August');
 rows(SHOPS,'p','Shops — open again today');
 rows(WC,'w','Toilets');
 
-map.fitBounds(L.polyline(W_MORN.concat(W_CASTLE,W_PM,M1,W_HILL,W_BAR)).getBounds(),{padding:[40,40]});
+map.fitBounds(L.polyline(W_MORN.concat(W_CASTLE,W_PM,W_FER,BUS7,W_RUD,W_HILL,W_BAR)).getBounds(),{padding:[40,40]});
 
-function doPrint(){
-  map.invalidateSize();
-  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
-}
-window.addEventListener('beforeprint',function(){map.invalidateSize()});
-window.addEventListener('afterprint',function(){map.invalidateSize()});
 </script>
 </body>
 </html>

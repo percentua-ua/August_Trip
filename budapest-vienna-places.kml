@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>Budapest + Vienna — Aug 20–23, 2026</name>
+  <description>Trip catalogue for 3 adults. Folders become separate layers in Google My Maps, so you can switch a day on and off. ICON LEGEND: cup = breakfast or café · plate = sit-down meal · snack bar = street food / take-out / eat standing up · camera = sight to see · museum = museum or gallery · mountain = viewpoint · basket = market · glass = bar · star = free event or show · P = parking · bed = where you sleep · train = a ride that is itself the attraction · swimmer = bath, lido or river beach · tree = park or island.</description>
+
+  <Style id="breakfast"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/coffee.png</href></Icon></IconStyle></Style>
+  <Style id="meal"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/dining.png</href></Icon></IconStyle></Style>
+  <Style id="takeout"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/snack_bar.png</href></Icon></IconStyle></Style>
+  <Style id="sight"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/camera.png</href></Icon></IconStyle></Style>
+  <Style id="museum"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/museum.png</href></Icon></IconStyle></Style>
+  <Style id="viewpoint"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/mountains.png</href></Icon></IconStyle></Style>
+  <Style id="market"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/shopping.png</href></Icon></IconStyle></Style>
+  <Style id="bar"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/bars.png</href></Icon></IconStyle></Style>
+  <Style id="event"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/star.png</href></Icon></IconStyle></Style>
+  <Style id="car"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/parking_lot.png</href></Icon></IconStyle></Style>
+  <Style id="bed"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/lodging.png</href></Icon></IconStyle></Style>
+  <Style id="ride"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/rail.png</href></Icon></IconStyle></Style>
+  <Style id="swim"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/swimming.png</href></Icon></IconStyle></Style>
+  <Style id="park"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/shapes/picnic.png</href></Icon></IconStyle></Style>
+
+  <Folder>
+    <name>0 — BEDS &amp; BREAKFAST</name>
+    <Placemark><styleUrl>#bed</styleUrl>
+      <name>HOTEL — Sophia Palace, Vámház körút 2</name>
+      <description>Fővám tér, District V. M4 Fővám tér is at the door; the Great Market Hall is directly across the street and Liberty Bridge is 100 m away. Bag drop ~16:15 on Aug 20.</description>
+      <Point><coordinates>19.05800,47.48800,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bed</styleUrl>
+      <name>FLAT — Mandlgasse 18, 1120 Wien</name>
+      <description>Meidling. U6 Niederhofstraße 250 m, Längenfeldgasse (U4/U6) 530 m, Meidling Hauptstraße (U4) 600 m. Meidlinger Markt is around the corner. Park free on the street at weekends — but not on Meidlinger Hauptstraße or Niederhofstraße before 12:00 Saturday, and never in resident-only bays.</description>
+      <Point><coordinates>16.33350,48.18450,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>BREAKFAST — Great Market Hall (across the street)</name>
+      <description>Mon 06:00-17:00, Tue-Fri 06:00-18:00, Sat 06:00-15:00, closed Sun. CLOSED Thu Aug 20, open normal hours Fri Aug 21. Go at 07:45 Friday: ground-floor bakery counters, upstairs lángos, coffee stands. MOSTLY CASH ONLY. About 6,000-9,000 HUF for three.</description>
+      <Point><coordinates>19.05835,47.48733,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>BREAKFAST — Fakanál Étterem (market gallery)</name>
+      <description>Hot Hungarian breakfast 09:00-11:00 while stocks last, and the only air-conditioned spot in the hall. Scrambled eggs or ham &amp; eggs 2,100 Ft, fried eggs 1,500 Ft, strudel 1,300 Ft, OJ 2,100 Ft, coffee 1,200 Ft. ~9,900 Ft for three with coffee.</description>
+      <Point><coordinates>19.05870,47.48750,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>BREAKFAST — Cafe Brunch Budapest, Fővám tér 2-3</name>
+      <description>30 seconds from the hotel. All-day breakfast from 08:00 every day, terrace facing Liberty Bridge and the market. ~12,000-16,000 HUF for three.</description>
+      <Point><coordinates>19.05730,47.48690,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>BREAKFAST — Kelet Kávézó, Bartók Béla út 29</name>
+      <description>The local option: book-lined café, proper specialty coffee, mains 2,000-4,000 HUF. 10 min walk over Liberty Bridge. Opens 07:30 weekdays but 09:00 at weekends — Aug 21 may run weekend hours, so check first.</description>
+      <Point><coordinates>19.04560,47.47960,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>BREAKFAST — Ignaz &amp; Rosalia, Meidlinger Markt 37</name>
+      <description>The Vienna answer both mornings. Breakfast daily 08:00-12:00. Sat 08:00-18:00, SUN 09:00-18:00 — which matters, because every shop in Austria is shut on Sunday. Order the Marktfrühstück: baguette, vine leaves, sheep's cheese, Croatian sausage, hummus, olives. ~€35-50 for three.</description>
+      <Point><coordinates>16.33290,48.18330,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#meal</styleUrl>
+      <name>DINNER — Meidlinger Alm (same market)</name>
+      <description>Austrian mountain-hut food — Kasnocken, goulash, hearty and cheap. Mon-Sat 08:00-23:00, Sun 10:00-18:00. Your easy dinner option 200 m from the flat.</description>
+      <Point><coordinates>16.33300,48.18340,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#market</styleUrl>
+      <name>MARKET — Meidlinger Markt (stalls)</name>
+      <description>Stalls Mon-Fri 06:00-21:00, Sat 06:00 to about 18:00, CLOSED SUNDAY. Saturday is the day for produce, cheese and sausage. The market's cafés and restaurants stay open Sunday 10:00-18:00 even though the stalls don't.</description>
+      <Point><coordinates>16.33310,48.18350,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>1 — PARKING</name>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Etele P2 / Őrmező P+R (M4 Kelenföld) — MAIN CAR PARK</name>
+      <description>FIRST CHOICE now that the hotel is at Fővám tér: M4 runs direct, no changes, Kelenföld to Fővám tér in ~12 min, and Saturday's drive to Vienna starts on the M1 right here. Surface lot, guarded, 0-24. 500 HUF flat 06:00-22:00 + 300 HUF/h overnight = ~6,300 HUF for 40 h. CASHLESS — card or the Parkl app. Get here off the M3 via the M0 southern ring, bypassing the city.</description>
+      <Point><coordinates>19.02350,47.46340,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Örs vezér tere P+R (M2) — BACKUP</name>
+      <description>Easiest to reach: straight off the M3, no ring-road detour. Costs you one change — M2 to Keleti, then M4 two stops to Fővám tér, ~25 min. Better base for Thursday's fireworks, since M2 goes direct to Batthyány tér. Entrance signposted P+R by the Árkád mall.</description>
+      <Point><coordinates>19.13850,47.50360,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Pillangó utca P+R (M2) — second backup</name>
+      <description>Same tariff, one M2 stop closer to town. Use if Örs vezér tere is full.</description>
+      <Point><coordinates>19.11890,47.50240,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>KÖKI Terminál P+R (M3) — AVOID, height limit</name>
+      <description>Three-level garage inside a mall. Not for a 1.9 m car unless the posted clearance says otherwise.</description>
+      <Point><coordinates>19.14670,47.45720,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>VIENNA — park free on the street by Mandlgasse</name>
+      <description>Vienna's citywide charge applies Mon-Fri 09:00-22:00 ONLY, so Sat and Sun are free everywhere. Park on Mandlgasse or a plain side street. NOT on Meidlinger Hauptstraße, Niederhofstraße, Pohlgasse, Rauchgasse, Tivoligasse or Reschgasse before 12:00 Saturday — shopping-street rules. Never in resident-only (Parkpickerl) bays, which apply at weekends too. If you stay into Monday, move it before 09:00.</description>
+      <Point><coordinates>16.33380,48.18500,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Vienna paid fallback — Bahnhof Wien Meidling garage</name>
+      <description>630 m from the flat. Use if the street fails.</description>
+      <Point><coordinates>16.33170,48.17930,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Vienna P+R Erdberg (U3) — last resort</name>
+      <description>€4.60/24 h, open decks. Only worth it if Meidling street parking somehow fails; it's on the wrong side of town from the flat.</description>
+      <Point><coordinates>16.41353,48.18683,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>2 — THU AUG 20 (arrival + fireworks)</name>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>THU 1 · 17:30 Liberty Bridge (Pest head)</name>
+      <description>300 m / 4 min from the hotel door. Cross on foot to Buda, then turn RIGHT (north) onto the lower quay. Do NOT continue north on the Pest side — that was the old, wrong route, and it ends 1.2 km from the fireworks on the wrong bank.</description>
+      <Point><coordinates>19.05550,47.48630,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>THU 2 · 17:40 Buda lower quay — car-free promenade</name>
+      <description>The Buda lower embankment is closed to traffic Aug 15-22, so for your dates this is a riverside promenade. 900 m / 11 min north to Döbrentei tér, Gellért Hill above you, the whole Pest skyline opposite. This is the walk the plan should always have had.</description>
+      <Point><coordinates>19.04960,47.48620,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>THU 3 · 17:55 Döbrentei tér</name>
+      <description>Still on the quay. 315 m / 4 min more to Várkert Bazár. Döbrentei utca is itself part of the food-street area.</description>
+      <Point><coordinates>19.04550,47.49170,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>THU 4 · 18:00 Várkert Bazár terraced gardens</name>
+      <description>1.9 km / 23 min cumulative from the hotel door. Neoclassical terraced gardens climbing towards the Castle, free to walk, holiday programming on. Friday at 14:15 you come back down through here from the Castle.</description>
+      <Point><coordinates>19.04280,47.49336,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#takeout</styleUrl>
+      <name>THU 5 · 18:15 DINNER — Magyar Ízek Utcája (CORRECTED LOCATION)</name>
+      <description>TAKE-OUT, eat standing up. CORRECTION: the 2026 Street of Hungarian Flavours is HERE, on the Buda side at the foot of the Castle — Várkert Bazár, Várkert rakpart, Clark Ádám tér, Lánchíd utca, Ybl Miklós tér, Döbrentei utca and Apród utca. OPEN 09:00-24:00, Aug 20-22. It is NOT by Parliament / St Stephen's Square; that old pin was 2.9 km from the hotel in the opposite direction to the fireworks. First public tasting of the Country's Bread (2026 winner Pilisi Pityókás, Hel Pékség) and the Cake of Hungary. Prices capped this year: beer under 1,000 HUF, water max 500 HUF. No reservation needed.</description>
+      <Point><coordinates>19.04220,47.49380,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>THU 6 · 19:00 Clark Ádám tér (under the Chain Bridge)</name>
+      <description>Leave dinner by 18:50 and keep going north on the same car-free quay. 660 m / 8 min from the food street.</description>
+      <Point><coordinates>19.03957,47.49828,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>THU 7 · 19:15 FIREWORKS SPOT — Bem rakpart (BEST)</name>
+      <description>PREFERRED SPOT. The car-free quay itself, square on the Parliament façade, and organisers say the Buda side gives the best view. 1.7 km / 22 min from the food street, all on the Buda bank with no river crossing. Sunset ~19:50. Show 21:00: ~30 min total of projection and light, with the fireworks CUT TO 10 MINUTES this year. Light painting on Parliament and the Chain Bridge 22:30-01:00. Agree a physical meeting point — phone networks fail in this crowd.</description>
+      <Point><coordinates>19.04013,47.50925,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>THU 7b · 19:15 FIREWORKS ALT — Batthyány tér (M2)</name>
+      <description>Same view, 370 m south of Bem rakpart, and it has a metro station at your feet for afterwards. Take this one if anybody wants the option of leaving quickly.</description>
+      <Point><coordinates>19.03878,47.50651,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>THU 8 · 23:00 WALK HOME over Elisabeth Bridge</name>
+      <description>Batthyány tér back to the hotel on foot is 3.1 km / 40 min, back down the car-free quay and over Elisabeth Bridge. Flat, lit, riverside, and on this night probably nicer than the metro alternative: M2 to Deák Ferenc tér, M3 to Kálvin tér, M4 to Fővám tér — ~20 min but two changes on crushed platforms. M2/M3/M4 run to ~02:30.</description>
+      <Point><coordinates>19.05450,47.48990,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>22:00 Optional — Kossuth tér open-air disco</name>
+      <description>Free. Anima Sound System 21:30, JumoDaddy 22:30, Abertura &amp; Matyó until 01:30. Light art on Parliament and the Chain Bridge until 01:00.</description>
+      <Point><coordinates>19.04630,47.50650,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>3 — FRI AUG 21 (Parliament + full day)</name>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>09:15 PARLIAMENT — Kossuth tér, join the queue</name>
+      <description>FREE holiday open day, 10:00-16:00. Nothing to book, nothing to register. Grand Staircase, Dome Hall, the Holy Crown. Be here 09:15 — the whole country is off today. No large bags, airport-style security.</description>
+      <Point><coordinates>19.04566,47.50722,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>11:30 Szabadság tér (MOVED FROM THURSDAY)</name>
+      <description>Was pinned Thursday 17:30, which was wrong — 2.3 km / 29 min from the hotel, in the opposite direction to both the food street and the fireworks. It belongs here: 640 m / 8 min east of the Kossuth tér queue you are already standing in. Wide shaded square, fountains, holiday programming. Optional 15 minutes, then 700 m / 9 min south to the Shoes.</description>
+      <Point><coordinates>19.05063,47.50403,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>15:45 HEAT BLOCK C — St Stephen's Basilica + dome terrace (MOVED FROM THURSDAY)</name>
+      <description>Was pinned Thursday 17:00 as the first stop after dropping bags — wrong: 1.8 km / 23 min from the hotel, the opposite direction to the food street and the fireworks. Now a Friday heat-block option, and the dome panorama terrace is the best central viewpoint in Pest. NOTE for Thursday: the Holy Right Procession sets out from here at 19:00, not 18:00, and the Basilica is 2.6 km from Bem rakpart — you cannot do both the procession and a 19:15 riverside fireworks position.</description>
+      <Point><coordinates>19.05392,47.50086,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>11:45 Shoes on the Danube Bank</name>
+      <description>Small, quiet, the most affecting thing in the city.</description>
+      <Point><coordinates>19.04555,47.50411,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>12:00 Széchenyi István tér</name>
+      <description>The Academy, the Gresham Palace, the Pest end of the Chain Bridge.</description>
+      <Point><coordinates>19.04693,47.49939,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>12:15 Chain Bridge (on foot)</name>
+      <description>Pedestrianised during the festivities, which almost never happens. Take it.</description>
+      <Point><coordinates>19.04347,47.49869,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#ride</styleUrl>
+      <name>12:30 Funicular — Clark Ádám tér</name>
+      <description>Budavári Sikló up to the Castle — the ride is part of the fun. Bus 16 is the free alternative on a Budapest pass.</description>
+      <Point><coordinates>19.03957,47.49828,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#viewpoint</styleUrl>
+      <name>12:45 Fisherman's Bastion</name>
+      <description>The postcard view over the Danube and Parliament. Free to wander the lower terraces.</description>
+      <Point><coordinates>19.03497,47.50242,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>13:00 Matthias Church + Trinity Square</name>
+      <description>The tiled roof is the thing. Church interior is ticketed; the square is free.</description>
+      <Point><coordinates>19.03443,47.50201,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>13:30 Buda Castle terraces</name>
+      <description>Free to walk. Holiday programming continues here today. Museums inside are ticketed and skippable on a hot day.</description>
+      <Point><coordinates>19.03972,47.49604,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>Vienna Gate (Bécsi kapu tér)</name>
+      <description>The quiet northern end of Castle Hill — old houses, almost no tourists.</description>
+      <Point><coordinates>19.03303,47.50577,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>14:15 Várkert Bazár gardens</name>
+      <description>Terraced gardens down from the Castle, then cross Elisabeth Bridge.</description>
+      <Point><coordinates>19.04280,47.49336,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#meal</styleUrl>
+      <name>14:45 LUNCH — Great Market Hall (your own front door)</name>
+      <description>Elisabeth Bridge drops you at Fővám tér. Gallery stalls for goulash and stuffed cabbage; downstairs for paprika and salami to take home. Or Bartók Béla út on the Buda side if you've had enough of the market after breakfast.</description>
+      <Point><coordinates>19.05835,47.48733,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#takeout</styleUrl>
+      <name>Lunch backup — Karaván street food yard</name>
+      <description>TAKE-OUT. Kazinczy utca, next to Szimpla. Lángos, goulash, vegan options, open late.</description>
+      <Point><coordinates>19.06184,47.49688,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>15:45 HEAT BLOCK A — Dohány Street Synagogue</name>
+      <description>Largest synagogue in Europe, with the Jewish Museum and the memorial garden. Indoors, cool.</description>
+      <Point><coordinates>19.06088,47.49561,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#museum</styleUrl>
+      <name>15:45 HEAT BLOCK B — House of Terror</name>
+      <description>Andrássy út 60. The Nazi and Communist terror regimes in the building where it happened. Heavy, excellent.</description>
+      <Point><coordinates>19.06529,47.50694,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>17:00 Hungarian State Opera</name>
+      <description>Start of the Andrássy út walk.</description>
+      <Point><coordinates>19.05782,47.50281,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#ride</styleUrl>
+      <name>17:15 Oktogon → M1 Millennium line</name>
+      <description>The M1 is the oldest metro on the continent after London and a UNESCO site in itself. Ride it out to Heroes' Square — the train is the attraction.</description>
+      <Point><coordinates>19.06376,47.50525,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>17:45 Heroes' Square</name>
+      <description>The Millennium Monument and the two galleries flanking it.</description>
+      <Point><coordinates>19.07789,47.51475,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#park</styleUrl>
+      <name>18:00 Vajdahunyad Castle + City Park</name>
+      <description>A romantic fake castle on a lake in City Park. Shaded, easy, free.</description>
+      <Point><coordinates>19.08206,47.51442,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#viewpoint</styleUrl>
+      <name>19:15 SUNSET — Gellért Hill Citadella</name>
+      <description>The full panorama of the river and both banks. Sunset ~19:50 and the air is finally bearable. Hot climb — take water. Lower-effort alternative: Fisherman's Bastion at dusk.</description>
+      <Point><coordinates>19.03970,47.48685,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>4 — SAT AUG 22 (drive + Vienna half day)</name>
+    <Placemark><styleUrl>#market</styleUrl>
+      <name>12:00 LUNCH — Naschmarkt + Saturday flea market</name>
+      <description>U4 Kettenbrückengasse. Stalls to graze plus sit-down places. Saturday is the big flea market day and it is DEAD on Sundays, so today is the only chance.</description>
+      <Point><coordinates>16.36330,48.19860,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>14:00 Karlsplatz</name>
+      <description>Start of the Innere Stadt walk. Karlskirche and the Secession are here.</description>
+      <Point><coordinates>16.36988,48.20049,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>14:20 Staatsoper</name>
+      <description>Then up Kärntner Straße towards the cathedral.</description>
+      <Point><coordinates>16.36907,48.20294,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>14:45 Stephansdom</name>
+      <description>The centre of Vienna. Nave is free to enter; towers and catacombs are ticketed.</description>
+      <Point><coordinates>16.37319,48.20849,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>15:15 Hofburg (via Graben)</name>
+      <description>The imperial palace complex. Sisi apartments optional.</description>
+      <Point><coordinates>16.36565,48.20650,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#museum</styleUrl>
+      <name>16:00 Optional — Albertina</name>
+      <description>Monet to Picasso, plus the state rooms. Open late on some days.</description>
+      <Point><coordinates>16.36831,48.20452,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>18:00 Vienna Classic Days — vintage car parade, Ringstrasse</name>
+      <description>Free, starts 18:00 on the Ring, right where you already are.</description>
+      <Point><coordinates>16.36180,48.20620,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>19:30 Rathausplatz Film Festival</name>
+      <description>U2 Rathaus / tram 2. FREE entry. Food and drink stalls 11:00-midnight (food to 23:00). Tonight 20:30: Imagine Dragons Live From The Hollywood Bowl on a 300 m² screen. Runs in rain; only cancelled for thunderstorms.</description>
+      <Point><coordinates>16.35730,48.21073,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>5 — SUN AUG 23 (Vienna full day)</name>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>07:45 Schönbrunn Palace</name>
+      <description>Only 2 U4 stops from the flat. Gardens open early and before 10:00 you'll have it close to yourself. Palace interior needs a booked timed slot (Grand Tour).</description>
+      <Point><coordinates>16.31222,48.18453,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#viewpoint</styleUrl>
+      <name>08:45 Gloriette (free walk up)</name>
+      <description>The hill behind the palace, best view back over Vienna. Free.</description>
+      <Point><coordinates>16.30594,48.18063,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>12:00 FREE Jazz Brunch — Rathausplatz</name>
+      <description>12:00-14:00, The Thrill Seekers today. Food stalls open. Everything retail in Austria is shut today, so this is also lunch.</description>
+      <Point><coordinates>16.35730,48.21073,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#museum</styleUrl>
+      <name>14:00 RAIN BLOCK A — Kunsthistorisches Museum</name>
+      <description>Open Sundays, closed Mondays — so today is the right day. Bruegel, Vermeer, Caravaggio. Allow 2-3 h.</description>
+      <Point><coordinates>16.36169,48.20384,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#museum</styleUrl>
+      <name>14:00 RAIN BLOCK B — Belvedere</name>
+      <description>Klimt's The Kiss. Upper Belvedere is the one you want.</description>
+      <Point><coordinates>16.38095,48.19146,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>17:00 Coffee house — Café Central</name>
+      <description>The grand one. Expect a short queue.</description>
+      <Point><coordinates>16.36567,48.21027,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>17:00 Coffee house — Café Sperl</name>
+      <description>Older, shabbier, more genuine. Billiard tables and 1880s fittings.</description>
+      <Point><coordinates>16.35970,48.19882,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>17:00 Coffee house — Demel</name>
+      <description>The imperial confectioner. Sachertorte argument headquarters.</description>
+      <Point><coordinates>16.36685,48.20852,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#meal</styleUrl>
+      <name>18:30 DINNER A — Heuriger in Grinzing</name>
+      <description>Tram 38 from Schottentor. Wine and cold cuts among the vineyards. The most memorable option if the sky holds.</description>
+      <Point><coordinates>16.33830,48.25513,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>20:30 EVENING B — Faust at Rathausplatz (free)</name>
+      <description>Vienna State Opera production on the big screen. Free.</description>
+      <Point><coordinates>16.35730,48.21073,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>5b — VIENNA EVENTS on Aug 22–23</name>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>NEUSTIFTER KIRTAG — Aug 20-23, the pick of the lot</name>
+      <description>Traditional Viennese wine festival: 650 m of road closed, market and gastronomy mile, Heuriger tables in the street. 100,000+ visitors over four days; the Hiatabaum and Hauerkrone rituals are UNESCO intangible heritage. WALKING IN IS FREE. SUNDAY AUG 23 is the free day and the last day, 12:00-22:00 — brass-band Frühschoppen from 12:00, Die Wuppa 17:00-21:00, no tables sold, just turn up. Saturday 14:00-24:00, table reservation needed if you want one (Fuhrgassl-Huber €285 for six). GET THERE: U6 to Nussdorfer Straße then bus 35A to Neustift am Walde. DO NOT DRIVE — roads closed, parking restricted. Austria is 0.5 per mille, so not the driver's evening.</description>
+      <Point><coordinates>16.29560,48.24170,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>STUMM &amp; LAUT — Aug 20-22, FREE, closest to your bed</name>
+      <description>Historic silent films projected open-air with live electronic music over them. Helmut-Zilk-Park, Hlawkagasse 2, 1100 (Sonnwendviertel, behind Hauptbahnhof). FREE. SATURDAY AUG 22 IS CLOSING NIGHT. A couple of S-Bahn stops from Bahnhof Wien Meidling, which is 630 m from the flat. Programme: volxkino.at/stumm-und-laut</description>
+      <Point><coordinates>16.38060,48.18450,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>AFRIKA TAGE — Aug 14-24, Donauinsel (paid)</name>
+      <description>22nd edition, one of Europe's biggest African festivals: live music, dance, crafts, fashion, food, daytime workshops. Mon-Sat from 14:00, Sun from 11:00, daily to midnight; concerts from 18:00, headliners 20:00. Line-up includes Sona Jobarteh, Marla Glen, Valérie Ékoumé, Kasiva Mutua. Day tickets ~€12.20-12.90 advance; at the door ~€10 before 16:00, €20 after 17:00. U6 direct from Niederhofstraße to Handelskai, then 400 m over the Georg-Danzer-Steg. Pairs with an afternoon on the free river beaches.</description>
+      <Point><coordinates>16.39600,48.24300,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>Kino am Dach — rooftop cinema, until Sept 12</name>
+      <description>Open-air screenings on the roof of the main library at Urban-Loritz-Platz, 1070. Ticketed. Direct U6 from your door to Burggasse-Stadthalle, which also drops you in the middle of the 7th-district bar cluster.</description>
+      <Point><coordinates>16.33800,48.19960,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#event</styleUrl>
+      <name>Frameout — MuseumsQuartier, free, until Aug 29</name>
+      <description>Free open-air documentaries, art films and experimental cinema in the MQ courtyard. Next door to the Kunsthistorisches Museum, so it slots onto the end of Sunday afternoon.</description>
+      <Point><coordinates>16.35930,48.20330,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>6 — BARS (Budapest 0.5 L = 900–1,400 HUF · Vienna 7th district)</name>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Ellátó Kert — best all-rounder</name>
+      <description>Klauzál tér 2. Tree-shaded garden, actual locals, Hungarian craft plus Eger and Tokaj wines, prices set for residents.</description>
+      <Point><coordinates>19.06344,47.49760,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Füge Udvar — Szimpla's look at half the price</name>
+      <description>Dob u. 19. Same crumbling courtyard, you can sit down and have a conversation. Opens 16:00.</description>
+      <Point><coordinates>19.06152,47.49876,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Fogasház / Instant-Fogas</name>
+      <description>Akácfa u. 49–51. Underground electronic music, all-night complex.</description>
+      <Point><coordinates>19.06843,47.49951,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Élesztőház — for beer people</name>
+      <description>District IX, Tűzoltó u. 20–22. 20–30 Hungarian craft taps and a cask-ale corner.</description>
+      <Point><coordinates>19.06726,47.48160,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Szimpla Kert — one drink, before 21:00</name>
+      <description>Kazinczy u. 14. The original ruin bar. Worth seeing, not worth a whole night.</description>
+      <Point><coordinates>19.06213,47.49722,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Csendes — quiet, surreal, for talking</name>
+      <description>Ferenczy István u. 5, near Astoria.</description>
+      <Point><coordinates>19.06045,47.49256,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Kőleves Kert — big summer garden</name>
+      <description>Kazinczy u. 37–41.</description>
+      <Point><coordinates>19.06188,47.49823,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Anker't — big courtyard garden</name>
+      <description>Paulay Ede u. 33.</description>
+      <Point><coordinates>19.06011,47.50060,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Jazzcafe Sofa — unbeatable value</name>
+      <description>Lindengasse 3, 1070. Beer special €2.80, spritzer €2.40. Mon–Sat 17:00–02:00.</description>
+      <Point><coordinates>16.35400,48.20130,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#meal</styleUrl>
+      <name>7Stern Bräu — brewpub, DINNER option</name>
+      <description>Siebensternstraße 19, 1070. Award-winning house beers, shaded garden, hearty food. The best group dinner in the bar district.</description>
+      <Point><coordinates>16.35398,48.20182,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Bukowski The Pub — the late-late option</name>
+      <description>Siebensterngasse 8. Daily 16:00–06:00.</description>
+      <Point><coordinates>16.35723,48.20343,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Kreisky — dive bar, open till 04:00</name>
+      <description>7th district. Grungy, graffitied, no snobbery. Verify the exact address in the app before setting off.</description>
+      <Point><coordinates>16.35300,48.20250,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#bar</styleUrl>
+      <name>Café Anno — proper dive, foosball and darts</name>
+      <description>7th district, Lerchenfelder Straße. Cheap draught, 80s pop. Verify the exact address in the app.</description>
+      <Point><coordinates>16.34400,48.20450,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#meal</styleUrl>
+      <name>Weinstube Josefstadt — Heuriger without the trek</name>
+      <description>Piaristengasse 27, 1080. Ivy garden, Grüner Veltliner and Blaufränkisch, cold cuts and strudel from the counter. Dinner as much as drinks.</description>
+      <Point><coordinates>16.35156,48.21105,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#takeout</styleUrl>
+      <name>Bitzinger Würstelstand — late-night TAKE-OUT</name>
+      <description>By the Albertina. Käsekrainer and a beer, standing up, at 2 a.m. The correct end to a Vienna night.</description>
+      <Point><coordinates>16.36866,48.20419,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>7 — ROUTE: Rivne → Budapest and back, one day each way</name>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>START — Rivne, 05:00 on Thu Aug 20</name>
+      <description>Tank full: fill at Ukrnafta or BRSM, the only chains that undercut Hungarian pump prices. 770 km to Budapest, ~10 h driving, but you gain an hour crossing into UTC+2 — so you arrive 15:00-15:30. The 05:00 start also gets you over the Carpathians in daylight.</description>
+      <Point><coordinates>26.25160,50.61990,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#breakfast</styleUrl>
+      <name>Lviv — breakfast + driver change, 07:45</name>
+      <description>213 km, bang on halfway, and the last easy place to eat properly. Rynok Square. Change drivers here and put the freshest person on the mountains that follow.</description>
+      <Point><coordinates>24.03150,49.84190,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Stryi — 08:40, the slow part starts here</name>
+      <description>282 km. From here it is 136 km over the Carpathian passes to Svalyava: two lanes, loaded trucks, nowhere safe to overtake. Give it 2 hours — you should reach Svalyava about 11:00.</description>
+      <Point><coordinates>23.85060,49.26170,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Svalyava — 11:00, out of the mountains</name>
+      <description>418 km. M06 roadworks across Zakarpattia this summer — expect single-lane, light-controlled sections from about here, and allow 20-30 min for them.</description>
+      <Point><coordinates>22.99640,48.54860,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Mukachevo — 11:25, last cheap fuel</name>
+      <description>440 km from Rivne. Change drivers, top up, then 30 km southwest to the crossing. On the way home this is the natural bail-out point if anyone is too tired to be safe — the last place with easy accommodation before the passes.</description>
+      <Point><coordinates>22.71750,48.44250,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>Palanok Castle — OPTIONAL, only if you are ahead</name>
+      <description>Daily 09:00-18:00 in summer, 150 UAH. A 14th-century fortress on a volcanic cone, right by the road. Costs you 45-60 min and pushes Budapest to 16:15-16:30 — still fine for the fireworks, but it eats the afternoon.</description>
+      <Point><coordinates>22.67970,48.42830,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>CROSS HERE — Luzhanka / Beregsurány, ~12:00</name>
+      <description>~30 km southwest of Mukachevo. Same 330 km to Budapest as Chop, but this avoids the Mukachevo-Uzhhorod section being dug up. Clocks go back an hour here. Pin approximate.</description>
+      <Point><coordinates>22.54420,48.18110,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>Vásárosnamény — the M3 starts here, 12:15</name>
+      <description>Route 41 from the crossing brings you here. HAVE THE D1 10-DAY E-VIGNETTE (6,900 HUF) LIVE BEFORE THIS POINT — ematrica.nemzetiutdij.hu. Then 3 h of motorway to Budapest.</description>
+      <Point><coordinates>22.31750,48.12890,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>ALTERNATIVE crossing — Chop / Záhony</name>
+      <description>The bigger crossing, also straight onto the M3, same 330 km to Budapest — but 40 km of poor road to reach it.</description>
+      <Point><coordinates>22.20000,48.43330,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>HOME RUN — Hegyeshalom, Mon Aug 24 06:45</name>
+      <description>Leave Vienna at 06:00 and you are here in 45 min. Then M1 to the M0 southern ring, round Budapest, onto the M3. ~1,000 km to Rivne, about 16 h door to door with three drivers rotating.</description>
+      <Point><coordinates>17.16330,47.92500,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#car</styleUrl>
+      <name>FILL UP HERE on the way home — Mosonmagyaróvár / Győr</name>
+      <description>Hungary averages €1.58 petrol / €1.81 diesel against Austria's €1.72 / €1.97, so leave Vienna on what is in the tank and fill here, about 07:30. Take the exit into town rather than using a motorway service area.</description>
+      <Point><coordinates>17.63500,47.68750,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>8 — OPTIONAL: baths, small trips</name>
+    <Placemark><styleUrl>#swim</styleUrl>
+      <name>Palatinus Strand — BEST bath choice in August</name>
+      <description>Margaret Island. A lido, not a spa: outdoor pools, slides, wave pool, grass and shade. 4,400–7,000 HUF. The right call at 32 °C.</description>
+      <Point><coordinates>19.04739,47.52872,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#swim</styleUrl>
+      <name>Lukács Bath — the value / local pick</name>
+      <description>8,000 HUF. Shaded courtyard, cool pools, no queue, no Instagram crowd.</description>
+      <Point><coordinates>19.03688,47.51787,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#swim</styleUrl>
+      <name>Széchenyi Bath — the famous one</name>
+      <description>~14,800 HUF weekend rate (Aug 21 counts as weekend). Use the outdoor swimming pools and the 18 °C plunge, not the hot water.</description>
+      <Point><coordinates>19.08316,47.51879,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#swim</styleUrl>
+      <name>Rudas Bath — Ottoman, rooftop pool</name>
+      <description>15,000 HUF Fri–Sun. The rooftop pool over the Danube is the best bath view in the city.</description>
+      <Point><coordinates>19.04869,47.48862,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#park</styleUrl>
+      <name>Margaret Island — musical fountain</name>
+      <description>The closest shade and grass to the centre. Convent ruins and the water tower too.</description>
+      <Point><coordinates>19.04630,47.52180,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#ride</styleUrl>
+      <name>SMALL TRIP — Cogwheel Railway (start, Városmajor)</name>
+      <description>Ride up into the Buda Hills. Several degrees cooler than the city and almost all shaded.</description>
+      <Point><coordinates>19.00196,47.50698,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#ride</styleUrl>
+      <name>SMALL TRIP — Children's Railway (Széchenyi-hegy)</name>
+      <description>Run by 10–14-year-olds since 1948. Genuinely charming, and it connects to the lookout tower.</description>
+      <Point><coordinates>18.98872,47.49893,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#viewpoint</styleUrl>
+      <name>SMALL TRIP — Elizabeth Lookout Tower (János-hegy)</name>
+      <description>Highest point in Budapest, 360° view. Chairlift back down to Zugliget.</description>
+      <Point><coordinates>18.96035,47.51823,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>SMALL TRIP — Memento Park</name>
+      <description>The Communist statues exiled from the city's squares, all in one field. Blunt and memorable. ~45 min out by bus from Kelenföld.</description>
+      <Point><coordinates>18.99872,47.42645,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#museum</styleUrl>
+      <name>SMALL TRIP — Aquincum Museum</name>
+      <description>The Roman city under Óbuda: amphitheatre, mosaics, a reconstructed organ. Quiet and unvisited.</description>
+      <Point><coordinates>19.04919,47.57108,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#viewpoint</styleUrl>
+      <name>VIENNA TRIP — Kahlenberg viewpoint</name>
+      <description>Bus 38A from Heiligenstadt. Terrace view over the whole city and the Danube. Combine with a Heuriger in Grinzing on the way down.</description>
+      <Point><coordinates>16.33355,48.27293,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#sight</styleUrl>
+      <name>VIENNA TRIP — Klosterneuburg Abbey</name>
+      <description>20 min by S-Bahn. Vast Augustinian monastery with its own winery.</description>
+      <Point><coordinates>16.32530,48.30525,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#swim</styleUrl>
+      <name>VIENNA TRIP — Donauinsel (free river beaches)</name>
+      <description>U1 Donauinsel. 21 km of free beaches and bars. Where Vienna actually goes when it's hot.</description>
+      <Point><coordinates>16.40946,48.22947,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#park</styleUrl>
+      <name>VIENNA TRIP — Prater / Riesenrad</name>
+      <description>The old funfair. The ferris wheel is the one paid thing worth it; the surrounding park is free and enormous.</description>
+      <Point><coordinates>16.39590,48.21661,0</coordinates></Point></Placemark>
+  </Folder>
+
+</Document>
+</kml>

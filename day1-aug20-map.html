@@ -65,7 +65,32 @@
   .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
   .leaflet-popup-content b{color:#c0392b}
   .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
-  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+  .langbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+  .langbar a.home{font-size:12.5px;font-weight:700;color:#2f6fb0;text-decoration:none;padding:6px 2px}
+  .langbar .seg{display:flex;border:1px solid #e2ddd4;border-radius:8px;overflow:hidden;background:#fff;flex:0 0 auto}
+  .langbar .seg b,.langbar .seg a{font-size:12px;font-weight:800;letter-spacing:.4px;padding:7px 12px;text-decoration:none;color:#6b7785}
+  .langbar .seg b{background:#1b2430;color:#fff}
+  .langbar .seg a:active{background:#f2ede4}
+  @media(max-width:900px){
+    html,body{height:auto}
+    #wrap{flex-direction:column;height:auto}
+    #map{width:100%;height:56vh;min-height:320px;order:1;position:sticky;top:0;z-index:700;
+         border-bottom:1px solid #e2ddd4}
+    #side{width:100%;min-width:0;height:auto;overflow:visible;border-right:none;border-bottom:none;
+          padding:14px 14px 48px;order:2}
+    h1{font-size:22px} .sub{font-size:13.5px}
+    .row{padding:11px 8px} .n{font-size:15px} .d{font-size:12.5px} .t{font-size:12.5px}
+    .stat div{font-size:12px} .stat b{font-size:15px}
+    button{padding:14px;font-size:14.5px}
+    .warn{font-size:13px} .key{font-size:12.5px} h2{font-size:11px}
+    .leaflet-popup-content{width:auto!important;max-width:calc(100vw - 80px)!important;font-size:12.5px}
+    .leaflet-control-layers{font-size:12px;max-height:38vh;overflow-y:auto}
+    .focusbar{font-size:12px;max-width:60vw}
+  }
+  @media(max-width:560px){
+    #map{height:48vh;min-height:260px}
+    .stat{gap:5px} .stat div{padding:5px 8px}
+  }
 
   /* ---- PRINT: one A4 landscape page, map keeps its street background ---- */
   @media print{
@@ -89,6 +114,7 @@
 <body>
 <div id="wrap">
   <div id="side">
+  <div class="langbar"><a class="home" href="index.html">← всі дні</a><span class="seg"><b>УКР</b><a href="day1-aug20-map-en.html">ENG</a></span></div>
     <h1>День 1 &mdash; четвер, 20 серпня 2026, Будапешт</h1>
     <div class="sub">Вечір приїзду, національне свято Угорщини. Liberty Bridge (міст Свободи) переходите <b>один раз</b>, а далі цілий вечір ідете на північ закритою для авто набережною Buda (Буда): вечеря на гастрономічній вулиці, потім шоу навпроти Parliament (Парламент) &mdash; його дають <b>двічі</b>, о 21:00 і ще раз о 22:00.</div>
     <div class="stat">
@@ -100,7 +126,6 @@
       <div>розваги<b>безкоштовно</b></div>
       <div>шоу<b>іде 2×</b></div>
     </div>
-    <button onclick="doPrint()">Зберегти в PDF / друк &mdash; одна горизонтальна сторінка, разом із картою</button>
     <div class="key" id="key"></div>
     <div id="list"></div>
     <div class="warn" style="background:#f4f6f9;border-color:#ccd4e0"><b>Як читати карту і як підсвітити один відрізок за раз.</b> <b>Пунктир = ви йдете пішки</b>, і <b>кожен пішохідний відрізок має власний колір</b>, тож сусідні відрізки ніколи не зливаються в один &mdash; підпис на лінії того ж кольору й називає два пункти, які вона з'єднує. <b>Суцільна = ви їдете</b>, справжнім кольором транспортної лінії &mdash; і тепер <b>з точно таким самим підписом</b>: лінія і два пункти, які з'єднує цей відрізок.<br><b>Клацніть будь-яку лінію, і вона підсвітиться сама</b> &mdash; решта тьмяніє, карта наближається до неї, а зліва вгорі з'являється смужка з кнопкою <b>показати весь день</b>. Клацніть ту саму лінію ще раз, щоб скасувати.<br><b>Клацніть нумерований пункт у списку</b> &mdash; і підсвітяться всі відрізки, що торкаються цього пункту: клацнувши <b>11</b>, ви разом побачите, як прибуваєте до 11 і як звідти йдете.</div>
@@ -498,16 +523,6 @@ function put(arr,grp,key){
 put(MONEY,'money','m'); put(STOPS,'route','s'); put(ENT,'ent','e'); put(SHOPS,'shop','p'); put(FOOD,'food','f'); put(WC,'wc','w');
 put(HOMEPT,'home','h'); put(OPTS,'opt','o');
 Object.keys(G).forEach(function(k){G[k].addTo(map)});
-L.control.layers(null,{
-  "День, пункти 0–8":G.route,
-  "Банкомати, готівка та обмін":G.money,
-  "Музика та події сьогодні ввечері":G.ent,
-  "Магазини, відкриті сьогодні":G.shop,
-  "Кава та їжа":G.food,
-  "Туалети":G.wc,
-  "Дорога додому (метро + пішки)":G.home,
-  "Запасне місце та конфлікт":G.opt
-},{collapsed:false}).addTo(map);
 
 /* ---------------- side list ---------------- */
 document.getElementById('key').innerHTML=
@@ -568,13 +583,6 @@ rows(FOOD,'f','Кава та їжа поблизу');
 rows(OPTS,'o','Запасний варіант і єдиний конфлікт');
 map.fitBounds(L.polyline(WALK).getBounds(),{padding:[45,45]});
 
-function doPrint(){
-  var b=L.latLngBounds(WALK);
-  map.invalidateSize();
-  map.fitBounds(b,{padding:[20,20]});
-  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
-}
-window.addEventListener('beforeprint',function(){map.invalidateSize()});
 window.addEventListener('afterprint',function(){
   map.invalidateSize(); map.fitBounds(L.polyline(WALK).getBounds(),{padding:[45,45]});
 });

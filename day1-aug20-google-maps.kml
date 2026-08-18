@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>DAY 1 — Thu 20 Aug 2026, Budapest</name>
+  <description>Arrival evening. Cross Liberty Bridge once, then walk north up the car-free Buda quay all evening: dinner at the food street, then the 21:00 show opposite Parliament. 4.0 km, about 50 minutes of walking, no backtracking.</description>
+
+  <Style id="walk">
+    <LineStyle><color>ff2b39c0</color><width>5</width></LineStyle>
+  </Style>
+  <Style id="walkhome">
+    <LineStyle><color>ff8a93a8</color><width>4</width></LineStyle>
+  </Style>
+  <Style id="stop">
+    <IconStyle><color>ff2b39c0</color><scale>1.1</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle>
+  </Style>
+  <Style id="bed">
+    <IconStyle><color>ff303030</color><scale>1.2</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-stars.png</href></Icon></IconStyle>
+  </Style>
+  <Style id="alt">
+    <IconStyle><color>ff30a0d0</color><scale>1.0</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon></IconStyle>
+  </Style>
+
+  <Folder>
+    <name>1 · STOPS in order, 0 to 6</name>
+    <Placemark><styleUrl>#bed</styleUrl>
+      <name>0 · 15:45 HOTEL — Sophia Palace, Fővám tér</name>
+      <description>Vámház körút 2, District V. M4 Fővám tér at the door. Arrive 15:00-15:30, park at the Kelenföld P+R and buy the three 72-hour travelcards at the station machine, then M4 in, 12 min. Rest 16:15-17:30 — you have been in a car for eleven hours. Leave at 17:30.</description>
+      <Point><coordinates>19.05800,47.48800,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#stop</styleUrl>
+      <name>1 · 17:30 Liberty Bridge — cross to Buda</name>
+      <description>300 m / 4 min from reception. Green ironwork, Gellért Hill ahead, the market behind you. At the far end turn RIGHT, downstream, onto the lower quay. Do not walk north on the Pest side — that is the wrong bank for tonight.</description>
+      <Point><coordinates>19.05550,47.48630,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#stop</styleUrl>
+      <name>2 · 17:40 Buda lower quay — closed to cars Aug 15-22</name>
+      <description>The lower embankment is shut to traffic for the festivities, so for your dates this is a riverside promenade: hill above you, the whole Pest skyline opposite. Walk it north, 1.30 km / 16 min up to Döbrentei tér. Google will route you along the road here because the closure is temporary and not in its data — just stay by the water.</description>
+      <Point><coordinates>19.04960,47.48620,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#stop</styleUrl>
+      <name>3 · 17:55 Döbrentei tér</name>
+      <description>Still on the quay, at the Buda foot of Elisabeth Bridge. Döbrentei utca is itself one of the food-street streets. 315 m / 4 min more to Várkert Bazár.</description>
+      <Point><coordinates>19.04550,47.49170,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#stop</styleUrl>
+      <name>4 · 18:15 DINNER — Street of Hungarian Flavours, Várkert Bazár</name>
+      <description>Magyar Ízek Utcája, open 09:00-24:00 on Aug 20-22. Spread across Várkert Bazár, the Várkert rakpart, Clark Ádám tér, Lánchíd utca, Ybl Miklós tér, Döbrentei utca and Apród utca. The Carpathian Basin's biggest food festival: first public tasting of the Country's Bread (2026 winner Pilisi Pityókás) and the Cake of Hungary. Prices are capped this year — beer under 1,000 HUF, water max 500. No reservation, eat standing up. Walk up the terraced gardens while you're here; they're free. 1.9 km / 24 min cumulative from the hotel.</description>
+      <Point><coordinates>19.04280,47.49336,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#stop</styleUrl>
+      <name>5 · 19:00 Clark Ádám tér — under the Chain Bridge</name>
+      <description>Leave dinner by 18:50 and keep going north on the same car-free quay. 620 m / 8 min from the food street. The funicular up to the Castle starts here — save it for Friday.</description>
+      <Point><coordinates>19.03957,47.49828,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#stop</styleUrl>
+      <name>6 · 19:15 BEM RAKPART — your spot for the 21:00 show</name>
+      <description>THE SPOT. The car-free quay directly opposite Parliament; organisers say the Buda side gives the best view. 1.40 km / 17 min on from Clark Ádám tér, so 2.0 km total from dinner, all on the Buda bank with no river crossing. Be here by 19:15 — arrive an hour early for anything on Aug 20. Sunset 19:50. At 21:00: about 30 minutes of projection onto Parliament plus drones, with 10 minutes of fireworks inside it, fired from barges between Margaret Bridge and the Chain Bridge. Light painting on Parliament and the Chain Bridge then runs 22:30 to 01:00. Agree a physical meeting point — mobile networks fail in this crowd.</description>
+      <Point><coordinates>19.04013,47.50925,0</coordinates></Point></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>2 · WALKING ROUTE — 4.0 km</name>
+    <Placemark><styleUrl>#walk</styleUrl>
+      <name>Evening walk, hotel to Bem rakpart, 4.0 km / ~50 min</name>
+      <description>Hotel to Liberty Bridge to the car-free Buda quay to the food street to Bem rakpart. One river crossing, no backtracking, every metre closed to traffic.</description>
+      <LineString><tessellate>1</tessellate><coordinates>
+        19.05800,47.48800,0
+        19.05550,47.48630,0
+        19.05130,47.48555,0
+        19.04960,47.48620,0
+        19.04780,47.48880,0
+        19.04620,47.49060,0
+        19.04550,47.49170,0
+        19.04420,47.49260,0
+        19.04280,47.49336,0
+        19.04180,47.49520,0
+        19.04060,47.49690,0
+        19.03957,47.49828,0
+        19.03900,47.50050,0
+        19.03900,47.50300,0
+        19.03930,47.50560,0
+        19.03960,47.50760,0
+        19.04013,47.50925,0
+      </coordinates></LineString></Placemark>
+    <Placemark><styleUrl>#walkhome</styleUrl>
+      <name>Walk home after the show, 3.1 km / 40 min</name>
+      <description>Back down the same car-free quay and over Elisabeth Bridge to the hotel. Flat, lit, riverside. The alternative is M2 to Deák Ferenc tér, M3 to Kálvin tér, M4 to Fővám tér — about 20 minutes but two changes on crushed platforms. Metros run to roughly 02:30 tonight.</description>
+      <LineString><tessellate>1</tessellate><coordinates>
+        19.04013,47.50925,0
+        19.03957,47.49828,0
+        19.04280,47.49336,0
+        19.04550,47.49170,0
+        19.05450,47.48990,0
+        19.05800,47.48800,0
+      </coordinates></LineString></Placemark>
+  </Folder>
+
+  <Folder>
+    <name>3 · OPTIONS and things to know</name>
+    <Placemark><styleUrl>#alt</styleUrl>
+      <name>ALT for stop 6 — Batthyány tér (M2)</name>
+      <description>Same view of Parliament, 370 m south of Bem rakpart, and it has a metro station at your feet. Take this instead if anyone wants the option of leaving fast.</description>
+      <Point><coordinates>19.03878,47.50651,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#alt</styleUrl>
+      <name>AFTER the show — free disco, Kossuth tér</name>
+      <description>Optional, from 21:30. Anima Sound System, JumoDaddy 22:30, Abertura and Matyó to 01:30. Cross the Chain Bridge on foot to reach it, about 1.2 km / 15 min from Bem rakpart.</description>
+      <Point><coordinates>19.04630,47.50650,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#alt</styleUrl>
+      <name>SKIP tonight — Holy Right Procession, St Stephen's Basilica</name>
+      <description>Sets out at 19:00, not 18:00 as older plans said — and the Basilica is 2.6 km away on the Pest side. You cannot do this and be on the quay for 19:15. If the procession matters more than a good view of the show, move the whole evening to the Pest side and watch from Széchenyi István tér instead.</description>
+      <Point><coordinates>19.05392,47.50086,0</coordinates></Point></Placemark>
+    <Placemark><styleUrl>#alt</styleUrl>
+      <name>THE CAR — Etele / Őrmező P+R, Kelenföld</name>
+      <description>Park here on arrival and do not move the car until Saturday morning. Surface, guarded, open 24 h, fits a 1.9 m car. About 6,300 HUF for the 40 hours, cashless only. M4 direct to Fővám tér in 12 min, and Saturday's drive to Vienna starts right here. Reach it on the M0 southern ring — do NOT drive into the centre on Aug 20.</description>
+      <Point><coordinates>19.02350,47.46340,0</coordinates></Point></Placemark>
+  </Folder>
+</Document>
+</kml>

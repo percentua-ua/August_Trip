@@ -61,7 +61,32 @@
   .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
   .leaflet-popup-content b{color:#2f6fb0}
   .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
-  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+  .langbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+  .langbar a.home{font-size:12.5px;font-weight:700;color:#2f6fb0;text-decoration:none;padding:6px 2px}
+  .langbar .seg{display:flex;border:1px solid #e2ddd4;border-radius:8px;overflow:hidden;background:#fff;flex:0 0 auto}
+  .langbar .seg b,.langbar .seg a{font-size:12px;font-weight:800;letter-spacing:.4px;padding:7px 12px;text-decoration:none;color:#6b7785}
+  .langbar .seg b{background:#1b2430;color:#fff}
+  .langbar .seg a:active{background:#f2ede4}
+  @media(max-width:900px){
+    html,body{height:auto}
+    #wrap{flex-direction:column;height:auto}
+    #map{width:100%;height:56vh;min-height:320px;order:1;position:sticky;top:0;z-index:700;
+         border-bottom:1px solid #e2ddd4}
+    #side{width:100%;min-width:0;height:auto;overflow:visible;border-right:none;border-bottom:none;
+          padding:14px 14px 48px;order:2}
+    h1{font-size:22px} .sub{font-size:13.5px}
+    .row{padding:11px 8px} .n{font-size:15px} .d{font-size:12.5px} .t{font-size:12.5px}
+    .stat div{font-size:12px} .stat b{font-size:15px}
+    button{padding:14px;font-size:14.5px}
+    .warn{font-size:13px} .key{font-size:12.5px} h2{font-size:11px}
+    .leaflet-popup-content{width:auto!important;max-width:calc(100vw - 80px)!important;font-size:12.5px}
+    .leaflet-control-layers{font-size:12px;max-height:38vh;overflow-y:auto}
+    .focusbar{font-size:12px;max-width:60vw}
+  }
+  @media(max-width:560px){
+    #map{height:48vh;min-height:260px}
+    .stat{gap:5px} .stat div{padding:5px 8px}
+  }
   @media print{
     @page{size:A4 landscape;margin:8mm}
     html,body{height:auto;background:#fff}
@@ -82,6 +107,7 @@
 <body>
 <div id="wrap">
   <div id="side">
+  <div class="langbar"><a class="home" href="index.html">← всі дні</a><span class="seg"><b>УКР</b><a href="day5-aug24-map-en.html">ENG</a></span></div>
     <h1>День 5 &mdash; понеділок, 24 серпня 2026, Братислава і дорога додому</h1>
     <div class="sub"><b>Тільки ранок у Bratislava (Братислава).</b> Виїзд із Vienna (Відень) о 06:00, порожнє старе місто о 07:10, брама замку о 08:00, поки там ще нікого, усе старе місто пішки до 08:45 &mdash; і геть о <b>09:00</b>. <b>Їсте один раз</b>, у номері перед виїздом із Vienna. Довгу дорогу додому після цього тут свідомо не намальовано.</div>
     <div class="stat">
@@ -93,7 +119,6 @@
       <div>замок + старе місто<b>безкоштовно</b></div>
       <div>виїзд не пізніше<b>09:00</b></div>
     </div>
-    <button onclick="doPrint()">Зберегти в PDF / друк &mdash; одна сторінка альбомно, разом із картою</button>
     <div class="key" id="key"></div>
     <div id="list"></div>
     <div class="warn red"><b>Виїзд із Vienna (Відень) о 06:00 і виїзд із Bratislava (Братислава) не пізніше 09:00.</b> Ці два часи &mdash; уся дисципліна ранку. Двох годин тут досить на замок і старе місто; три вже з’їдають світло, потрібне вам на карпатські перевали в кінці дня, а це єдиний запас міцності в плані.</div>
@@ -297,12 +322,6 @@ function rows(arr,key,heading){
     list.appendChild(r);
   });
 }
-function doPrint(){
-  map.invalidateSize();
-  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
-}
-window.addEventListener('beforeprint',function(){map.invalidateSize()});
-window.addEventListener('afterprint',function(){map.invalidateSize()});
 
 var W_IN=[[48.14500,17.10300],[48.14470,17.10420],[48.14462,17.10550],[48.14455,17.10650],[48.14450,17.10718]];
 var W_LOOP=[[48.14450,17.10718],[48.14428,17.10760],[48.14400,17.10800],[48.14360,17.10830],[48.14322,17.10800],[48.14300,17.10745],[48.14285,17.10690],[48.14262,17.10640],[48.14235,17.10600],[48.14208,17.10560],[48.14185,17.10520],[48.14200,17.10440],[48.14230,17.10370]];
@@ -315,11 +334,6 @@ walkLeg(W_UP,'Угору до замку на відкриття о 08:00 \u2014
 walkLeg(W_DOWN,'Замок \u2192 назад униз до авто. Усе під ухил, і це остання ходьба за всю подорож.','3 \u2192 авто');
 put(STOPS,'route','s'); put(FOOD,'food','f'); put(ALTS,'alt','a');
 Object.keys(G).forEach(function(k){G[k].addTo(map)});
-L.control.layers(null,{
-  "ДЕНЬ 0&rarr;3 &mdash; прогулянка центром Bratislava (Братислава)":G.route,
-  "Якщо ви радше поїсте тут":G.food,
-  "Заміни та компроміс":G.alt
-},{collapsed:false}).addTo(map);
 
 document.getElementById('key').innerHTML=
  '<span><b style="color:#1f6f8b">- - -</b> клацніть будь-яку лінію, щоб виділити її</span>'+

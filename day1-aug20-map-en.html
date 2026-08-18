@@ -65,7 +65,32 @@
   .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
   .leaflet-popup-content b{color:#c0392b}
   .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
-  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+  .langbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+  .langbar a.home{font-size:12.5px;font-weight:700;color:#2f6fb0;text-decoration:none;padding:6px 2px}
+  .langbar .seg{display:flex;border:1px solid #e2ddd4;border-radius:8px;overflow:hidden;background:#fff;flex:0 0 auto}
+  .langbar .seg b,.langbar .seg a{font-size:12px;font-weight:800;letter-spacing:.4px;padding:7px 12px;text-decoration:none;color:#6b7785}
+  .langbar .seg b{background:#1b2430;color:#fff}
+  .langbar .seg a:active{background:#f2ede4}
+  @media(max-width:900px){
+    html,body{height:auto}
+    #wrap{flex-direction:column;height:auto}
+    #map{width:100%;height:56vh;min-height:320px;order:1;position:sticky;top:0;z-index:700;
+         border-bottom:1px solid #e2ddd4}
+    #side{width:100%;min-width:0;height:auto;overflow:visible;border-right:none;border-bottom:none;
+          padding:14px 14px 48px;order:2}
+    h1{font-size:22px} .sub{font-size:13.5px}
+    .row{padding:11px 8px} .n{font-size:15px} .d{font-size:12.5px} .t{font-size:12.5px}
+    .stat div{font-size:12px} .stat b{font-size:15px}
+    button{padding:14px;font-size:14.5px}
+    .warn{font-size:13px} .key{font-size:12.5px} h2{font-size:11px}
+    .leaflet-popup-content{width:auto!important;max-width:calc(100vw - 80px)!important;font-size:12.5px}
+    .leaflet-control-layers{font-size:12px;max-height:38vh;overflow-y:auto}
+    .focusbar{font-size:12px;max-width:60vw}
+  }
+  @media(max-width:560px){
+    #map{height:48vh;min-height:260px}
+    .stat{gap:5px} .stat div{padding:5px 8px}
+  }
 
   /* ---- PRINT: one A4 landscape page, map keeps its street background ---- */
   @media print{
@@ -89,6 +114,7 @@
 <body>
 <div id="wrap">
   <div id="side">
+  <div class="langbar"><a class="home" href="index.html">← all days</a><span class="seg"><a href="day1-aug20-map.html">УКР</a><b>ENG</b></span></div>
     <h1>Day 1 &mdash; Thursday 20 August</h1>
     <div class="sub">Arrival evening, Hungary's national day. Cross Liberty Bridge <b>once</b>, then walk north up the car-free Buda quay all evening: dinner at the food street, then the show opposite Parliament &mdash; which is performed <b>twice</b>, at 21:00 and again at 22:00.</div>
     <div class="stat">
@@ -100,7 +126,6 @@
       <div>entertainment<b>free</b></div>
       <div>the show<b>runs 2×</b></div>
     </div>
-    <button onclick="doPrint()">Save as PDF / print &mdash; one landscape page, map included</button>
     <div class="key" id="key"></div>
     <div id="list"></div>
     <div class="warn" style="background:#f4f6f9;border-color:#ccd4e0"><b>Reading the map, and lighting up one leg at a time.</b> <b>Dashed = you walk</b>, and <b>each walking leg has its own colour</b> so consecutive legs never blur into one another &mdash; the badge on the line matches its colour and names the two stops it joins. <b>Solid = you ride</b>, in the transport line's real colour &mdash; and now <b>badged exactly the same way</b>: the line, and the two stops that leg joins.<br><b>Click any line and it lights up on its own</b> &mdash; everything else dims, the map zooms to it, and a bar appears top-left with a <b>show the whole day</b> button. Click the same line again to undo it.<br><b>Click a numbered stop in the list</b> and every leg touching that stop lights up &mdash; so clicking <b>11</b> shows you how you arrive at 11 and how you leave it, together.</div>
@@ -498,16 +523,6 @@ function put(arr,grp,key){
 put(MONEY,'money','m'); put(STOPS,'route','s'); put(ENT,'ent','e'); put(SHOPS,'shop','p'); put(FOOD,'food','f'); put(WC,'wc','w');
 put(HOMEPT,'home','h'); put(OPTS,'opt','o');
 Object.keys(G).forEach(function(k){G[k].addTo(map)});
-L.control.layers(null,{
-  "The day, stops 0–8":G.route,
-  "ATMs, cash &amp; exchange":G.money,
-  "Music &amp; events tonight":G.ent,
-  "Shops open today":G.shop,
-  "Coffee &amp; food":G.food,
-  "Toilets":G.wc,
-  "Way home (metro + walk)":G.home,
-  "Fallback spot &amp; the clash":G.opt
-},{collapsed:false}).addTo(map);
 
 /* ---------------- side list ---------------- */
 document.getElementById('key').innerHTML=
@@ -568,13 +583,6 @@ rows(FOOD,'f','Coffee & food nearby');
 rows(OPTS,'o','The fallback, and the one clash');
 map.fitBounds(L.polyline(WALK).getBounds(),{padding:[45,45]});
 
-function doPrint(){
-  var b=L.latLngBounds(WALK);
-  map.invalidateSize();
-  map.fitBounds(b,{padding:[20,20]});
-  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
-}
-window.addEventListener('beforeprint',function(){map.invalidateSize()});
 window.addEventListener('afterprint',function(){
   map.invalidateSize(); map.fitBounds(L.polyline(WALK).getBounds(),{padding:[45,45]});
 });
