@@ -48,12 +48,6 @@
   .bed{background:linear-gradient(135deg,#ffb300 0%,#ff2d78 52%,#b620e0 100%);box-shadow:0 0 0 2px rgba(255,45,120,.30),0 2px 7px rgba(0,0,0,.45)} .wc{background:#2a7fb8} .metro{background:#1a6aa8} .car{background:#5d6470}
   .shop{background:#2e7d4f} .ent{background:#b0338e} .view{background:#8a5a12}
   .atm{background:#0f7b6c} .mall{background:#0e7490} .alt{background:#2f7d8c} .clash{background:#d64541} .light{background:#8a5fc0}
-  .focusbar{display:none;background:#1b2430;color:#fff;font-size:12.5px;font-weight:600;
-      padding:7px 10px;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.35);max-width:330px}
-  .focusbar b{color:#ffb066}
-  .focusbar button{font:inherit;font-size:11.5px;font-weight:700;background:#ff7a1a;color:#1b2430;
-      border:0;border-radius:6px;padding:3px 8px;margin-left:4px;cursor:pointer;width:auto}
-  .focusbar button:hover{background:#ffa15c}
     .wb{white-space:nowrap;background:#fff;color:#1f6f8b;border:2px dashed #1f6f8b;border-radius:10px;
       font-size:9.5px;font-weight:700;text-align:center;line-height:16px;height:20px;
       white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.25)}
@@ -83,7 +77,6 @@
     .warn{font-size:13px} .key{font-size:12.5px} h2{font-size:11px}
     .leaflet-popup-content{width:auto!important;max-width:calc(100vw - 80px)!important;font-size:12.5px}
     .leaflet-control-layers{font-size:12px;max-height:38vh;overflow-y:auto}
-    .focusbar{font-size:12px;max-width:60vw}
   }
   @media(max-width:560px){
     #map{height:48vh;min-height:260px}
@@ -219,18 +212,24 @@ var STOPS=[
  {n:"13",cat:"event",t:"15:45",dist:"600 m · 8 min",name:"SZIMPLA KERT — the first ruin bar, and by day you can actually see it",lat:47.49730,lon:19.06356,
   price:"entry FREE",pay:"card ok",
   d:"<b>Kazinczy utca 14. At four in the afternoon this is less a bar than an object you can walk around.</b> Szimpla opened in 2002 in a half-derelict building waiting for demolition: two floors of rooms around a roofless courtyard, walls papered in whatever came to hand, a bathtub instead of a sofa, a Trabant in the middle of the room with people sitting in it.<br><br><b>It isn\u2019t a period pastiche.</b> The entire ruin-bar genre started here, and half the 7th district is still repeating the idea. After nine you can\u2019t move in it; by day you can walk every room, go upstairs, and see how the thing is put together.<br><br><b>You don\u2019t have to order anything.</b> If you want to &mdash; a <i>fr\u00f6ccs</i> (wine with soda, ~1,200 HUF) or a lemonade. Nobody comes here for the coffee.<br><br><b>The quarter around it:</b> Kazinczy and Dob utca are solid ruin bars, El\u00e1t\u00f3 Kert and Fogash\u00e1z 200 m away, and <b>Karav\u00e1n</b> &mdash; a street-food yard &mdash; is right next door if lunch has worn off.<br><br><b>Money:</b> free to walk in; a drink 1,200&ndash;2,000 HUF."},
- {n:"14",cat:"sight",t:"17:00",dist:"bus 7 · 12 min",name:"RUDAS — Turkish baths with the rooftop panorama pool",lat:47.48889,lon:19.04861,
+ {n:"14",cat:"sight",t:"17:00",dist:"bus 7 · 12 min",name:"RUDAS — baths with the rooftop pool (OPTIONAL — see the two swaps)",lat:47.48889,lon:19.04861,
   price:"~12,000 HUF a head",pay:"card ok",
-  d:"<b>A bath house from 1550 &mdash; and a round pool on the roof looking straight down the Danube at the Erzs\u00e9bet Bridge and the whole of Pest.</b> Rudas sits directly under Gell\u00e9rt Hill, so you soak, get out, and walk up for sunset without touching transport.<br><br><b>One thing to know about Fridays:</b> the historic domed hall &mdash; the octagonal pool under the 1550 cupola &mdash; is <b>men only on Fridays</b> (women only on Tuesdays, mixed at weekends). The <b>wellness section with the rooftop panorama pool is co-ed every day</b>, and that is the ticket you buy.<br><br><b>Open 06:00&ndash;22:00</b>, with night bathing 22:00&ndash;03:00 on Fridays and Saturdays on a separate ticket. A 2026 day ticket runs about <b>12,000 HUF</b> (~&euro;30). It is the most expensive item of the day and the only one here worth paying for.<br><br><b>Bring:</b> swimwear, flip-flops, a towel (rental exists but costs more). A locker is included; swimwear is required in all mixed areas.<br><br><b>Why not the Gell\u00e9rt:</b> the Gell\u00e9rt baths are <b>closed for renovation until 2028</b>. Sz\u00e9chenyi is just as good but sits at the other end of the city &mdash; it would eat the evening.<br><br><b>Next:</b> 900 m south along the embankment to Szent Gell\u00e9rt t\u00e9r, and up the hill to the Citadella from there.<br><br><b>Money:</b> ~12,000 HUF a head."},
+  d:"<b>⚠ This stop is now optional.</b> If baths are not your thing, two swaps are pinned on the map for the same slot: <b>Hospital in the Rock</b> (the bunker under Castle Hill, one guided hour, ~€15) or <b>New York Café</b> (eight minutes from Szimpla, you just sit down for two hours, ~€20–30). Both cost less than Rudas.<br><br><b>A bath house from 1550 &mdash; and a round pool on the roof looking straight down the Danube at the Erzs\u00e9bet Bridge and the whole of Pest.</b> Rudas sits directly under Gell\u00e9rt Hill, so you soak, get out, and walk up for sunset without touching transport.<br><br><b>One thing to know about Fridays:</b> the historic domed hall &mdash; the octagonal pool under the 1550 cupola &mdash; is <b>men only on Fridays</b> (women only on Tuesdays, mixed at weekends). The <b>wellness section with the rooftop panorama pool is co-ed every day</b>, and that is the ticket you buy.<br><br><b>Open 06:00&ndash;22:00</b>, with night bathing 22:00&ndash;03:00 on Fridays and Saturdays on a separate ticket. A 2026 day ticket runs about <b>12,000 HUF</b> (~&euro;30). It is the most expensive item of the day and the only one here worth paying for.<br><br><b>Bring:</b> swimwear, flip-flops, a towel (rental exists but costs more). A locker is included; swimwear is required in all mixed areas.<br><br><b>Why not the Gell\u00e9rt:</b> the Gell\u00e9rt baths are <b>closed for renovation until 2028</b>. Sz\u00e9chenyi is just as good but sits at the other end of the city &mdash; it would eat the evening.<br><br><b>Next:</b> 900 m south along the embankment to Szent Gell\u00e9rt t\u00e9r, and up the hill to the Citadella from there.<br><br><b>Money:</b> ~12,000 HUF a head."},
  {n:"15",cat:"view",t:"19:15",dist:"3 lines + a 20 min climb",name:"GELLÉRT HILL — sunset from the Citadella",lat:47.48685,lon:19.03970,
   price:"free",pay:"—",
-  d:"<b>The one panorama that contains the whole city</b> — every bridge, both banks, Parliament, the Castle. <b>Sunset 19:50</b>, and by then the air is finally bearable.<br><br><b>Getting there:</b> M1 from Hősök tere to Deák Ferenc tér, M3 to Kálvin tér, M4 to Szent Gellért tér — then <b>climb, about 20 minutes and it's steep</b>. Take water. The Liberty Statue and the Citadella are at the top; the terraces just below the statue are the best spot and less crowded than the summit.<br><br><b>Lower-effort alternative:</b> Fisherman's Bastion at dusk, or just the Danube promenade with the Castle lit.<br><br><b>Money:</b> free."},
+  d:"<b>The one panorama that contains the whole city</b> — every bridge, both banks, Parliament, the Castle. <b>Sunset 19:50</b>, and by then the air is finally bearable.<br><br><b>Getting there:</b> if you did <b>Rudas</b> you are already at the foot of the hill — just walk up. From <b>New York Café</b>: Blaha Lujza tér → M2 to Deák → M3 to Kálvin → M4 to Szent Gellért tér, ~25 min. From <b>Hospital in the Rock</b> you are already on the Buda side — down to the quay and south, or bus 27 from the bottom.<br><br>Either way, then <b>climb, about 20 minutes and it's steep</b>. Take water. The Liberty Statue and the Citadella are at the top; the terraces just below the statue are the best spot and less crowded than the summit.<br><br><b>Lower-effort alternative:</b> Fisherman's Bastion at dusk, or just the Danube promenade with the Castle lit.<br><br><b>Money:</b> free."},
  {n:"16",cat:"food",t:"20:15",dist:"0.9 km downhill",name:"DINNER — Bartók Béla út, on the Buda side",lat:47.47930,lon:19.04530,
   price:"~4,000–6,000 HUF a head",pay:"card ok",
   d:"<b>This is the fix for the evening.</b> Instead of crossing the city again after sunset, you walk <b>0.9 km downhill, about 12 minutes</b>, off the south-west side of Gellért Hill and land on Budapest's best café street.<br><br><b>Bartók Béla út</b> is the arty stretch between Szent Gellért tér and Móricz Zsigmond körtér — galleries, book-lined cafés, wine bars, actual residents, and prices set for them rather than for tourists. Three pinned: <b>Hadik Kávéház</b> (no. 36, a proper old literary café doing full dinners), <b>Szatyor Bár</b> next door (same building, louder, good for a drink after), and <b>Kelet Kávézó</b> (no. 29, walls of books, lighter food and the best coffee).<br><br><b>Why it beats District VII tonight:</b> going back to the ruin bars from the hill is a 20-minute descent, a metro ride and a <b>1.7 km walk</b> — roughly 45 minutes, after a day with 11 km already in it. This is twelve minutes and downhill.<br><br><b>GETTING HOME — three ways, all on your travelcard:</b><br> <b>1 · Tram 47 or 49, ~8 min, no changes ← take this.</b> It runs the length of Bartók Béla út, crosses <b>Liberty Bridge</b> and stops at <b>Fővám tér</b>, 100 m from the hotel. You board on the street you ate on and get off at your door. <i>Riverside services are disrupted until 24 Aug — check the notice on the stop.</i><br> <b>2 · Walk 680 m to Szent Gellért tér, then M4 one stop, ~12 min.</b> The backup if the trams are diverted.<br> <b>3 · Walk the whole 1.4 km, ~18 min.</b> Up Bartók Béla út, through Szent Gellért tér, over Liberty Bridge to the door. Flat, lit, riverside, and the nicest version if anyone still has legs.<br><br><b>Money:</b> ~4,000–6,000 Ft a head with a drink. <i>Ruin bars are still pinned as an option if you want them.</i>"}
 ];
 
 var ALTS=[
+ {cat:"alt",t:"17:00 · instead of Rudas",name:"SWAP A — Hospital in the Rock, the bunker under Castle Hill",lat:47.50170,lon:19.03060,
+  price:"5,800 HUF / ~€15 pp",pay:"card · book online",
+  d:"<b>Lovas út 4/c. A natural cave under Buda Castle, turned into a military hospital in 1944, then a bomb shelter in 1956, then a secret nuclear bunker that stayed classified until 2002.</b><br><br>Inside: 200 wax figures at their posts, operating theatres with the original equipment, air filters that still run. It holds <b>about 18 °C</b> year-round, which also makes it the best escape from August heat in the city.<br><br><b>Guided tour only, exactly one hour, on a fixed schedule.</b> Open daily 10:00–19:00, ticket office closes at 18:00 — <b>book ahead at sziklakorhaz.eu</b>, group sizes are capped. English tours hourly.<br><br><b>What it costs you:</b> it's up on Castle Hill, and you need to be below Gellért-hegy by 19:15 — <b>2.5 km along the lower quay, or bus 27 from the bottom</b>. After an 11 km day you will feel it. If you take this option, go up straight after lunch and move Szimpla to after dinner.<br><br><b>Money:</b> 5,800 HUF adult, 4,800 student/senior. 10% off with a Budapest Card."},
+ {cat:"alt",t:"17:00 · instead of Rudas",name:"SWAP B — New York Café, the most ornate café in Europe",lat:47.49694,lon:19.06861,
+  price:"~€20–30 pp",pay:"card ok",
+  d:"<b>Erzsébet körút 9–11, 700 metres from Szimpla — eight minutes on foot, and that is the whole point.</b> You travel nowhere, you sit down, and you spend <b>two hours off your feet</b> before the Gellért-hegy climb.<br><br>Opened 1894, and for its first decades half of Hungarian literature was written in it — newspaper editorial desks sat right in the room. Painted ceilings, Venetian chandeliers, marble columns, gilt on every surface. It is frankly too much, which is exactly why people go.<br><br><b>What to order:</b> a Melange or espresso with <i>Esterházy</i> or <i>Dobos torta</i> — roughly 6,000–9,000 HUF a head. There is a full menu too, but then dinner on Bartók Béla út becomes redundant.<br><br><b>Expect a queue</b> — 20–40 minutes without a booking. <b>Reserve at newyorkcafe.hu</b>; for 17:00 on a Friday it's worth doing.<br><br><b>On to sunset:</b> Blaha Lujza tér is 200 m away → M2 to Deák → M3 to Kálvin → M4 to Szent Gellért tér. About 25 minutes, all on your travelcard.<br><br><b>Money:</b> coffee and cake 6,000–9,000 HUF; a full lunch double that."},
  {cat:"alt",t:"15:45 · swap",name:"Indoor hour B — House of Terror",lat:47.50694,lon:19.06529,
   price:"~4,000–5,000 HUF · estimate",pay:"card ok",
   d:"Andrássy út 60 — the building the Nazi Arrow Cross and then the Communist secret police actually used, including the cellar cells. <b>Heavy and excellent</b>, and about half the price of the baths. Choose this if you want history over water and ruin bars. It's also right on your Andrássy út route, so it costs you no walking at all."},
@@ -521,19 +520,9 @@ function focusStop(n){
     try{ map.fitBounds(b,{padding:[70,70],maxZoom:16}); }catch(e){} }
   banner('Showing everything that touches <b>stop '+n+'</b>');
 }
+map.on('click',function(){ if(_focus) clearFocus(); });
 function clearFocus(){ _focus=null; _legs.forEach(_reset); banner(null); }
-var _bn=null;
-function banner(html){
-  if(!_bn){ _bn=L.control({position:'topleft'});
-    _bn.onAdd=function(){ var d=L.DomUtil.create('div','focusbar'); d.id='focusbar';
-      L.DomEvent.disableClickPropagation(d); return d; };
-    _bn.addTo(map); }
-  var el=document.getElementById('focusbar');
-  if(!el) return;
-  if(!html){ el.style.display='none'; el.innerHTML=''; return; }
-  el.style.display='block';
-  el.innerHTML=html+' &nbsp;<button onclick="clearFocus()">show the whole day</button>';
-}
+function banner(){}
 
 
 function _mm(a,b){var R=6371000,r=Math.PI/180;
