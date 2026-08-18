@@ -33,15 +33,17 @@
   .days button{flex:0 0 auto;border:1px solid #e2ddd4;background:#fff;border-radius:999px;
                font:inherit;font-size:12px;font-weight:700;color:#4b5560;padding:7px 13px;
                cursor:pointer;white-space:nowrap}
-  .days button.on{background:#2f6fb0;border-color:#2f6fb0;color:#fff}
+  ::selection{background:#ffd9b0;color:#1b2430}
+  ::-moz-selection{background:#ffd9b0;color:#1b2430}
+  .days button.on{background:#e8590c;border-color:#e8590c;color:#fff;box-shadow:0 1px 3px rgba(232,89,12,.35)}
 
   a.card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid #e2ddd4;
          border-radius:13px;padding:14px 15px;margin-bottom:11px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
   a.card:active{background:#f2ede4}
-  a.card.next{border-color:#2f6fb0;box-shadow:0 0 0 2px rgba(47,111,176,.14)}
-  .day{font-size:11px;font-weight:800;letter-spacing:1.1px;color:#2f6fb0;text-transform:uppercase;
+  a.card.next{border-color:#e8590c;box-shadow:0 0 0 2px rgba(232,89,12,.16)}
+  .day{font-size:11px;font-weight:800;letter-spacing:1.1px;color:#e8590c;text-transform:uppercase;
        display:flex;align-items:center;gap:7px}
-  .tag{background:#2f6fb0;color:#fff;border-radius:20px;padding:2px 7px;font-size:9.5px;letter-spacing:.6px}
+  .tag{background:#e8590c;color:#fff;border-radius:20px;padding:2px 7px;font-size:9.5px;letter-spacing:.6px}
   .ttl{font-size:16.5px;font-weight:650;line-height:1.28;margin:3px 0 5px;letter-spacing:-.2px}
   .meta{font-size:12.5px;color:#6b7785;line-height:1.45}
   .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
