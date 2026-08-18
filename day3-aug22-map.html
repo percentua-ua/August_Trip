@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>День 3 — субота, 22 серпня 2026, Будапешт → Відень</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1b2430;background:#fbfaf7}
+  #wrap{display:flex;height:100%}
+  #side{width:410px;min-width:410px;height:100%;overflow-y:auto;background:#fbfaf7;border-right:1px solid #e2ddd4;padding:18px 18px 40px}
+  #map{flex:1;height:100%}
+  h1{font-size:20px;letter-spacing:-.2px}
+  .sub{font-size:12.5px;color:#727e8c;margin:6px 0 14px;line-height:1.45}
+  .stat{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .stat div{background:#fff;border:1px solid #e2ddd4;border-radius:8px;padding:6px 9px;font-size:11px}
+  .stat b{display:block;font-size:14px;color:#b0790a}
+  button{font:inherit;font-size:12.5px;font-weight:600;background:#1b2430;color:#fff;border:0;
+         border-radius:8px;padding:9px 13px;cursor:pointer;width:100%;margin-bottom:14px}
+  button:hover{background:#2d3b4d}
+  .row{display:flex;gap:10px;padding:8px;border-radius:9px;cursor:pointer;align-items:flex-start}
+  .row:hover{background:#f2ede4}
+  .row.on{background:#f0ecf6}
+  .t{font-size:11.5px;font-weight:700;letter-spacing:.2px}
+  .n{font-size:13.5px;font-weight:600;line-height:1.3;margin:1px 0 2px}
+  .d{font-size:11.5px;color:#6b7785;line-height:1.42}
+  h2{font-size:10.5px;letter-spacing:1.1px;color:#8a93a8;text-transform:uppercase;margin:20px 0 4px;font-weight:700}
+  .warn{background:#fff6e6;border:1px solid #f0d9a8;border-radius:9px;padding:10px 11px;font-size:12px;line-height:1.5;margin-top:12px}
+  .warn.red{background:#fdecea;border-color:#f0bdb5}
+  .warn.blue{background:#eaf2f8;border-color:#b8d3e6}
+  .warn.green{background:#eef5f0;border-color:#cfe2d6}
+  .key{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:11.5px;color:#4b5560;margin-top:6px}
+  .key span{display:flex;align-items:center;gap:5px}
+  .pr{color:#1b6b45;font-weight:700}
+  .ptag{margin:7px 0 2px;padding:5px 8px;background:#eef5f0;border:1px solid #cfe2d6;
+        border-radius:7px;font-size:12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .ptag b{color:#1b6b45!important} .ptag span{color:#8a5a12;font-weight:700;font-size:11px}
+  .mk{position:relative;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;
+      justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.45);border:2.5px solid #fff}
+  .mk .g{position:absolute;top:-7px;right:-7px;background:#fff;border-radius:50%;
+         width:17px;height:17px;display:flex;align-items:center;justify-content:center;
+         box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .mk svg{display:block;flex:0 0 auto}
+  .sq{border-radius:5px}
+  .pill{border-radius:4px;border-width:2px}
+  .sight{background:#b0790a} .food{background:#c8781a} .event{background:#7d3c98}
+  .bed{background:linear-gradient(135deg,#ffb300 0%,#ff2d78 52%,#b620e0 100%);box-shadow:0 0 0 2px rgba(255,45,120,.30),0 2px 7px rgba(0,0,0,.45)} .wc{background:#2a7fb8} .metro{background:#1a6aa8} .car{background:#5d6470}
+  .shop{background:#2e7d4f} .ent{background:#b0338e} .view{background:#8a5a12}
+  .alt{background:#2f7d8c} .clash{background:#d64541} .light{background:#8a5fc0} .wine{background:#7d2e46}
+  .focusbar{display:none;background:#1b2430;color:#fff;font-size:12.5px;font-weight:600;
+      padding:7px 10px;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.35);max-width:330px}
+  .focusbar b{color:#ffb066}
+  .focusbar button{font:inherit;font-size:11.5px;font-weight:700;background:#ff7a1a;color:#1b2430;
+      border:0;border-radius:6px;padding:3px 8px;margin-left:4px;cursor:pointer;width:auto}
+  .focusbar button:hover{background:#ffa15c}
+    .wb{white-space:nowrap;background:#fff;color:#b0790a;border:2px dashed #b0790a;border-radius:10px;
+      font-size:9.5px;font-weight:700;text-align:center;line-height:16px;height:20px;
+      white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .lb{display:flex;align-items:center;gap:3px;color:#fff;font-weight:700;font-size:11px;
+      border-radius:7px;padding:2px 6px 2px 4px;border:2px solid #fff;white-space:nowrap;
+      box-shadow:0 1px 4px rgba(0,0,0,.45)}
+  .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
+  .leaflet-popup-content b{color:#b0790a}
+  .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
+  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+  @media print{
+    @page{size:A4 landscape;margin:8mm}
+    html,body{height:auto;background:#fff}
+    #wrap{display:block;height:auto}
+    button,.leaflet-control-zoom,.leaflet-control-attribution,.leaflet-control-layers{display:none!important}
+    #side{width:78mm;min-width:0;height:auto;overflow:visible;border:none;padding:0;float:left;font-size:9px}
+    #map{width:196mm;height:185mm;margin-left:80mm;border:1px solid #bbb}
+    h1{font-size:14px} .sub{font-size:8.5px;margin:4px 0 7px}
+    .stat{gap:3px;margin-bottom:7px} .stat div{padding:3px 5px;font-size:7.5px} .stat b{font-size:9.5px}
+    .row{padding:2.5px 0;break-inside:avoid} .n{font-size:9px;margin:0} .d{font-size:7.8px;line-height:1.3}
+    .t{font-size:7.8px} h2{font-size:7.5px;margin:8px 0 2px}
+    .warn{font-size:7.8px;padding:5px 6px;margin-top:5px;break-inside:avoid}
+    .key{font-size:7.5px;gap:2px 8px}
+    .mk{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="side">
+    <h1>День 3 &mdash; субота, 22 серпня 2026</h1>
+    <div class="sub">Виїзд о 08:15, машина на паркінгу у Відні до 10:45, а далі <b>єдине пообіддя з гарною погодою за всю поїздку</b>: Naschmarkt (Нашмаркт) із блошиним ринком, який працює лише в суботу, Innere Stadt (Іннере Штадт) пішки, безкоштовний парад ретроавтомобілів на Ring (Ринг) і Imagine Dragons на екрані 300 м&sup2; біля Rathaus (Ратгаус).</div>
+    <div class="stat"><div>авто<b>243 км</b></div><div>пішки<b>~5 км</b></div><div>поїздок U-Bahn<b>5</b></div><div>з людини<b>~&euro;60</b></div><div>вечір<b>безкоштовно</b></div></div>
+    <button onclick="doPrint()">Зберегти в PDF / друк &mdash; одна горизонтальна сторінка, разом із картою</button>
+    <div class="key" id="key"></div>
+    <div id="list"></div>
+    <div class="warn" style="background:#f4f6f9;border-color:#ccd4e0"><b>Як читати карту і підсвічувати по одному відрізку.</b> <b>Пунктир = ви йдете пішки</b>, і <b>кожен пішохідний відрізок має свій колір</b>, щоб сусідні відрізки не зливалися &mdash; бейдж на лінії має той самий колір і називає два пункти, які вона з’єднує. <b>Суцільна = ви їдете</b>, справжнім кольором лінії транспорту &mdash; і тепер <b>з таким самим бейджем</b>: лінія і два пункти, які з’єднує цей відрізок.<br><b>Клацніть будь-яку лінію &mdash; і вона підсвітиться сама</b>: решта пригасне, карта наблизиться до неї, а зліва вгорі з’явиться смужка з кнопкою <b>показати весь день</b>. Клацніть ту саму лінію ще раз, щоб скасувати.<br><b>Клацніть нумерований пункт у списку</b> &mdash; і підсвітяться всі відрізки, що торкаються цього пункту: клацнувши <b>11</b>, ви разом побачите, як прибуваєте до 11 і як звідти йдете.</div>
+    <div class="warn red"><b>Сьогодні все вирішують дві речі.</b> <b>1 &mdash; висота паркінгу:</b> Prado має ~1.9 м, а віденські Tiefgarage (підземні паркінги) зазвичай позначені 1.80&ndash;2.00 м. <b>Уточніть Durchfahrtsh&ouml;he (висоту проїзду) на Reschgasse (Решгассе) ще до виїзду з Будапешта</b> і тримайте в голові безкоштовну вулицю як запасний варіант. <b>2 &mdash; австрійська віньєтка</b> (на 10 днів, &euro;12.80) має бути активна <i>ще до того</i>, як ви виїдете на A4.</div>
+    <div class="warn green"><b>Юридично цими вихідними ви не мусите платити за парковку.</b> Віденська Kurzparkzone (зона платної короткої парковки) діє <b>лише з понеділка по п’ятницю</b>. Ви приїжджаєте в суботу, їдете в понеділок о 06:00, а плата в понеділок починається лише о 09:00 &mdash; тобто біля бордюру весь цей час безкоштовно. Паркінг ви купуєте за спокій, безпеку й тінь, а не за законність. Сама Reschgasse (Решгассе) &mdash; <b>торгова вулиця</b>, а там на вулиці таки платять у суботу 08:00&ndash;12:00 &mdash; тож якщо станете біля бордюру, обирайте <b>Mandlgasse (Мандльгассе)</b>.</div>
+    <div class="warn" style="background:#fdf3e7;border-color:#f0d0a8"><b>Сніданок двічі, і обидва на ринках.</b> Готельного сніданку немає ні там, ні там, тож: <b>07:00 Great Market Hall (Великий ринковий зал)</b> у Будапешті &mdash; кава й випічка з пекарських прилавків (гарячий сніданок у Fakan&aacute;l відкривається лише о 09:00, тому їсте стоячи), а потім <b>12:00 Naschmarkt (Нашмаркт)</b> у Відні на нормальний обід. Два добрих європейських ринки за один ранок, а до другого ще й прилаштований суботній блошиний ринок.</div>
+    <div class="warn"><b>Якщо у Відні стане спекотно:</b> <b>Mariahilfer Stra&szlig;e (Марігільферштрассе)</b> &mdash; головна торгова вулиця міста, на ній <b>Gerngross</b> і <b>Steffl</b>, усе з кондиціонерами й відкрито в суботу до ~18:00 &mdash; і вона тягнеться між MuseumsQuartier (Музеумсквартір) і Westbahnhof (Вестбангоф), тож це кілька хвилин пішки вбік від вашого кола по Innere Stadt (Іннере Штадт). <b>У неділю тут усе зачинено.</b> Хоча у Відні лише 26 &deg;C, тож це радше варіант на дощ або на втомлені ноги, ніж на спеку.<br><br><b>Сьогодні єдиний шанс для двох речей.</b> <b>Блошиний ринок на Naschmarkt працює лише в суботу</b>, а в неділю зачинено весь ринок. І <b>завтра в Австрії зачинені всі магазини</b> &mdash; воду, запасний сніданок і їжу на 1,000 км дороги в понеділок купуйте <b>сьогодні</b>.</div>
+    <div class="warn blue"><b>Квитки і чому звичайні поради вже не працюють.</b> <b>Квитки на 48 і 72 години скасували 1 січня 2026</b>. Купіть <b>по два квитки на 24 години на кожного (&euro;10.20)</b> на Niederhofstra&szlig;e (Нідерхофштрассе), виставте другому старт через 24 год і <b>прокомпостуйте кожен у синій коробці при першому використанні</b>. Без компостування &mdash; штраф <b>&euro;105</b>. Туалети тут коштують близько <b>&euro;0.50</b> і кращі, ніж у Будапешті.</div>
+    <div class="warn green"><b>Скільки коштує цей день, з людини.</b> Віденські квитки <b>&euro;20.40</b> на два дні &middot; обід на Naschmarkt (Нашмаркт) <b>~&euro;18</b> &middot; одна пам’ятка, якщо візьмете <b>&euro;9&ndash;21</b> &middot; вечеря з наметів на Rathausplatz (Ратгаусплац) <b>~&euro;12&ndash;18</b>. <b>Classic Days, Rathausplatz, нава Stephansdom (Штефансдом), двори Hofburg (Гофбург) і Graben (Грабен) &mdash; усе безкоштовно.</b> Приблизно <b>&euro;50&ndash;70 з людини</b>, плюс паркінг і віньєтка на машину. Ціни приблизні, крім квитків і віньєтки.</div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+var PATHS={
+  sight:'<path d="M3 21h18"/><path d="M5.5 21V10.5M9.8 21V10.5M14.2 21V10.5M18.5 21V10.5"/><path d="M12 3l9.5 5.5h-19L12 3z"/>',
+  cup:  '<path d="M4 7.5h12.5V13a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7.5z"/><path d="M16.5 9h2.2a2.4 2.4 0 0 1 0 4.8h-2.2"/><path d="M3 21h15"/>',
+  bag:  '<path d="M5.5 7.5h13l-1.1 11.6a1.6 1.6 0 0 1-1.6 1.4H8.2a1.6 1.6 0 0 1-1.6-1.4L5.5 7.5z"/><path d="M9 7.5V6a3 3 0 0 1 6 0v1.5"/>',
+  event:'<circle cx="12" cy="12" r="2.7"/><path d="M12 2.2v3.4M12 18.4v3.4M2.2 12h3.4M18.4 12h3.4M5.1 5.1l2.4 2.4M16.5 16.5l2.4 2.4M18.9 5.1l-2.4 2.4M7.5 16.5l-2.4 2.4"/>',
+  bed:  '<path d="M3 19v-7h12.5A4.5 4.5 0 0 1 20 16.5V19"/><path d="M3 12V6.5"/><path d="M3 19h18"/><circle cx="7.6" cy="9.3" r="1.9"/>',
+  car:  '<path d="M2.5 16.5v-4l2-5.5h15l2 5.5v4"/><path d="M2.5 12.5h19"/><circle cx="7" cy="16.8" r="1.7"/><circle cx="17" cy="16.8" r="1.7"/>',
+  train:'<rect x="5" y="2.8" width="14" height="13" rx="3.2"/><path d="M5.5 11h13"/><path d="M9 19l-1.6 2.2M15 19l1.6 2.2"/><path d="M9.5 16v3M14.5 16v3"/>',
+  music:'<path d="M9.5 18.5V6l10.5-2.2v11"/><circle cx="6.6" cy="18.6" r="2.9"/><circle cx="17" cy="15.9" r="2.9"/>',
+  eye:  '<path d="M2.2 12S6 6.2 12 6.2 21.8 12 21.8 12 18 17.8 12 17.8 2.2 12 2.2 12z"/><circle cx="12" cy="12" r="3.1"/>',
+  warn: '<path d="M12 3.6l9.4 16.3H2.6L12 3.6z"/><path d="M12 9.6v4.3"/><path d="M12 17v.12"/>',
+  bulb: '<path d="M9.2 18.2h5.6"/><path d="M10.3 21h3.4"/><path d="M12 3.2a6 6 0 0 1 3.6 10.8c-.5.4-.8 1-.8 1.6v.6H9.2v-.6c0-.6-.3-1.2-.8-1.6A6 6 0 0 1 12 3.2z"/>',
+  peak: '<path d="M2.5 19.5h19L14 5.5l-3.4 6.2-2.1-1.9L2.5 19.5z"/>',
+  wine: '<path d="M7.5 3h9l-.7 6a3.8 3.8 0 0 1-7.6 0L7.5 3z"/><path d="M12 12.8V19"/><path d="M8.6 21h6.8"/>',
+  bus:  '<rect x="3.5" y="4" width="17" height="12.5" rx="2.5"/><path d="M3.5 10.5h17"/><circle cx="7.5" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/><path d="M6 16.5v1M18 16.5v1"/>'
+};
+function gl(k,c,s){
+  return '<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="'+c+
+         '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+PATHS[k]+'</svg>';
+}
+var GK={sight:'sight',bed:'bed',food:'cup',event:'event',shop:'bag',car:'car',metro:'train',
+        ent:'music',alt:'eye',clash:'warn',light:'bulb',view:'peak',wine:'wine',bus:'bus'};
+var COL={sight:'#b0790a',food:'#c8781a',event:'#7d3c98',bed:'#e0247a',wc:'#2a7fb8',metro:'#1a6aa8',
+         car:'#5d6470',shop:'#2e7d4f',ent:'#b0338e',alt:'#2f7d8c',clash:'#d64541',light:'#8a5fc0',
+         view:'#8a5a12',wine:'#7d2e46',bus:'#1a6aa8'};
+var STOPS=[{"n": "0", "cat": "food", "t": "07:00", "dist": "відкрито з 06:00", "name": "Кава й випічка — Great Market Hall (Великий ринковий зал)", "lat": 47.48733, "lon": 19.05835, "price": "~1,500 HUF з людини", "pay": "готівка", "d": "Виселяєтесь — і ще раз, останній, через дорогу. Ринок відкривається о <b>06:00</b>, і субота тут найкращий день, але ви виїжджаєте о 07:40, тож це кава й щось спечене, а не закупи. <b>Паприку й салямі купіть учора за обідом</b>, а не зараз.<br><br><b>Гроші:</b> ~1,500 з людини."}, {"n": "1", "cat": "metro", "t": "07:40", "dist": "5 зупинок · 12 хв", "name": "M4 до Kelenföld (Келенфельд) по машину", "lat": 47.4883, "lon": 19.0574, "price": "без доплат", "pay": "—", "d": "M4 від Fővám tér (Фьовам тер) назад до <b>Kelenföld vasútállomás (Келенфельд)</b>, де машина стоїть із четверга. Ваш квиток на 72 години зранку ще діє — він почався в четвер близько 15:35, тож тягнеться до неділі по обіді, але після цього він вам уже не потрібен.<br><br>Заплатіть в автоматі, перш ніж виїжджати: <b>~6,300 HUF, лише картка, готівку не приймають.</b>"}, {"n": "2", "cat": "car", "t": "08:15", "dist": "243 км · ~2.5 год", "name": "АВТО — Будапешт → Відень по M1/A4", "lat": 47.4634, "lon": 19.0235, "price": "австрійська віньєтка €12.80", "pay": "картка", "d": "<b>Від Kelenföld (Келенфельд) ви одразу на M1</b> — жодної їзди містом ні туди, ні назад, і саме для цього машина стояла тут.<br><br><b>Австрійська віньєтка на 10 днів (€12.80) має бути активна, перш ніж ви виїдете на A4.</b> Купіть її на shop.asfinag.at або в застосунку ASFINAG — на 10-денну не діє правило 18 днів очікування, тож вона чинна відразу — або на останній угорській заправці. Без неї: доплата за проїзд на місці плюс штраф.<br><br><b>Пальне дешевше в Угорщині</b> (≈€1.58 проти €1.72 за бензин) — заправляйтесь до кордону, з’їхавши в місто, а не на автомагістральну зону обслуговування. Ваша угорська віньєтка з четверга ще діє.<br><br>Виїзд 08:15, у Відні на паркінгу близько 10:45."}, {"n": "3", "cat": "car", "t": "10:45", "dist": "пін приблизний", "name": "ПАРКІНГ — Tiefgarage Reschgasse (Решгассе, підземний паркінг), APCOA", "lat": 48.1836, "lon": 16.33, "price": "~€15–25 / 24 год · перевірте", "pay": "картка", "d": "<b>Reschgasse 24/26, 1120 Wien.</b> Підземний, охоронюваний, у тіні й за кілька сотень метрів від квартири — тому ви вибрали його, а не кружляння по Meidling (Майдлінг) із завантаженою машиною.<br><br><b>⚠ ПЕРЕВІРТЕ ВИСОТУ, ПЕРШ НІЖ ЗАЇЖДЖАТИ.</b> Prado має ~1.9 м, а віденські Tiefgarage (підземні паркінги) зазвичай позначені <b>1.80–2.00 м</b>. Рейлінги на даху або бокс — і ви вже вище. Уточніть <i>Durchfahrtshöhe</i> (висоту проїзду) на apcoa.at або на в’їзді — якщо менше 1.9 м, ставайте на вулиці (див. пін із заміною).<br><br><b>Варто знати:</b> цими вихідними ви взагалі не зобов’язані платити за парковку. Віденська Kurzparkzone (зона платної короткої парковки) діє <b>лише пн–пт</b>, тож у суботу й неділю бордюр безкоштовний, а плата в понеділок починається лише о 09:00 — уже після того, як ви поїхали о 06:00. Ви купуєте спокій і дах, а не законність.<br><br><b>Гроші:</b> APCOA публікує тарифи на apcoa.at; районні паркінги у Відні зазвичай €15–25 за 24 год. <b>Пін приблизний</b> — вулиця правильна, в’їзд уточніть на місці."}, {"n": "4", "cat": "bed", "t": "11:00", "dist": "~350 м", "name": "КВАРТИРА — Mandlgasse 18 (Мандльгассе), 1120", "lat": 48.1845, "lon": 16.3335, "price": "вже оплачено", "pay": "—", "d": "Meidling (Майдлінг), XII район. Закиньте сумки й вирушайте — у вас пів дня Відня, і це єдине пообіддя, яке ви маєте.<br><br><b>Чому ця адреса щаслива:</b> U6 Niederhofstraße (Нідерхофштрассе) 250 м, U4 Längenfeldgasse (Ленгенфельдгассе) 530 м, <b>2 зупинки U4 до Schönbrunn (Шенбрунн)</b> на завтрашній ранок, і Meidlinger Markt (Майдлінгер маркт) за рогом, чиї кафе відкриті в неділю, коли зачинено всю країну.<br><br>Заодно спитайте господаря про місце у дворі — у сусідньому будинку такі є, тож у цьому кварталі це звична річ."}, {"n": "5", "cat": "metro", "t": "11:30", "dist": "купіть 6 квитків", "name": "КВИТКИ — автомат на Niederhofstraße (Нідерхофштрассе)", "lat": 48.183, "lon": 16.3325, "price": "€10.20 за квиток × 2 на кожного", "pay": "готівка або картка", "d": "<b>По два квитки на 24 години на кожного, €20.40 з людини, €61.20 на вас трьох.</b> Купіть усі шість зараз в автоматі на станції — він багатомовний, готівка або картка — і <b>виставте другому старт через 24 год після першого</b>, автомат це дозволяє.<br><br><b>Прокомпостуйте перший квиток у маленькій синій коробці, перш ніж поїдете.</b> Один раз, на початку його 24 годин, а не перед кожною поїздкою. Без компостування = без квитка = <b>€105 на місці</b>.<br><br>Чому два квитки на 24 години, а не один на 7 днів: квитки на 48 і 72 години <b>скасували 1 січня 2026</b>, тож більшість порад в інтернеті хибні. Цифровий на 50 центів дешевший, але ви купуєте паперовий.<br><br><b>Купіть обидва дні зараз</b> — у неділю все зачинено, і Trafik (кіоски) теж."}, {"n": "6", "cat": "food", "t": "12:00", "dist": "U6+U4, 4 зупинки", "name": "NASCHMARKT (НАШМАРКТ) — обід + суботній блошиний ринок", "lat": 48.1986, "lon": 16.3633, "price": "~€15–22 з людини", "pay": "переважно картка", "d": "U6 одну зупинку до Längenfeldgasse (Ленгенфельдгассе), пересадка на U4 у бік Heiligenstadt (Гайлігенштадт), три зупинки до <b>Kettenbrückengasse (Кеттенбрюккенгассе)</b> — виходите з дальнього кінця ринку.<br><br>Великий продуктовий ринок Відня: прилавки, де можна перекушувати на ходу, плюс нормальні місця з посадкою з боку Karlsplatz (Карлсплац). <b>А субота — день блошиного ринку</b>: Flohmarkt працює лише в суботу, з боку Kettenbrückengasse, і це справжній ринок, а не туристичний лоток.<br><br><b>Це ваш єдиний шанс:</b> прилавки Naschmarkt <b>у неділю зачинені</b>, тож або сьогодні, або ніколи.<br><br><b>Гроші:</b> €15–22 за добрий обід; блошиний ринок безкоштовний для огляду і любить готівку."}, {"n": "7", "cat": "sight", "t": "14:00", "dist": "600 м · 8 хв", "name": "Karlsplatz (Карлсплац) — Karlskirche (Карлскірхе) + Secession (Сецесіон)", "lat": 48.20049, "lon": 16.36988, "price": "площа безкоштовно · церква ~€9.50", "pay": "картка ок", "d": "Ідіть на схід від ринку. <b>Karlskirche</b> (1737, бароко, дві колони в стилі Траяна — головна прикмета), а 300 м назад на захід — <b>будівля Secession</b> із золоченою банею: «Кожній епосі — своє мистецтво, мистецтву — свобода» над входом і Бетовенський фриз Клімта в підвалі.<br><br><b>Гроші:</b> площа й усе знадвору — безкоштовно. Всередину Karlskirche за квитком (~€9.50, включно з ліфтом у баню); Secession окремо (~€12). Обидва можна пропустити — у вас попереду ще багато Відня."}, {"n": "8", "cat": "sight", "t": "14:20", "dist": "450 м · 6 хв", "name": "Staatsoper (Штаатсопер) → Kärntner Straße (Кернтнерштрассе)", "lat": 48.20294, "lon": 16.36907, "price": "знадвору безкоштовно · екскурсія ~€13", "pay": "картка ок", "d": "<b>Державна опера</b> (1869) — екскурсії водять, коли немає репетиції, але на пів дня достатньо будівлі знадвору й лоджії. Далі вгору по <b>Kärntner Straße</b>, головній пішохідній артерії, прямо на собор.<br><br><b>Гроші:</b> пройтися безкоштовно. Екскурсії ~€13, і на них треба час, якого сьогодні немає."}, {"n": "9", "cat": "sight", "t": "14:45", "dist": "600 м · 8 хв", "name": "STEPHANSDOM (ШТЕФАНСДОМ)", "lat": 48.20849, "lon": 16.37319, "price": "нава БЕЗКОШТОВНО · вежі ~€6–7", "pay": "картка ок", "d": "<b>Центр Відня, у буквальному сенсі.</b> Південна вежа 136 м, черепичний дах зигзагом у стилі Zsolnay і 700 років будівництва. <b>Вхід у наву безкоштовний</b> — платите лише за вежі, катакомби й за квиткову частину вівтарної зони.<br><br><b>Яку вежу:</b> <b>південна — 343 сходинки й без ліфта</b> (~€6), у північній є ліфт (~€7) і нижча, але, мабуть, краща панорама самого даху. У пообіддя при 26 °C після 2.5 години за кермом беріть ліфт або пропустіть обидві — завтра у вас Gloriette (Глорієтта).<br><br><b>Гроші:</b> найголовніша частина безкоштовна."}, {"n": "10", "cat": "sight", "t": "15:15", "dist": "800 м · 10 хв", "name": "Hofburg (Гофбург) — через Graben (Грабен)", "lat": 48.2065, "lon": 16.36565, "price": "двори безкоштовно · Sisi ~€21", "pay": "картка ок", "d": "Вниз по <b>Graben</b> (чумна колона й громадські туалети за проєктом Loos, які справді є пам’яткою під охороною) і далі в <b>Hofburg</b> — зимову резиденцію Габсбургів, а тепер розсип дворів, Іспанська школа верхової їзди, Національна бібліотека й офіси президента.<br><br><b>Двори безкоштовні, і в них більша частина задоволення.</b> Комбінований квиток Імперські апартаменти + Музей Sisi + Колекція срібла коштує ~€21 і забирає 1.5 год.<br><br><b>Гроші:</b> гуляти безкоштовно; інтер’єри беріть лише якщо пропускаєте Albertina (Альбертіна)."}, {"n": "11", "cat": "sight", "t": "16:00", "dist": "400 м · 5 хв", "name": "Виберіть щось одне — Albertina (Альбертіна), Sisi або кав’ярня", "lat": 48.20452, "lon": 16.36831, "price": "Albertina ~€20 · кава ~€8", "pay": "картка ок", "d": "<b>Albertina:</b> від Моне до Пікассо плюс парадні зали Габсбургів, у палаці на старому міському валу. Близько €20, 1.5 год, і найсильніше мистецтво в пішій доступності.<br><br><b>Або апартаменти Hofburg/Sisi</b>, якщо вам ближча імперська історія.<br><br><b>Або — і це справжній варіант — нормальна кав’ярня.</b> Посидіти годину з Melange і скибкою чогось, газета на тримачі, ніхто вас не підганяє: у Відні це не вбивання часу, а саме те, за чим сюди їдуть. <b>Café Central</b> (розкішна, черга ймовірна), <b>Sperl</b> (умеблювання 1880-х, обшарпаніша, справжніша), <b>Prückel</b> (1950-ті, без ремонту).<br><br><b>Гроші:</b> Melange з тортом виходить €8–12. Дешевше за Albertina, а запам’ятається так само надовго."}, {"n": "12", "cat": "event", "t": "18:00", "dist": "ви вже там", "name": "VIENNA CLASSIC DAYS — безкоштовний парад на Ring (Ринг)", "lat": 48.2062, "lon": 16.3618, "price": "БЕЗКОШТОВНО", "pay": "—", "d": "<b>Ретроавтомобілі їдуть парадом по Ringstrasse (Рингштрассе) з 18:00</b>, дивитися безкоштовно, і це відбувається саме там, де ви й так опиняєтесь у кінці кола по Innere Stadt (Іннере Штадт). Від довоєнної техніки до класики 1970-х, і все на власному ходу, а не на тралах.<br><br>Станьте будь-де вдовж Ring між Оперою і Rathaus (Ратгаус) — на ділянці Burgring / Heldenplatz (Бургринг / Гельденплац) ви отримаєте парад із Hofburg (Гофбург) на тлі.<br><br><b>Гроші:</b> безкоштовно."}, {"n": "13", "cat": "event", "t": "19:30", "dist": "900 м · 11 хв", "name": "КІНОФЕСТИВАЛЬ НА RATHAUSPLATZ (РАТГАУСПЛАЦ)", "lat": 48.21073, "lon": 16.3573, "price": "БЕЗКОШТОВНО · їжа €6–12", "pay": "картка ок", "d": "<b>Вхід безкоштовний, і це найвигідніший вечір у Відні.</b> Екран 300 м² перед неоготичною ратушею, намети з їжею та напоями з <b>11:00 до півночі</b> (кухні до 23:00) — австрійське, азійське, балканське, плюс вино й пиво.<br><br><b>Сьогодні о 20:30: Imagine Dragons — Live From The Hollywood Bowl</b>, з оркестром на 50 музикантів. У програмі концертні фільми й опера, а не кіно.<br><br><b>Показ іде і в дощ</b> — скасовує лише гроза чи град. Візьміть щось накинути: удень 26 °C, але площа вихолоджується.<br><br><b>Гроші:</b> сидіти безкоштовно; намети €6–12 за тарілку, €4–6 за напій."}, {"n": "14", "cat": "metro", "t": "~22:45", "dist": "700 м + 2 лінії · ~25 хв", "name": "ДОДОМУ — Volkstheater (Фолькстеатр) U3 → Westbahnhof (Вестбангоф) → U6", "lat": 48.18265, "lon": 16.33205, "price": "за квитком на 24 години", "pay": "—", "d": "<b>Після кіно прямо додому, без барів сьогодні.</b> Пройдіть <b>700 м на південь вдовж Ring до Volkstheater (Фолькстеатр)</b>, сядьте на <b>U3 і три зупинки до Westbahnhof (Вестбангоф)</b>, пересядьте на <b>U6</b> і три зупинки на південь до <b>Niederhofstraße (Нідерхофштрассе)</b> — далі 250 м до дверей. Одна пересадка, близько 25 хвилин від дверей до дверей.<br><br><b>Закриття U3 вас не торкається.</b> Закрита ділянка — <b>Hütteldorfer Straße–Westbahnhof</b>, на захід від того, де ви сідаєте й виходите, тож Volkstheater → Westbahnhof працює нормально.<br><br><b>Якщо хочете розходитися:</b> 1.9 км на захід по Burggasse (Бурггассе) до <b>Burggasse-Stadthalle</b> дає вам U6 <i>без</i> жодної пересадки — 23 хвилини пішки замість стрибка на U3.<br><br><b>У суботу U-Bahn ходить усю ніч</b>, тож проблеми останнього поїзда сьогодні немає — єдина така ніч за всю поїздку. Завтра неділя, і тоді він теж ходить усю ніч.<br><br>Ваш перший квиток на 24 години, початий сьогодні близько 11:30, ще діє. <b>Гроші:</b> без доплат."}];
+var ALTS=[{"cat": "alt", "t": "10:45 · заміна", "name": "Парковка на вулиці на Mandlgasse (Мандльгассе) — безкоштовно, якщо паркінг не візьме машину", "lat": 48.185, "lon": 16.3338, "price": "БЕЗКОШТОВНО сб + нд", "pay": "—", "d": "<b>Запасний варіант, якщо висота Tiefgarage (підземного паркінгу) вас переможе</b>, і юридично він не гірший. Віденська зона короткої парковки діє <b>лише пн–пт 09:00–22:00</b>, тож у суботу й неділю безкоштовно всюди, а Meidling (Майдлінг) — житловий район, тож місця тут є.<br><br><b>Дві пастки:</b> <b>торгові вулиці все одно платні в суботу 08:00–12:00</b> — у Meidling це Meidlinger Hauptstraße, Niederhofstraße, Pohlgasse, Rauchgasse, Tivoligasse і <b>Reschgasse (Решгассе)</b>, а ви приїжджаєте о 10:45, якраз у це вікно. Тож ставайте на <b>самій Mandlgasse або на звичайній бічній вулиці</b>. І <b>місця лише для мешканців (Anrainerparkplätze) завжди потребують дозволу</b> — вони позначені табличками; читайте табличку, а не бордюр.<br><br><b>Переставте машину до 09:00 у понеділок</b> — ви їдете о 06:00, тож це не проблема."}, {"cat": "alt", "t": "19:30 · заміна", "name": "STUMM & LAUT — останній вечір, найближче до вашого ліжка", "lat": 48.1845, "lon": 16.3806, "price": "БЕЗКОШТОВНО", "pay": "—", "d": "<b>Сьогодні його останній вечір.</b> Історичні німі фільми просто неба, а <b>поверх них — жива електронна музика</b>, у Helmut-Zilk-Park (Гельмут-Цільк-парк) за Wien Hauptbahnhof (Він Гауптбангоф). Безкоштовно.<br><br><b>Чому це спокушає:</b> це кілька зупинок S-Bahn від <b>Bahnhof Wien Meidling (Майдлінг)</b>, а той за 630 м від квартири — з усіх вечірніх варіантів поїздки з цього найлегше просто випасти додому. Програма на volxkino.at/stumm-und-laut.<br><br><b>Ціна вибору:</b> ви відмовляєтеся від Imagine Dragons на екрані 300 м² і від наметів на Rathausplatz (Ратгаусплац). Беріть це, якщо дорога вас розчавила і ви хочете короткий вечір."}, {"cat": "alt", "t": "пообіддя · заміна", "name": "Kunsthistorisches (Кунстгісторішес) — залиште на неділю", "lat": 48.20384, "lon": 16.36169, "price": "~€21", "pay": "картка ок", "d": "О 18:00 ви пройдете просто попри нього на Ring (Ринг) і спокуситесь. <b>Не варто</b> — воно <b>зачинене в понеділок і відкрите в неділю</b>, а дощ прогнозують саме в неділю по обіді. Це запланований блок «під дахом» на завтра. Сьогодні єдиний день Відня з гарною погодою і парадом; проведіть його на вулиці."}, {"cat": "clash", "t": "ризик", "name": "Дві речі, які можуть зламати цей день", "lat": 48.1859, "lon": 16.3343, "price": "—", "pay": "—", "d": "<b>1 · Висота паркінгу.</b> Уся картина приїзду залежить від того, чи пройде Prado у Tiefgarage (підземний паркінг). Перевірте <i>Durchfahrtshöhe</i> (висоту проїзду) до поїздки, а не перед шлагбаумом, і тримайте в голові запасну Mandlgasse (Мандльгассе).<br><br><b>2 · U3 частково закрита</b> — від Hütteldorfer Straße до Westbahnhof (Вестбангоф), до кінця серпня, із замінними автобусами. А <b>магістральна лінія S-Bahn</b> Floridsdorf–Praterstern на замінних автобусах до початку вересня. <b>Ні те, ні те не торкається ваших маршрутів U6/U4 з Meidling (Майдлінг)</b>, але це збиватиме з пантелику будь-який застосунок, у якого спитаєте маршрут.<br><br><b>3 · Торгові вулиці платні в суботу зранку</b>, а ви приїжджаєте о 10:45, якраз у це вікно — див. пін із парковкою на вулиці."}];
+var ENT=[{"cat": "ent", "t": "18:00", "name": "Vienna Classic Days на Ringstrasse (Рингштрассе)", "lat": 48.2045, "lon": 16.36, "price": "БЕЗКОШТОВНО", "pay": "—", "d": "Безкоштовний парад ретроавтомобілів вдовж Ring (Ринг) з 18:00. Його ще називають Vienna Oldtimer Parade. Якраз у кінці вашого кола по Innere Stadt (Іннере Штадт), тож жодної поїздки він вам не коштує."}, {"cat": "ent", "t": "11:00–24:00", "name": "Rathausplatz (Ратгаусплац) — намети цілий день, фільм о 20:30", "lat": 48.21073, "lon": 16.3573, "price": "вхід БЕЗКОШТОВНИЙ", "pay": "картка ок", "d": "Намети відкриваються з <b>11:00</b> і працюють до півночі, кухні до 23:00 — тож можете прийти й раніше за 19:30, якщо пообіддя скоротиться. Сьогодні показують <b>Imagine Dragons — Live From The Hollywood Bowl</b> о 20:30 з оркестром на 50 музикантів. Іде і в дощ."}, {"cat": "ent", "t": "14–24 серпня", "name": "AFRIKA TAGE — Donauinsel (Донауінзель), єдина платна подія", "lat": 48.243, "lon": 16.396, "price": "~€12.20–12.90 наперед", "pay": "картка", "d": "22-й випуск, один із найбільших африканських фестивалів Європи: жива музика, танці, ремесла, мода, їжа, денні воркшопи. <b>Відкрито пн–сб з 14:00, у неділю з 11:00, до півночі</b>, концерти з ~18:00, хедлайнери о 20:00. Цього року: Sona Jobarteh, Marla Glen, Valérie Ékoumé, Kasiva Mutua.<br><br><b>U6 напряму від Niederhofstraße (Нідерхофштрассе) до Handelskai (Гандельскай)</b>, потім 400 м через Georg-Danzer-Steg — тобто це просто від ваших дверей. Денні квитки ~€12.20–12.90 наперед; на вході минулого року було €10 до 16:00 і €20 після 17:00. <b>Безкоштовні дні — два понеділки, і вони не ваші.</b><br><br>Гарна комбінація: це на Donauinsel (Донауінзель), тож пообіддя на безкоштовних міських пляжах плавно переходить у фестиваль."}, {"cat": "light", "t": "до 12 вересня", "name": "Kino am Dach — кіно на даху, у барному районі", "lat": 48.1996, "lon": 16.338, "price": "за квитками", "pay": "картка", "d": "Показ на даху головної бібліотеки на Urban-Loritz-Platz (Урбан-Лоріц-плац), 1070. <b>U6 напряму від ваших дверей до Burggasse-Stadthalle</b>, а після сеансу ви опиняєтесь посеред барів 7-го району. За квитками. Тихіша альтернатива Rathausplatz (Ратгаусплац), якщо екран 300 м² і натовп — не той настрій."}];
+var SHOPS=[{"cat": "shop", "t": "суботні години", "name": "Закупіться СЬОГОДНІ — у неділю все зачинено", "lat": 48.1833, "lon": 16.3329, "price": "звичайні ціни", "pay": "картка ок", "d": "<b>Найкорисніше, що варто знати про Відень цими вихідними.</b> У неділю Австрія зачиняється — ні супермаркетів, ні Trafik (кіосків), нічого. Усе, що знадобиться завтра (вода для Schönbrunn (Шенбрунн) о 08:00, запасний сніданок, перекуси на 1,000 км дороги в понеділок), <b>купуйте сьогодні</b>.<br><br>Прилавки Meidlinger Markt (Майдлінгер маркт) працюють у сб 06:00–18:00, а вдовж Meidlinger Hauptstraße є супермаркети. <b>Особливо: вода і їжа на понеділок</b>, бо ви їдете о 06:00, і ніщо не буде відкрите."}, {"cat": "shop", "t": "06:00–18:00", "name": "Прилавки Meidlinger Markt (Майдлінгер маркт)", "lat": 48.1835, "lon": 16.3331, "price": "ринкові ціни", "pay": "по-різному", "d": "За рогом від квартири: <b>пн–пт 06:00–21:00, сб 06:00–18:00, у неділю зачинено.</b> Сьогодні той день, коли ринок працює повністю — овочі, сир, ковбаси. Завтра відкриті лише кафе.<br><br>Тут же: <b>Meidlinger Alm</b>, австрійська кухня гірської колиби, Kasnocken і гуляш, сб 08:00–23:00 — пристойна пізня вечеря за 200 м від ліжка, якщо не поїдете в 7-й район."}];
+var WC=[{"cat": "wc", "t": "надійно", "name": "Naschmarkt (Нашмаркт)", "lat": 48.198, "lon": 16.364, "price": "~€0.50", "pay": "монети", "d": "Громадські туалети на ринку. Ви будете тут дві години за обідом, тож скористайтеся ними, перш ніж рушати в Innere Stadt (Іннере Штадт)."}, {"cat": "wc", "t": "надійно", "name": "Karlsplatz (Карлсплац) U-Bahn", "lat": 48.20049, "lon": 16.36988, "price": "~€0.50", "pay": "монети", "d": "Великий пересадковий вузол із туалетами. Громадські туалети у Відні загалом чистіші й краще позначені, ніж у Будапешті, і коштують близько €0.50."}, {"cat": "wc", "t": "пам’ятка під охороною", "name": "Graben (Грабен) — громадські туалети Loos", "lat": 48.2087, "lon": 16.37, "price": "~€0.50", "pay": "монети", "d": "Справді варто побачити: Adolf Loos спроєктував цей підземний туалет у 1904 році, і це пам’ятка під охороною — червоне дерево й латунь. На Graben, на вашому шляху між Stephansdom (Штефансдом) і Hofburg (Гофбург). <b>Єдиний туалет цієї поїздки, який ще й пам’ятка.</b>"}, {"cat": "wc", "t": "надійно", "name": "Rathausplatz (Ратгаусплац) — туалети фестивалю", "lat": 48.21, "lon": 16.3576, "price": "безкоштовно", "pay": "—", "d": "Кінофестиваль має власні туалети на площі, безкоштовні, відкриті поки працюють намети."}, {"cat": "wc", "t": "надійно", "name": "Niederhofstraße (Нідерхофштрассе) U6", "lat": 48.183, "lon": 16.3325, "price": "~€0.50", "pay": "монети", "d": "Ваша домашня станція. Варто знати на випадок повернення о 23:00."}];
+var map=L.map('map',{scrollWheelZoom:true}).setView([48.199,16.352],13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+var G={route:L.layerGroup(),metro:L.layerGroup(),ent:L.layerGroup(),shop:L.layerGroup(),
+       wc:L.layerGroup(),alt:L.layerGroup()};
+
+/* walking legs cycle through a warm-to-cool ramp so consecutive legs are distinguishable */
+var WRAMP=['#e8590c','#f08c00','#d9a406','#82a114','#2f9e44','#0ca678','#1098ad','#1c7ed6','#4263eb','#7048e8','#ae3ec9','#d6336c'];
+var _wi=0;
+function wcol(){ var c=WRAMP[_wi%WRAMP.length]; _wi++; return c; }
+/* ================= КЛАЦНІТЬ ВІДРІЗОК, ЩОБ ЙОГО ПІДСВІТИТИ ================= */
+var _legs=[], _focus=null;
+function reg(main,casing,id,kind,nums){
+  _legs.push({id:id,kind:kind,m:main,c:casing,
+    ms:{color:main.options.color,weight:main.options.weight,opacity:main.options.opacity,dashArray:main.options.dashArray},
+    cs:casing?{color:casing.options.color,weight:casing.options.weight,opacity:casing.options.opacity}:null,
+    nums:nums||(String(id).match(/\d+/g)||[]).map(Number)});
+  main.on('click',function(){focusLeg(id);});
+  if(casing) casing.on('click',function(){focusLeg(id);});
+  return main;
+}
+function _dim(L){ L.m.setStyle({weight:2.5,opacity:.14,color:L.ms.color}); if(L.c) L.c.setStyle({opacity:0}); }
+function _lit(L,glow){
+  if(L.c) L.c.setStyle({color:glow,weight:L.ms.weight+13,opacity:.55});
+  L.m.setStyle({color:L.ms.color,weight:L.ms.weight+3.5,opacity:1,dashArray:L.ms.dashArray});
+  L.m.bringToFront();
+}
+function _reset(L){ L.m.setStyle(L.ms); if(L.c) L.c.setStyle(L.cs); }
+function focusLeg(id){
+  if(_focus===id){ clearFocus(); return; }
+  _focus=id;
+  var hit=null;
+  _legs.forEach(function(L){ if(L.id===id){ _lit(L,'#ff7a1a'); hit=L; } else _dim(L); });
+  if(hit){ try{ map.fitBounds(hit.m.getBounds(),{padding:[70,70],maxZoom:17}); }catch(e){} }
+  banner('Показано лише <b>'+String(id).replace(/&/g,'&amp;')+'</b>');
+}
+function focusStop(n){
+  _focus='stop'+n;
+  var any=[];
+  _legs.forEach(function(L){ if(L.nums.indexOf(n)>=0){ _lit(L,'#ff7a1a'); any.push(L); } else _dim(L); });
+  if(any.length){ var b=any[0].m.getBounds(); any.slice(1).forEach(function(L){b.extend(L.m.getBounds());});
+    try{ map.fitBounds(b,{padding:[70,70],maxZoom:16}); }catch(e){} }
+  banner('Показано все, що торкається <b>пункту '+n+'</b>');
+}
+function clearFocus(){ _focus=null; _legs.forEach(_reset); banner(null); }
+var _bn=null;
+function banner(html){
+  if(!_bn){ _bn=L.control({position:'topleft'});
+    _bn.onAdd=function(){ var d=L.DomUtil.create('div','focusbar'); d.id='focusbar';
+      L.DomEvent.disableClickPropagation(d); return d; };
+    _bn.addTo(map); }
+  var el=document.getElementById('focusbar');
+  if(!el) return;
+  if(!html){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='block';
+  el.innerHTML=html+' &nbsp;<button onclick="clearFocus()">показати весь день</button>';
+}
+
+function ic(p){
+  if(p.cat==='wc'){
+    return L.divIcon({className:'',iconSize:[30,20],iconAnchor:[15,10],
+      html:'<div class="mk wc pill" style="width:30px;height:20px;font-size:10.5px;letter-spacing:.5px">WC</div>'});
+  }
+  if(p.cat==='shop'){
+    return L.divIcon({className:'',iconSize:[28,28],iconAnchor:[14,14],
+      html:'<div class="mk shop sq" style="width:28px;height:28px">'+gl('bag','#fff',17)+'</div>'});
+  }
+  if(p.n){
+    var k=GK[p.cat];
+    var badge=k?'<span class="g">'+gl(k,COL[p.cat],11)+'</span>':'';
+    var s=(p.cat==='bed')?37:32;                     /* home/hotel reads as the anchor */
+    return L.divIcon({className:'',iconSize:[s,s],iconAnchor:[s/2,s/2],
+      html:'<div class="mk '+p.cat+'" style="width:'+s+'px;height:'+s+'px;font-size:'+(s>34?15.5:14)+'px">'+badge+p.n+'</div>'});
+  }
+  return L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
+    html:'<div class="mk '+p.cat+' sq" style="width:26px;height:26px">'+gl(GK[p.cat],'#fff',16)+'</div>'});
+}
+function pop(p){
+  var tag=p.price?'<div class="ptag"><b>'+p.price+'</b>'+
+      (p.pay&&p.pay!=='-'?'<span>'+p.pay+'</span>':'')+'</div>':'';
+  return '<b>'+(p.t?p.t+' &middot; ':'')+p.name+'</b>'+
+         (p.dist?'<br><span class="meta">'+p.dist+'</span>':'')+tag+'<br>'+p.d;
+}
+/* ---- keep coincident pins visible: numbered stops hold their true position,
+        anything landing on top of an already-placed pin walks outward on a spiral ---- */
+var _placed=[];
+function _m(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function spread(lat,lon,keep){
+  if(keep){_placed.push([lat,lon]);return [lat,lon];}
+  var p=[lat,lon],k=0;
+  while(_placed.some(function(q){return _m(p,q)<22;}) && k<40){
+    k++;
+    var ang=k*2.39996, rad=0.00030+0.00010*Math.floor(k/6);
+    p=[lat+rad*Math.cos(ang), lon+rad*1.45*Math.sin(ang)];
+  }
+  _placed.push(p); return p;
+}
+/* ---- ПІШКИ: пунктир, бейдж із двома пунктами, які з’єднує відрізок ---- */
+function _mm(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function _len(p){var t=0;for(var i=1;i<p.length;i++)t+=_mm(p[i-1],p[i]);return t;}
+function _near(p,ll){var bi=0,bd=1e9;for(var i=0;i<p.length;i++){var d=_mm(p[i],ll);if(d<bd){bd=d;bi=i;}}return bi;}
+function walkLeg(pts,label,badge){
+  if(!pts||pts.length<2) return;
+  var m=_len(pts);
+  var _c=L.polyline(pts,{color:'#fff',weight:11,opacity:.75}).addTo(G.route);
+  var _wc=wcol();
+  var _w=L.polyline(pts,{color:_wc,weight:5,opacity:.95,dashArray:'3,7',lineCap:'round'}).addTo(G.route);
+  reg(_w,_c,badge,'walk');
+  _w.bindPopup('<b>ПІШКИ &nbsp;'+badge+'</b><br>'+label+'<br><br><b>'+
+      (m<1000?Math.round(m/10)*10+' м':(m/1000).toFixed(2)+' км')+
+      ' &middot; приблизно '+Math.max(1,Math.round(m/1.35/60))+' хв</b><br><br><i>Клацніть лінію, щоб підсвітити лише її.</i>');
+  var dtxt=(m<1000?Math.round(m/10)*10+' м':(m/1000).toFixed(2)+' км')+
+            ' · '+Math.max(1,Math.round(m/1.35/60))+' хв';
+  var lab=badge+' · '+dtxt;
+  var mid=pts[Math.floor(pts.length/2)], w=22+lab.length*6.4;
+  L.marker(mid,{interactive:false,zIndexOffset:500,icon:L.divIcon({className:'',iconSize:[w,20],
+    iconAnchor:[w/2,10],html:'<div class="wb" style="color:'+_wc+';border-color:'+_wc+'">'+lab+'</div>'})}).addTo(G.route);
+}
+function walkChain(pts,stops,notes){
+  var idx=stops.map(function(s){return _near(pts,[STOPS[s].lat,STOPS[s].lon]);});
+  if(idx[0]>2) walkLeg(pts.slice(0,idx[0]+1),'до пункту '+stops[0],'\u2192 '+stops[0]);
+  for(var i=0;i<stops.length-1;i++){
+    walkLeg(pts.slice(idx[i],idx[i+1]+1),
+      (notes&&notes[i])||(STOPS[stops[i]].name.split('\u2014')[0].trim()+' \u2192 '+STOPS[stops[i+1]].name.split('\u2014')[0].trim()),
+      stops[i]+' \u2192 '+stops[i+1]);
+  }
+  var last=idx[stops.length-1];
+  if(last<pts.length-3) walkLeg(pts.slice(last),'далі від пункту '+stops[stops.length-1],stops[stops.length-1]+' \u2192');
+}
+
+var markers={};
+function put(arr,grp,key){
+  arr.forEach(function(p,i){
+    var xy=spread(p.lat,p.lon,!!p.n);
+    var m=L.marker(xy,{icon:ic(p),zIndexOffset:(p.n?1200:200)}).bindPopup(pop(p));
+    m.addTo(G[grp]); markers[key+i]=m; p._xy=xy;
+  });
+}
+
+var MC={M4:'#41a62a',U1:'#e2001a',U2:'#a862a4',U3:'#f28b00',U4:'#009b3a',U6:'#9d6b3f',BUS:'#1a6aa8',CAR:'#5d6470'};
+/* ---- YOU RIDE: solid, in the line's own colour, badged with the two stops it joins,
+        exactly like the walking legs, and clickable on its own ---- */
+function line(pts,tag,label,pair,dash,glyph){
+  var o={color:MC[tag]||'#1a6aa8',weight:5.5,opacity:.9};
+  if(dash) o.dashArray=dash;
+  var _c=L.polyline(pts,{color:'#fff',weight:o.weight+5,opacity:.6}).addTo(G.route);
+  var _m=L.polyline(pts,o).addTo(G.route);
+  var id=tag+(pair?' \u00b7 '+pair:'');
+  reg(_m,_c,id,'ride',pair?(pair.match(/\d+/g)||[]).map(Number):null);
+  _m.bindPopup('<b>'+(glyph==='car'?'АВТО':glyph==='bus'?'АВТОБУС':'ЇДЕТЕ')+' &nbsp;'+id+
+    '</b><br>'+label+'<br><br><i>Клацніть лінію, щоб підсвітити лише її.</i>');
+  if(pair) lineBadge(pts,tag+' \u00b7 '+pair,o.color,glyph);
+}
+function lineBadge(pts,label,color,glyph){
+  var m=pts[Math.floor(pts.length/2)], w=30+label.length*7;
+  L.marker(m,{interactive:false,zIndexOffset:400,icon:L.divIcon({className:'',iconSize:[w,22],
+    iconAnchor:[w/2,11],html:'<div class="lb" style="background:'+color+'">'+gl(glyph||'train','#fff',13)+label+'</div>'})}).addTo(G.metro);
+}
+var list=document.getElementById('list');
+function rows(arr,key,heading){
+  var h=document.createElement('h2'); h.textContent=heading; list.appendChild(h);
+  arr.forEach(function(p,i){
+    var r=document.createElement('div'); r.className='row';
+    var sw;
+    if(p.cat==='wc'){
+      sw='<div class="mk wc pill" style="width:30px;min-width:30px;height:20px;font-size:10px;margin-top:3px">WC</div>';
+    } else if(p.n){
+      var k=GK[p.cat];
+      sw='<div class="mk '+p.cat+'" style="width:24px;min-width:24px;height:24px;font-size:11px;margin-top:2px">'+
+         (k?'<span class="g" style="width:13px;height:13px;top:-5px;right:-5px">'+gl(k,COL[p.cat],9)+'</span>':'')+p.n+'</div>';
+    } else {
+      sw='<div class="mk '+p.cat+' sq" style="width:24px;min-width:24px;height:24px;margin-top:2px">'+gl(GK[p.cat],'#fff',15)+'</div>';
+    }
+    r.innerHTML=sw+
+      '<div><div class="t" style="color:'+COL[p.cat]+'">'+p.t+(p.dist?' &nbsp;&middot;&nbsp; '+p.dist:'')+
+      (p.price?' &nbsp;&middot;&nbsp; <span class="pr">'+p.price+'</span>':'')+'</div>'+
+      '<div class="n">'+p.name+'</div><div class="d">'+
+      p.d.replace(/<[^>]+>/g,'').slice(0,120)+'\u2026</div></div>';
+    r.onclick=function(){
+      document.querySelectorAll('.row').forEach(function(x){x.classList.remove('on')});
+      r.classList.add('on');
+      if(p.n!==undefined&&p.n!==null&&/^\d+$/.test(p.n)) focusStop(Number(p.n));
+      else { clearFocus(); map.setView(p._xy||[p.lat,p.lon],16,{animate:true}); }
+      markers[key+i].openPopup();
+    };
+    list.appendChild(r);
+  });
+}
+function doPrint(){
+  map.invalidateSize();
+  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
+}
+window.addEventListener('beforeprint',function(){map.invalidateSize()});
+window.addEventListener('afterprint',function(){map.invalidateSize()});
+
+var W_MKT=[[47.48733,19.05835],[47.48800,19.05790],[47.48830,19.05740]];
+var M4_OUT=[[47.48830,19.05740],[47.48340,19.05240],[47.47760,19.04630],[47.47280,19.04020],[47.46660,19.03160],[47.46350,19.02250]];
+var DRIVE=[[47.46340,19.02350],[47.45900,19.00500],[47.44800,18.92000],[47.44000,18.80000],
+           [47.46500,18.60000],[47.52000,18.30000],[47.60000,18.05000],[47.68000,17.63500],
+           [47.78000,17.30000],[47.86000,17.16000],[47.92500,17.16330],[48.02000,16.90000],
+           [48.10000,16.70000],[48.15000,16.55000],[48.17000,16.44000],[48.18360,16.33000]];
+var W_PARK=[[48.18360,16.33000],[48.18400,16.33150],[48.18450,16.33350]];
+var W_TIX=[[48.18450,16.33350],[48.18380,16.33300],[48.18300,16.33250]];
+var U6_A=[[48.18300,16.33250],[48.18450,16.33350],[48.18590,16.33430]];
+var U4_A=[[48.18590,16.33430],[48.18800,16.34200],[48.19100,16.35100],[48.19500,16.35700],[48.19750,16.36150]];
+var W_CITY=[[48.19750,16.36150],[48.19810,16.36240],[48.19860,16.36330],[48.19905,16.36470],[48.19955,16.36620],[48.20000,16.36770],[48.20030,16.36890],[48.20049,16.36988],[48.20110,16.36960],[48.20200,16.36930],[48.20294,16.36907],[48.20380,16.36980],[48.20470,16.37050],[48.20560,16.37120],[48.20650,16.37200],[48.20740,16.37270],[48.20849,16.37319],[48.20860,16.37200],[48.20870,16.37060],[48.20845,16.36930],[48.20800,16.36815],[48.20730,16.36700],[48.20650,16.36565],[48.20590,16.36640],[48.20520,16.36735],[48.20452,16.36831],[48.20470,16.36700],[48.20510,16.36540],[48.20560,16.36380],[48.20620,16.36180],[48.20700,16.36080],[48.20790,16.35970],[48.20880,16.35880],[48.20970,16.35800],[48.21073,16.35730]];
+/* 13 \u2192 14 \u2014 Rathausplatz on foot to Volkstheater, U3 to Westbahnhof, U6 home */
+var W_HOME=[[48.21073,16.35730],[48.20950,16.35715],[48.20830,16.35760],[48.20700,16.35850],[48.20600,16.35930],[48.20500,16.35970]];
+var U3_H=[[48.20500,16.35970],[48.20250,16.35560],[48.19980,16.35100],[48.19850,16.34550],[48.19650,16.33850]];
+var U6_H=[[48.19650,16.33850],[48.19300,16.34050],[48.18590,16.33430],[48.18300,16.33250]];
+
+walkChain(W_MKT,[0,1],['З ринку, 150 м до входу на M4 F\u0151v\u00e1m t\u00e9r (Фьовам тер).']);
+walkChain(W_PARK,[3,4],['З Tiefgarage (підземного паркінгу) і <b>~350 м до квартири з сумками</b>.']);
+walkChain(W_TIX,[4,5],['Квартира \u2192 <b>Niederhofstra\u00dfe (Нідерхофштрассе) U6</b>, 250 м, купити всі шість квитків.']);
+walkChain(W_CITY,[6,7,8,9,10,11,12,13],[
+ 'З Naschmarkt (Нашмаркт) на схід до <b>Karlsplatz (Карлсплац)</b>.',
+ 'Karlskirche (Карлскірхе) \u2192 <b>Staatsoper (Штаатсопер)</b>, далі вгору по K\u00e4rntner Stra\u00dfe (Кернтнерштрассе).',
+ 'K\u00e4rntner Stra\u00dfe прямо на <b>Stephansdom (Штефансдом)</b>.',
+ 'Вниз по <b>Graben (Грабен)</b> \u2014 чумна колона, туалети Loos \u2014 у Hofburg (Гофбург).',
+ 'Через двори Hofburg до <b>Albertina (Альбертіна)</b>.',
+ 'Albertina \u2192 <b>Ringstrasse (Рингштрассе)</b> на парад ретроавтомобілів.',
+ 'Вдовж Ring до <b>Rathausplatz (Ратгаусплац)</b>.']);
+walkLeg(W_HOME,'Rathausplatz (Ратгаусплац) \u2192 <b>Volkstheater (Фолькстеатр) U3</b>, 700 м на південь вдовж Ring \u2014 останній пішохідний відрізок дня.','13 \u2192 14');
+line(M4_OUT,'M4','<b>Будапешт, M4: Fővám tér (Фьовам тер) → Kelenföld (Келенфельд)</b>, 5 зупинок, 12 хв, без пересадок. Ваш квиток на 72 години це ще покриває.','1 \u2192 2');
+line(DRIVE,'CAR','<b>Будапешт → Відень, 243 км, ~2.5 год по M1/A4.</b> Австрійська віньєтка активна ще до виїзду на A4; заправляйтесь в Угорщині.','2 \u2192 3','12,7','car');
+line(U6_A,'U6','<b>Niederhofstraße (Нідерхофштрассе) → Längenfeldgasse (Ленгенфельдгассе)</b>, 1 зупинка, далі пересадка на U4.','5 \u2192 L\u00e4ngenfeldgasse');
+line(U4_A,'U4','<b>Längenfeldgasse → Kettenbrückengasse (Кеттенбрюккенгассе)</b>, 3 зупинки, і ви виходите з дальнього кінця Naschmarkt (Нашмаркт).','L\u00e4ngenfeldgasse \u2192 6');
+line(U3_H,'U3','<b>Volkstheater (Фолькстеатр) → Westbahnhof (Вестбангоф)</b>, 3 зупинки. Закрита ділянка U3 — на захід від Westbahnhof, тож цей перегін працює нормально.','13 \u2192 14');
+line(U6_H,'U6','<b>Westbahnhof → Niederhofstraße (Нідерхофштрассе)</b>, 3 зупинки, далі 250 м до дверей. У суботу ходить УСЮ НІЧ.','13 \u2192 14');
+put(STOPS,'route','s'); put(ENT,'ent','e'); put(SHOPS,'shop','p'); put(WC,'wc','w'); put(ALTS,'alt','a');
+Object.keys(G).forEach(function(k){G[k].addTo(map)});
+L.control.layers(null,{
+  "ДЕНЬ 0&rarr;14 &mdash; авто, U-Bahn + пішки, один ланцюг":G.route,
+  "Події 22 серпня":G.ent,
+  "Магазини — закупіться сьогодні":G.shop,
+  "Туалети":G.wc,
+  "Заміни та попередження":G.alt
+},{collapsed:false}).addTo(map);
+
+document.getElementById('key').innerHTML=
+ '<span><b style="color:#e8590c">-</b><b style="color:#f08c00">-</b><b style="color:#2f9e44">-</b>'+
+   '<b style="color:#1c7ed6">-</b><b style="color:#7048e8">-</b> пішки, свій колір на кожен відрізок</span>'+
+ '<span>'+gl('sight',COL.sight,15)+' пам’ятка</span>'+
+ '<span>'+gl('cup',COL.food,15)+' їжа</span>'+
+ '<span>'+gl('event',COL.event,15)+' безкоштовна подія</span>'+
+ '<span>'+gl('bag',COL.shop,15)+' магазин</span>'+
+ '<span>'+gl('music',COL.ent,15)+' що ще відбувається</span>'+
+ '<span><b style="color:'+COL.wc+'">WC</b> туалет</span>'+
+ '<span>'+gl('train',COL.metro,15)+' U-Bahn</span>'+
+ '<span>'+gl('car',COL.car,15)+' машина</span>'+
+ '<span>'+gl('eye',COL.alt,15)+' заміна</span>'+
+ '<span>'+gl('warn',COL.clash,15)+' увага</span>';
+rows(STOPS,'s','День по порядку — від 0 до 14');
+rows(ALTS,'a','Заміни і що може зламатися');
+rows(ENT,'e','Що ще відбувається 22 серпня');
+rows(SHOPS,'p','Магазини — закупіться сьогодні, у неділю зачинено');
+rows(WC,'w','Туалети');
+map.fitBounds(L.polyline(W_CITY.concat(W_HOME,U4_A,U6_A)).getBounds(),{padding:[40,40]});
+</script>
+</body>
+</html>

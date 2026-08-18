@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Будапешт + Відень">
+<meta name="theme-color" content="#1b2430">
+<title>Будапешт і Відень — 20–24 серпня 2026</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:#fbfaf7;color:#1b2430;padding:22px 18px calc(60px + env(safe-area-inset-bottom));
+       max-width:640px;margin:0 auto}
+
+  /* language switch */
+  .langbar{display:flex;justify-content:flex-end;margin-bottom:14px}
+  .seg{display:inline-flex;background:#f2ede4;border:1px solid #e2ddd4;border-radius:999px;padding:3px}
+  .seg button{border:0;background:transparent;font:inherit;font-size:12px;font-weight:750;
+              letter-spacing:.4px;color:#6b7785;padding:6px 15px;border-radius:999px;cursor:pointer}
+  .seg button.on{background:#1b2430;color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.18)}
+
+  h1{font-size:23px;letter-spacing:-.4px;line-height:1.2}
+  .sub{font-size:13.5px;color:#727e8c;margin:8px 0 4px;line-height:1.5}
+  .who{font-size:12.5px;color:#8a93a8;margin-bottom:18px}
+
+  /* day pills */
+  .days{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;
+        scrollbar-width:none}
+  .days::-webkit-scrollbar{display:none}
+  .days button{flex:0 0 auto;border:1px solid #e2ddd4;background:#fff;border-radius:999px;
+               font:inherit;font-size:12px;font-weight:700;color:#4b5560;padding:7px 13px;
+               cursor:pointer;white-space:nowrap}
+  .days button.on{background:#2f6fb0;border-color:#2f6fb0;color:#fff}
+
+  a.card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid #e2ddd4;
+         border-radius:13px;padding:14px 15px;margin-bottom:11px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  a.card:active{background:#f2ede4}
+  a.card.next{border-color:#2f6fb0;box-shadow:0 0 0 2px rgba(47,111,176,.14)}
+  .day{font-size:11px;font-weight:800;letter-spacing:1.1px;color:#2f6fb0;text-transform:uppercase;
+       display:flex;align-items:center;gap:7px}
+  .tag{background:#2f6fb0;color:#fff;border-radius:20px;padding:2px 7px;font-size:9.5px;letter-spacing:.6px}
+  .ttl{font-size:16.5px;font-weight:650;line-height:1.28;margin:3px 0 5px;letter-spacing:-.2px}
+  .meta{font-size:12.5px;color:#6b7785;line-height:1.45}
+  .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+  .chips span{font-size:10.5px;font-weight:700;background:#f2ede4;border:1px solid #e2ddd4;
+              border-radius:20px;padding:3px 9px;color:#4b5560}
+  .foot{font-size:11.5px;color:#a3abb8;margin-top:26px;line-height:1.5;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="langbar">
+  <div class="seg" id="seg">
+    <button type="button" data-lang="uk">УКР</button>
+    <button type="button" data-lang="en">ENG</button>
+  </div>
+</div>
+
+<h1 id="h1"></h1>
+<div class="sub" id="sub"></div>
+<div class="who" id="who"></div>
+
+<div class="days" id="days"></div>
+<div id="cards"></div>
+
+<div class="foot" id="foot"></div>
+
+<script>
+/* ---------------------------------------------------------------
+   Trip hub. Two languages, Ukrainian by default.
+   UA maps -> dayN-...-map.html
+   EN maps -> dayN-...-map-en.html
+   --------------------------------------------------------------- */
+
+var SLUG = ['day1-aug20','day2-aug21','day3-aug22','day4-aug23','day5-aug24'];
+var DATES = ['2026-08-20','2026-08-21','2026-08-22','2026-08-23','2026-08-24'];
+
+var T = {
+  uk: {
+    htmlLang:'uk',
+    title:'Будапешт і Відень — 20–24 серпня 2026',
+    h1:'Будапешт і Відень',
+    sub:'Четвер 20 – понеділок 24 серпня 2026. Рівне → Будапешт → Відень → Братислава → додому.',
+    who:'Троє дорослих, один Land Cruiser Prado. Торкніться дня, щоб відкрити карту.',
+    all:'Усі дні',
+    dayShort:['Чт 20','Пт 21','Сб 22','Нд 23','Пн 24'],
+    next:'НАСТУПНИЙ',
+    today:'СЬОГОДНІ',
+    foot:'Дані карт © учасники OpenStreetMap<br>Оновлено 18 серпня 2026',
+    days:[
+      { d:'Чт 20 серп · День 1',
+        t:'Приїзд і національне свято на річці',
+        m:'Паркуємось на Kelenföld, M4 до центру, і весь вечір на пішохідній набережній Буди: вулиця їжі біля Várkert Bazár, потім шоу о 21:00 навпроти Парламенту з Bem rakpart.',
+        c:['9 зупинок','3,3 км пішки','феєрверк 21:00','банкомати й обмін'] },
+      { d:'Пт 21 серп · День 2',
+        t:'Парламент, Замкова гора і Геллерт на заході сонця',
+        m:'Сніданок у Великому ринковому залі, день відкритих дверей у Парламенті, «Черевики на Дунаї», Рибальський бастіон і церква Матяша, обід у disznótoros, потім гора Геллерт на захід сонця і вечеря на Bartók Béla út.',
+        c:['17 зупинок','11,6 км пішки','ТРЦ на випадок спеки','ділянки метро позначено'] },
+      { d:'Сб 22 серп · День 3',
+        t:'Будапешт → Відень',
+        m:'Забираємо авто, траса M1, далі центр Відня пішки від Reschgasse: Kärntner Straße, Штефансдом, Graben, Kohlmarkt, Гофбург — і фестиваль увечері.',
+        c:['15 зупинок','6,5 км пішки','обмеження висоти в паркінгу'] },
+      { d:'Нд 23 серп · День 4',
+        t:'Шенбрунн, Глорієтта і неділя, коли нічого не працює',
+        m:'Ранній виїзд до Шенбрунна перед натовпом і спекою, підйом до Глорієтти, джаз-бранч, Музей історії мистецтв, Café Sperl, потім Kirtag.',
+        c:['12 зупинок','магазини зачинені — один виняток','ділянки U-Bahn позначено'] },
+      { d:'Пн 24 серп · День 5',
+        t:'Дві години в Братиславі, потім довга дорога додому',
+        m:'Один прийом їжі в номері о 05:15, виїзд із Відня о 06:00. Порожнє старе місто о 07:10, брама замку о 08:00, від’їзд до 09:00. Усе після цього свідомо не нанесено на карту.',
+        c:['4 зупинки','1,7 км пішки','€10–23 разом','виїзд до 09:00'] }
+    ]
+  },
+  en: {
+    htmlLang:'en',
+    title:'Budapest & Vienna — 20–24 August 2026',
+    h1:'Budapest &amp; Vienna',
+    sub:'Thursday 20 – Monday 24 August 2026. Rivne → Budapest → Vienna → Bratislava → home.',
+    who:'Three adults, one Land Cruiser Prado. Tap a day for the map.',
+    all:'All days',
+    dayShort:['Thu 20','Fri 21','Sat 22','Sun 23','Mon 24'],
+    next:'NEXT UP',
+    today:'TODAY',
+    foot:'Map data © OpenStreetMap contributors<br>Updated 18 August 2026',
+    days:[
+      { d:'Thu 20 Aug · Day 1',
+        t:'Arrival, and the national holiday on the river',
+        m:'Park at Kelenföld, M4 in, then the whole evening on the car-free Buda quay: the food street at Várkert Bazár, then the 21:00 show opposite Parliament from Bem rakpart.',
+        c:['9 stops','3.3 km on foot','fireworks 21:00','ATMs + exchange'] },
+      { d:'Fri 21 Aug · Day 2',
+        t:'Parliament, the Castle hill, and Gellért at sunset',
+        m:'Breakfast in the Great Market Hall, Parliament open day, Shoes on the Danube, Fisherman’s Bastion and Matthias Church, lunch at a disznótoros, then Gellért Hill for sunset and dinner on Bartók Béla út.',
+        c:['17 stops','11.6 km on foot','malls for the heat','metro legs badged'] },
+      { d:'Sat 22 Aug · Day 3',
+        t:'Budapest → Vienna',
+        m:'Collect the car, the M1, then the Vienna centre on foot from Reschgasse: Kärntner Straße, Stephansdom, Graben, Kohlmarkt, Hofburg — and the festival in the evening.',
+        c:['15 stops','6.5 km on foot','garage height warning'] },
+      { d:'Sun 23 Aug · Day 4',
+        t:'Schönbrunn, the Gloriette, and a Sunday where nothing is open',
+        m:'Out early to Schönbrunn before the crowds and the heat, up to the Gloriette, jazz brunch, the Kunsthistorisches, Café Sperl, then the Kirtag.',
+        c:['12 stops','shops shut — one exception','U-Bahn legs badged'] },
+      { d:'Mon 24 Aug · Day 5',
+        t:'Two hours in Bratislava, then the long way home',
+        m:'One meal in the room at 05:15, out of Vienna at 06:00. The deserted old town at 07:10, the castle gates at 08:00, away by 09:00. Everything after that is deliberately not mapped.',
+        c:['4 stops','1.7 km on foot','€10–23 all in','leave by 09:00'] }
+    ]
+  }
+};
+
+function store(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){ return null; } }
+
+var q = new URLSearchParams(location.search);
+var lang = q.get('lang') || store('trip.lang') || 'uk';
+if(!T[lang]) lang = 'uk';
+var filter = 'all';
+
+function mapHref(i){
+  return lang === 'uk' ? SLUG[i] + '-map.html' : SLUG[i] + '-map-en.html';
+}
+
+function todayIndex(){
+  var t = new Date();
+  var iso = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+  return DATES.indexOf(iso);
+}
+function nextIndex(){
+  var t = new Date(); t.setHours(0,0,0,0);
+  for (var i=0;i<DATES.length;i++){ if(new Date(DATES[i]+'T00:00:00') >= t) return i; }
+  return -1;
+}
+
+function render(){
+  var L = T[lang];
+  document.documentElement.lang = L.htmlLang;
+  document.title = L.title;
+  document.getElementById('h1').innerHTML = L.h1;
+  document.getElementById('sub').innerHTML = L.sub;
+  document.getElementById('who').innerHTML = L.who;
+  document.getElementById('foot').innerHTML = L.foot;
+
+  Array.prototype.forEach.call(document.querySelectorAll('#seg button'), function(b){
+    b.classList.toggle('on', b.dataset.lang === lang);
+  });
+
+  // day pills
+  var days = document.getElementById('days');
+  days.innerHTML = '';
+  var mk = function(label, val){
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = label;
+    if (String(filter) === String(val)) b.classList.add('on');
+    b.onclick = function(){ filter = val; render(); window.scrollTo({top:0,behavior:'smooth'}); };
+    days.appendChild(b);
+  };
+  mk(L.all,'all');
+  L.dayShort.forEach(function(s,i){ mk(s,i); });
+
+  // cards
+  var ti = todayIndex(), ni = nextIndex();
+  var wrap = document.getElementById('cards');
+  wrap.innerHTML = '';
+  L.days.forEach(function(d,i){
+    if (filter !== 'all' && Number(filter) !== i) return;
+    var a = document.createElement('a');
+    a.className = 'card' + ((i === ti || (ti === -1 && i === ni)) ? ' next' : '');
+    a.href = mapHref(i);
+    var badge = i === ti ? '<span class="tag">'+L.today+'</span>'
+              : (ti === -1 && i === ni ? '<span class="tag">'+L.next+'</span>' : '');
+    a.innerHTML =
+      '<div class="day">' + d.d + badge + '</div>' +
+      '<div class="ttl">' + d.t + '</div>' +
+      '<div class="meta">' + d.m + '</div>' +
+      '<div class="chips">' + d.c.map(function(c){ return '<span>'+c+'</span>'; }).join('') + '</div>';
+    wrap.appendChild(a);
+  });
+}
+
+document.getElementById('seg').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if(!b) return;
+  lang = b.dataset.lang; store('trip.lang', lang); render();
+});
+
+render();
+</script>
+
+</body>
+</html>

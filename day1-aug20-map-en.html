@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day 1 — Thu 20 Aug 2026, Budapest</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1b2430;background:#fbfaf7}
+  #wrap{display:flex;height:100%}
+  #side{width:410px;min-width:410px;height:100%;overflow-y:auto;background:#fbfaf7;border-right:1px solid #e2ddd4;padding:18px 18px 40px}
+  #map{flex:1;height:100%}
+  h1{font-size:20px;letter-spacing:-.2px}
+  .sub{font-size:12.5px;color:#727e8c;margin:6px 0 14px;line-height:1.45}
+  .stat{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .stat div{background:#fff;border:1px solid #e2ddd4;border-radius:8px;padding:6px 9px;font-size:11px}
+  .stat b{display:block;font-size:14px;color:#c0392b}
+  button{font:inherit;font-size:12.5px;font-weight:600;background:#1b2430;color:#fff;border:0;
+         border-radius:8px;padding:9px 13px;cursor:pointer;width:100%;margin-bottom:14px}
+  button:hover{background:#2d3b4d}
+  .row{display:flex;gap:10px;padding:8px;border-radius:9px;cursor:pointer;align-items:flex-start}
+  .row:hover{background:#f2ede4}
+  .row.on{background:#fdecea}
+  .t{font-size:11.5px;font-weight:700;letter-spacing:.2px}
+  .n{font-size:13.5px;font-weight:600;line-height:1.3;margin:1px 0 2px}
+  .d{font-size:11.5px;color:#6b7785;line-height:1.42}
+  h2{font-size:10.5px;letter-spacing:1.1px;color:#8a93a8;text-transform:uppercase;margin:20px 0 4px;font-weight:700}
+  .warn{background:#fff6e6;border:1px solid #f0d9a8;border-radius:9px;padding:10px 11px;font-size:12px;line-height:1.5;margin-top:12px}
+  .warn.red{background:#fdecea;border-color:#f0bdb5}
+  .warn.blue{background:#eaf2f8;border-color:#b8d3e6}
+  .key{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:11.5px;color:#4b5560;margin-top:6px}
+  .key span{display:flex;align-items:center;gap:5px}
+  .pr{color:#1b6b45;font-weight:700}
+  .ptag{margin:7px 0 2px;padding:5px 8px;background:#eef5f0;border:1px solid #cfe2d6;
+        border-radius:7px;font-size:12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .ptag b{color:#1b6b45!important} .ptag span{color:#8a5a12;font-weight:700;font-size:11px}
+  /* markers */
+  .mk{position:relative;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;
+      justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.45);border:2.5px solid #fff}
+  .mk .g{position:absolute;top:-7px;right:-7px;background:#fff;border-radius:50%;
+         width:17px;height:17px;display:flex;align-items:center;justify-content:center;
+         box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .mk svg{display:block;flex:0 0 auto}
+  .sq{border-radius:5px}
+  .pill{border-radius:4px;border-width:2px}
+  .sight{background:#c0392b} .food{background:#c8781a} .event{background:#7d3c98}
+  .bed{background:linear-gradient(135deg,#ffb300 0%,#ff2d78 52%,#b620e0 100%);box-shadow:0 0 0 2px rgba(255,45,120,.30),0 2px 7px rgba(0,0,0,.45)} .wc{background:#2a7fb8} .metro{background:#1a6aa8} .car{background:#5d6470}
+  .opt{background:#8a93a8} .shop{background:#2e7d4f} .ent{background:#b0338e}
+  .alt{background:#2f7d8c} .clash{background:#d64541} .light{background:#8a5fc0}
+  .cash{background:#0f7b6c} .atm{background:#0f7b6c}
+  .dot{width:19px;height:19px;font-size:10px}
+  .focusbar{display:none;background:#1b2430;color:#fff;font-size:12.5px;font-weight:600;
+      padding:7px 10px;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.35);max-width:330px}
+  .focusbar b{color:#ffb066}
+  .focusbar button{font:inherit;font-size:11.5px;font-weight:700;background:#ff7a1a;color:#1b2430;
+      border:0;border-radius:6px;padding:3px 8px;margin-left:4px;cursor:pointer;width:auto}
+  .focusbar button:hover{background:#ffa15c}
+    .wb{white-space:nowrap;background:#fff;color:#c0392b;border:2px dashed #c0392b;border-radius:10px;
+      font-size:9.5px;font-weight:700;text-align:center;line-height:16px;height:20px;
+      white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .lb{display:flex;align-items:center;gap:3px;color:#fff;font-weight:700;font-size:11px;
+      border-radius:7px;padding:2px 6px 2px 4px;border:2px solid #fff;white-space:nowrap;
+      box-shadow:0 1px 4px rgba(0,0,0,.45)}
+  .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
+  .leaflet-popup-content b{color:#c0392b}
+  .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
+  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+
+  /* ---- PRINT: one A4 landscape page, map keeps its street background ---- */
+  @media print{
+    @page{size:A4 landscape;margin:8mm}
+    html,body{height:auto;background:#fff}
+    #wrap{display:block;height:auto}
+    button,.leaflet-control-zoom,.leaflet-control-attribution,.leaflet-control-layers{display:none!important}
+    #side{width:78mm;min-width:0;height:auto;overflow:visible;border:none;padding:0;
+          float:left;font-size:9px}
+    #map{width:196mm;height:185mm;margin-left:80mm;border:1px solid #bbb}
+    h1{font-size:14px} .sub{font-size:8.5px;margin:4px 0 7px}
+    .stat{gap:3px;margin-bottom:7px} .stat div{padding:3px 5px;font-size:7.5px} .stat b{font-size:9.5px}
+    .row{padding:2.5px 0;break-inside:avoid} .n{font-size:9px;margin:0} .d{font-size:7.8px;line-height:1.3}
+    .t{font-size:7.8px} h2{font-size:7.5px;margin:8px 0 2px}
+    .warn{font-size:7.8px;padding:5px 6px;margin-top:5px;break-inside:avoid}
+    .key{font-size:7.5px;gap:2px 8px}
+    .mk{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="side">
+    <h1>Day 1 &mdash; Thursday 20 August</h1>
+    <div class="sub">Arrival evening, Hungary's national day. Cross Liberty Bridge <b>once</b>, then walk north up the car-free Buda quay all evening: dinner at the food street, then the show opposite Parliament &mdash; which is performed <b>twice</b>, at 21:00 and again at 22:00.</div>
+    <div class="stat">
+      <div>walk out<b>3.3 km</b></div>
+      <div>on foot<b>~41 min</b></div>
+      <div>if you walk home too<b>6.6 km</b></div>
+      <div>crossings<b>1</b></div>
+      <div>cost a head<b>~11,000 Ft</b></div>
+      <div>entertainment<b>free</b></div>
+      <div>the show<b>runs 2×</b></div>
+    </div>
+    <button onclick="doPrint()">Save as PDF / print &mdash; one landscape page, map included</button>
+    <div class="key" id="key"></div>
+    <div id="list"></div>
+    <div class="warn" style="background:#f4f6f9;border-color:#ccd4e0"><b>Reading the map, and lighting up one leg at a time.</b> <b>Dashed = you walk</b>, and <b>each walking leg has its own colour</b> so consecutive legs never blur into one another &mdash; the badge on the line matches its colour and names the two stops it joins. <b>Solid = you ride</b>, in the transport line's real colour &mdash; and now <b>badged exactly the same way</b>: the line, and the two stops that leg joins.<br><b>Click any line and it lights up on its own</b> &mdash; everything else dims, the map zooms to it, and a bar appears top-left with a <b>show the whole day</b> button. Click the same line again to undo it.<br><b>Click a numbered stop in the list</b> and every leg touching that stop lights up &mdash; so clicking <b>11</b> shows you how you arrive at 11 and how you leave it, together.</div>
+    <div class="warn"><b>Map apps won't know this.</b> The Buda lower embankment is closed to cars 15&ndash;22 Aug, but it's temporary so routing sends you along the road above. Stay down by the water.</div>
+    <div class="warn red"><b>You can't also do the Holy Right Procession.</b> It leaves St Stephen's Basilica at <b>19:00</b>, 2.6 km away on the Pest side. Pick one: a good spot for the show, or the procession and a worse view.</div>
+    <div class="warn" style="background:#eaf4ec;border-color:#b6d6c0"><b>Nothing on this map is shut today &mdash; I removed the pins that were.</b> It's a national holiday, so <b>Lidl, Aldi, SPAR, Penny, Tesco and Auchan are all closed</b>, and so is the Great Market Hall across from your hotel — as are post offices and ordinary pharmacies (only the duty pharmacy, <i>&uuml;gyeletes gy&oacute;gyszert&aacute;r</i>, is open; look up the nearest one to the hotel before you travel). <b>What is open:</b> shops inside railway stations, petrol-station shops (SPAR Express / DESPAR), some non-stop convenience shops, some tobacconists, and every restaurant, caf&eacute; and bar. <b>Etele Plaza, the big mall right at the Kelenf&ouml;ld P+R, is CLOSED today</b> &mdash; malls shut for the national holiday, so don't count on it for air conditioning or supplies on arrival. <b>Buy water and snacks at Kelenf&ouml;ld station when you park</b> — it's a station, so it's open, and you walk right past it. Friday everything reopens.</div>
+    <div class="warn" style="background:#fdf3e7;border-color:#f0d0a8"><b>No breakfast at the hotel &mdash; so the market is the plan, not the fallback.</b>
+    The <b>Great Market Hall is directly across your street</b> and opens at <b>06:00</b>. It's shut today for the holiday, but from tomorrow it's your breakfast every morning: bakery counters downstairs, a l&aacute;ngos upstairs, coffee from the stands, <b>2,000&ndash;3,000 Ft a head</b> &mdash; against &euro;15&ndash;20 for a hotel buffet you aren't getting anyway. See Day 2 and Day 3 for the detail.<br>
+    <b>Tonight, eating is solved by the festival:</b> the food street at V&aacute;rkert Baz&aacute;r runs <b>09:00&ndash;24:00</b>, so stop 6 is dinner and there's no need to find a restaurant on the busiest night of the year. <b>If you land hungry before 17:30</b>, Cafe Brunch Budapest is 30 seconds from the door and open &mdash; caf&eacute;s aren't affected by the holiday closure.</div>
+    <div class="warn" style="background:#e8f4f1;border-color:#b6d8d0"><b>Euro &rarr; forint, and where to do it.</b>
+    <b>Rate: about 362 HUF to &euro;1</b> (the MNB benchmark sat at 360&ndash;364 in mid-2026 &mdash; check your phone on the day).<br>
+    <b>Seven ATMs are now pinned, numbered by usefulness.</b> <b>&#9312; Kelenf&ouml;ld station hall is the one that matters</b> &mdash; draw <b>60,000&ndash;80,000 Ft for all three of you in a single withdrawal</b> while you're buying tickets. It's at the car, before the hotel, and station ATMs run on a public holiday when every counter in the city is shut. &#9313; is the metro concourse next door if that machine is dry. &#9314; F&#337;v&aacute;m t&eacute;r is under your bed, &#9315; K&aacute;lvin t&eacute;r is the best cluster of real bank branches, &#9316; Batthy&aacute;ny t&eacute;r is 78 m from tonight's viewing spot &mdash; but <b>event-adjacent machines empty first on a night like this</b>, so don't plan on it. &#9317; and &#9318; are marked <i>verify</i>: probably there, not guaranteed.<br>
+    <b>Changing euro notes:</b> bureaux are <b>shut Thursday</b>, open Friday. Use the ones inland of Ferenciek t&eacute;re, not on V&aacute;ci utca.<br>
+    <b>Three rules:</b> always choose <b>HUF</b>, never &quot;charge in your home currency&quot; &middot; <b>never the blue-and-yellow Euronet ATMs</b> (2,000&ndash;3,000 Ft lost on a 50,000 withdrawal) &middot; <b>&quot;0% commission&quot; means the markup is in the rate</b> &mdash; Hungarian law sets a 0.3% legal minimum, so nobody is doing it free.</div>
+    <div class="warn" style="background:#eef5f0;border-color:#cfe2d6"><b>What today actually costs, per person.</b>
+    Transport <b>5,750 HUF</b> (the 72-hour card, covers everything) &middot; dinner at the food street <b>~4,000 HUF</b> &middot;
+    water and snacks from Kelenf&ouml;ld <b>~1,000 HUF</b> &middot; toilets <b>200 HUF a go, in coins</b> &middot;
+    the show, the light painting, the disco, Elektro Rakpart and the island concerts: <b>all free</b>.
+    <b>Roughly 11,000 HUF / &euro;30 a head for the whole day</b>, plus <b>~6,300 HUF for the car</b> across the three of you.<br>
+    <b>Cash rules:</b> festival stands and market stalls are cash-first, and public toilets want <b>200-forint coins</b>.
+    The P+R is the opposite — <b>card only, no cash accepted</b>. <b>Rate: about 362 HUF to &euro;1</b> (MNB benchmark mid-2026 was 360&ndash;364) &mdash; check it on your phone before you change anything, and see the money pins.
+    Prices are Aug 2026 estimates; the capped drink prices at the food street are official.</div>
+    <div class="warn" style="background:#f7ecf4;border-color:#e0b8d4"><b>The show runs twice &mdash; so stop treating 21:00 as your only chance.</b><br>
+    <b>21:00&ndash;21:30</b> full show + the 10-min fireworks, from the quay.<br>
+    <b>21:30</b> leave while everyone else is still standing there. Walk <i>south</i> down the car-free quay.<br>
+    <b>22:00&ndash;22:30</b> the entire show is <b>repeated</b> (no fireworks, no drones) &mdash; watch it from further down the same bank with a fraction of the crowd.<br>
+    <b>22:30&ndash;01:00</b> light painting on Parliament <i>and the Chain Bridge</i> &mdash; and you walk directly under the Chain Bridge at stop 7 on the way home. The walk back <i>is</i> the last act.<br>
+    <b>Then pick one:</b> home by ~23:15 &middot; or over Liberty Bridge to <b>Elektro Rakpart</b> for the end of Modeselektor and Tolo &amp; Falcao to 01:30, 11 min from your bed &middot; or the <b>Kossuth t&eacute;r</b> disco to 01:30, 15 min over the Chain Bridge &middot; or the <b>F&eacute;nykert</b> on Margaret Island, open to 01:00.</div>
+    <div class="warn" style="background:#eef0f6;border-color:#c2c8dc"><b>Getting home — four ways, all on your travelcard.</b> All of them start with an <b>80 m walk south to Batthy&aacute;ny t&eacute;r</b>.<br>
+    <b>A · 3 lines, 2 changes, ~20 min</b> — M2 → M3 → M4, out at the hotel door. Least walking, worst crowds.<br>
+    <b>B · 2 lines, 1 change, ~20 min</b> — M2 → M3, out at K&aacute;lvin t&eacute;r, then 380 m / 5 min down V&aacute;mh&aacute;z k&ouml;r&uacute;t. <b>Same time as A with one less interchange — take this one.</b><br>
+    <b>C · 1 line, no changes, ~25 min</b> — M2 only to De&aacute;k Ferenc t&eacute;r, then 1.4 km / 17 min through the Belv&aacute;ros.<br>
+    <b>D · no metro at all, 3.3 km / ~41 min</b> — back down the car-free quay and over Liberty Bridge to the door.<br>
+    Metros run to about <b>02:30</b> tonight.</div>
+    <div class="warn blue"><b>Toilets, the honest version.</b> Public ones cost about <b>200 HUF</b> and many are coin-operated &mdash; <b>carry coins</b>. They cluster in metro stations, pedestrian underpasses and markets; look for the <b>WC</b> pictogram. Buy a drink and use a caf&eacute; if you're stuck. On 20 Aug organisers put <b>temporary toilets at every event site</b>, including the food street and along the quays &mdash; those are your best bet all evening. The pins marked <i>verify</i> are approximate.</div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ---------------- data ---------------- */
+var STOPS=[
+ {n:"0",g:"P",cat:"car",t:"15:30",dist:"the car stops here",name:"PARKING — Etele / Őrmező P+R, Kelenföld",lat:47.46340,lon:19.02350,
+  price:"~6,300 HUF / €17 for 40 h",pay:"card only",d:"Come off the M0 southern ring onto the M1/M7 and exit at Kelenföld — <b>never through the city on 20 Aug</b>. Surface, guarded, open 24 h, no height limit to worry about with a 1.9 m car. <b>~6,300 HUF for the 40 hours, cashless only</b>: card at the machine or the Parkl app. Take the bags and leave the car until Saturday morning — Saturday's drive to Vienna starts right here, so you never drive inside the city in either direction.<br><br><b>Money:</b> 500 HUF flat per entry 06:00–22:00, 300 HUF/hour 22:00–06:00 — the two nights are the whole cost. <b>Cashless since 1 July 2026</b>, so card at the machine or the Parkl app. No attendant on the holiday."},
+ {n:"1",g:"M",cat:"metro",t:"15:35",dist:"do all three here",name:"STATION — cash, tickets, snacks, then the M4",lat:47.46390,lon:19.02300,
+  price:"5,750 HUF / €16 per person",pay:"cash or card",d:"<b>Three jobs in one stop, and this is the only place before the hotel where you can do them on a public holiday.</b><br><br><b>1 · CASH.</b> Draw forints from a <b>bank ATM in the station hall</b> — OTP, Erste, K&amp;H or CIB. <b>Avoid the blue-and-yellow Euronet machines</b>; a single 50,000 Ft withdrawal there can cost you 2,000–3,000 Ft more. When it asks whether to charge in HUF or your own currency, <b>always choose HUF</b>. Draw <b>50,000 Ft for the three of you, for the whole stay</b> for the whole Budapest stay — festival stands, market stalls and toilets are cash-first.<br><br><b>2 · TICKETS.</b> Machine in the same hall, 24/7, cash or card, multilingual: three <b>72-hour travelcards, 5,750 HUF each</b>. Validate at first use.<br><br><b>3 · WATER AND FOOD.</b> Station shops are open on the holiday when every supermarket is shut. There are toilets here too — worth knowing after ten hours in a car.<br><br>Then <b>M4 towards Keleti</b>: Kelenföld vasútállomás → Bikás park → Újbuda-központ → Móricz Zsigmond körtér → Szent Gellért tér → <b>Fővám tér</b>. No changes. M4 is the new line, air-conditioned and step-free, so the luggage is easy.<br><br><b>Money:</b> That's the <b>72-hour travelcard</b>, and it covers every metro, tram and bus ride until Saturday morning. Singles are 500 HUF, 700 from a bus driver in exact cash — so the card pays for itself at about 11 rides and you'll make ten tonight and tomorrow."},
+ {n:"2",g:"★",cat:"bed",t:"16:00",dist:"station exit",name:"HOTEL — Sophia Palace, Fővám tér",lat:47.48800,lon:19.05800,
+  price:"already paid",pay:"—",d:"Vámház körút 2, District V. The M4 exit comes up at the hotel door. Drop bags, shower, and <b>lie flat until 17:30</b> — that hour does more for the evening than any extra walk. The Great Market Hall is across the street but <b>closed today</b>, being the holiday. Leave at 17:30 for the bridge.<br><br><b>Money:</b> Worth asking at check-in whether breakfast is included and what it costs — if it's €15–20 a head, the market across the street is a third of that."},
+ {n:"3",g:"★",cat:"sight",t:"17:30",dist:"413 m · 5 min",name:"Liberty Bridge — cross to Buda",lat:47.48520,lon:19.05440,
+  price:"free",pay:"—",d:"Down Vámház körút to Fővám tér, then <b>walk the bridge deck itself</b> — 333 m across, landing at Szent Gellért tér, green ironwork, Gellért Hill rising ahead, the market behind you. At the Buda end, by the Gellért, turn <b>right</b> and drop down onto the lower quay. Do not walk north on the Pest side.<br><br><b>Money:</b> Walking the deck costs nothing."},
+ {n:"4",g:"★",cat:"sight",t:"17:40",dist:"706 m · 9 min",name:"Buda lower quay — closed to cars",lat:47.48700,lon:19.04930,
+  price:"free",pay:"—",d:"Shut to traffic 15–22 Aug, so for your dates it's a riverside promenade: Gellért Hill above you, the whole Pest skyline opposite. Keep the water on your right and walk north — <b>640 m / 8 min</b> to Döbrentei tér.<br><br><b>Money:</b> A public embankment, and closed to cars for your dates."},
+ {n:"5",g:"★",cat:"sight",t:"17:55",dist:"597 m · 7 min",name:"Döbrentei tér",lat:47.49170,lon:19.04550,
+  price:"free",pay:"—",d:"On the quay at the Buda foot of Elisabeth Bridge. Döbrentei utca is itself one of the food-street streets, so you're already on the edge of dinner."},
+ {n:"6",g:"☕",cat:"food",t:"18:15",dist:"1.9 km · 24 min",name:"DINNER — Street of Hungarian Flavours",lat:47.49336,lon:19.04280,
+  price:"~3,000–5,000 HUF / €8–14 a head",pay:"CASH, take plenty",d:"<b>Magyar Ízek Utcája, open 09:00–24:00 on 20–22 Aug.</b> Across Várkert Bazár, the Várkert rakpart, Clark Ádám tér, Lánchíd utca, Ybl Miklós tér, Döbrentei utca and Apród utca. First public tasting of the Country's Bread (2026 winner <i>Pilisi Pityókás</i>) and the Cake of Hungary. Prices capped — beer under 1,000 HUF, water max 500. No reservation, eat standing up. Toilets on site.<br><br><b>Money:</b> <b>Free to walk in.</b> Organisers have capped drinks this year: <b>beer under 1,000 HUF, mineral water max 500 HUF</b>. Hot dishes from the stands run roughly 2,500–4,500 HUF, and a slice of the Country's Bread or the Cake of Hungary about 1,500–2,500. Budget ~4,000 HUF a head to eat and drink properly. <b>Festival stands are cash-first</b> — some take card, plenty don't."},
+ {n:"7",g:"★",cat:"sight",t:"19:00",dist:"620 m · 8 min",name:"Clark Ádám tér — under the Chain Bridge",lat:47.49828,lon:19.03957,
+  price:"free",pay:"—",d:"Leave dinner by 18:50 and keep going north on the same car-free quay. The funicular up to the Castle starts here — save it for Friday.<br><br><b>Money:</b> The funicular beside it is a separate ticket, but that's Friday's problem."},
+ {n:"8",g:"◉",cat:"event",t:"19:15",dist:"1.01 km · 13 min",name:"THE SPOT — Bem rakpart, on the Parliament axis",lat:47.50720,lon:19.03900,
+  price:"free",pay:"—",d:"<b>Exact spot: the lower quay on Bem rakpart, 78 m north of Batthyány tér, on the Parliament axis</b> — the dome is 490 m straight across the water from here, so the projection fills your view without you having to crane. This stretch is closed to cars 15–22 Aug, and organisers say the Buda side gives the best view.<br><br><b>Organisers name this exact stretch — the Buda bank between the Chain Bridge and Margaret Bridge — as the best view in the city</b>, because you get Parliament, the river and the Chain Bridge in one frame.<br><br><b>The show is «Chapters from the Thousand-Year History of the Hungarian Nation»</b>, ~30 minutes of projection mapping, laser, drones and pyrotechnics, with the imagery built from Hungarian painting, architecture and ornament. Music by <b>Zságer Balázs and DJ Bootsie</b>; over thirty artists worked on it.<br><br><b>And here is the thing that changes your evening: it runs twice.</b><br>· <b>21:00–21:30</b> full show, closing with the ~10-minute fireworks<br>· <b>22:00–22:30</b> the whole show <b>repeated</b>, without fireworks or drones<br>· <b>22:30–01:00</b> light painting continues on Parliament and the Chain Bridge<br><br>So you do not have to hold this spot all night, and if the crowd beats you at 21:00 you get a second, calmer go at 22:00. Sunset 19:50; be here by 19:15 for the first one.<br><br>Batthyány tér (M2, toilets, market hall) is <b>80 m behind you</b> — which is why this beats standing further north. Agree a physical meeting point; networks fail in that crowd.<br><br><b>Money:</b> The whole evening programme is free — organisers confirm every open-air event on 20 August is free entry with no registration. Bring your own water; there's no bar on the quay."}
+];
+var FOOD=[
+ {g:"☕",cat:"food",t:"open today",name:"Cafe Brunch Budapest — 30 seconds from the door",lat:47.48690,lon:19.05730,
+  price:"~4,000–5,500 HUF / €11–15 a head",pay:"card fine",d:"30 seconds from the hotel door, terrace facing Liberty Bridge, all-day breakfast from 08:00 daily. Your fallback if you want a sit-down coffee before setting off, and Friday's easy breakfast if the market feels like too much.<br><br><b>Money:</b> Sit-down, all-day breakfast, priced for the Fővám tér location. About 12,000–16,000 HUF for the three of you."}
+];
+var WC=[
+ {g:"WC",cat:"wc",t:"best bet",name:"Food street toilets, Várkert Bazár",lat:47.49300,lon:19.04220,
+  price:"free at the event",pay:"—",d:"Temporary toilets are set up across the event area for 20–22 Aug, and Várkert Bazár itself is a public venue with facilities. <b>Use these before you walk north</b> — it's 2 km from here to your spot on the quay, with nothing guaranteed in between.<br><br><b>Money:</b> Temporary units on the festival site, no charge."},
+ {g:"WC",cat:"wc",t:"reliable",name:"Fővám tér M4 station",lat:47.48830,lon:19.05740,
+  price:"~200 HUF",pay:"COINS",d:"M4 is the new line and its stations have public toilets. Right under your hotel, so use it on the way out and on the way back in. Small charge, coins.<br><br><b>Money:</b> Coin-operated. Keep 200-forint pieces for exactly this."},
+ {g:"WC",cat:"wc",t:"reliable",name:"Batthyány tér M2 station",lat:47.50640,lon:19.03920,
+  price:"~200 HUF",pay:"COINS",d:"M2 station plus the Batthyány téri Vásárcsarnok above it. The most dependable toilet near your fireworks spot, 370 m south of Bem rakpart. Go here rather than hoping, and go before 20:30 when the crowd thickens.<br><br><b>Money:</b> Coin-operated. The market hall's may want the same."},
+ {g:"WC",cat:"wc",t:"verify",name:"Döbrentei tér area",lat:47.49150,lon:19.04600,
+  price:"~200 HUF",pay:"COINS",d:"There is normally a public toilet around Döbrentei tér / the Elisabeth Bridge underpass. Approximate pin — look for the WC pictogram. Coins."},
+ {g:"WC",cat:"wc",t:"verify",name:"Clark Ádám tér / funicular station",lat:47.49810,lon:19.03990,
+  price:"~200 HUF",pay:"COINS",d:"Facilities at the Sikló lower station and around the square, and the food street runs through here on 20–22 Aug so temporary units are likely. Approximate pin."},
+ {g:"WC",cat:"wc",t:"event",name:"Kossuth tér event toilets",lat:47.50700,lon:19.04600,
+  price:"free at the event",pay:"—",d:"The main event site opposite you gets a large bank of temporary toilets. Relevant if you cross the Chain Bridge for the disco after the show."}
+];
+var HOMEPT=[
+ {g:"M",cat:"metro",t:"23:00",dist:"80 m walk",name:"START — walk south to Batthyány tér (M2)",lat:47.50651,lon:19.03878,
+  price:"covered by the travelcard",pay:"—",d:"Every option starts here, and it is <b>80 m</b> — your viewing spot is deliberately just north of the station. Board <b>M2 towards Örs vezér tere</b>. There's a toilet in the station and market hall — worth using before you get on."},
+ {g:"M",cat:"metro",t:"option A",dist:"3 lines · 2 changes · ~20 min",name:"A — all the way by metro",lat:47.48830,lon:19.05740,
+  price:"0 HUF extra",pay:"—",d:"<b>M2</b> Batthyány tér → Deák Ferenc tér (2 stops) · change · <b>M3</b> → Kálvin tér (2 stops) · change · <b>M4</b> → Fővám tér (1 stop). Exit at the hotel door, almost no walking. The cost is <b>two interchanges</b>, and Deák Ferenc tér at 23:00 after a riverside show is the busiest station in the city.<br><br><b>Money:</b> Your 72-hour card covers all three lines and both interchanges."},
+ {g:"M",cat:"metro",t:"option B",dist:"2 lines · 1 change · ~20 min",name:"B — off at Kálvin tér, walk 5 min  ← best",lat:47.48940,lon:19.06160,
+  price:"0 HUF extra",pay:"—",d:"<b>M2</b> to Deák Ferenc tér · change · <b>M3</b> to Kálvin tér, then <b>walk 380 m / 5 min</b> west down Vámház körút to the hotel. <b>One change instead of two, and the same total time</b> — you just skip the M4 leg for a five-minute stroll in the cool. This is the one I'd pick."},
+ {g:"M",cat:"metro",t:"option C",dist:"1 line · no changes · ~25 min",name:"C — off at Deák, walk 1.4 km",lat:47.49750,lon:19.05460,
+  price:"0 HUF extra",pay:"—",d:"<b>M2 only</b>, two stops to Deák Ferenc tér, then <b>walk 1.4 km / 17 min</b> south through the Belváros — Károlyi utca, Szabad sajtó út, Váci utca — to Fővám tér. <b>No interchanges at all.</b> Five minutes slower than A, and much less unpleasant if the crowd is heavy."},
+ {g:"M",cat:"metro",t:"23:20",name:"Fővám tér — home",lat:47.48830,lon:19.05740,
+  price:"0 HUF extra",pay:"—",d:"However you come, your <b>72-hour travelcard covers all of it</b> — no new ticket, no re-validating between lines. <b>M2, M3 and M4 run until about 02:30 tonight</b>; after that it's night buses and tram 6 on the Grand Boulevard."}
+];
+var OPTS=[
+ {cat:"alt",t:"plan B",name:"Batthyány tér — the fallback viewing spot",lat:47.50651,lon:19.03878,
+  price:"free",pay:"—",
+  d:"Same stretch of quay, 78 m south of the marked spot, with a metro station and a toilet at your feet. Take this if the crowd on the lower quay looks impassable, or if anyone wants the option of leaving in one move.<br><br><b>Money:</b> free."},
+ {cat:"clash",t:"19:00",name:"Holy Right Procession — the one real clash",lat:47.50086,lon:19.05392,
+  price:"free",pay:"—",
+  d:"A 900-year-old relic carried through the streets, the biggest Catholic event of the Hungarian year. <b>It leaves St Stephen's Basilica at 19:00</b> — and the Basilica is 2.6 km away on the Pest side.<br><br><b>You cannot do this and hold a riverside spot for 21:00.</b> If the procession matters more, spend the evening on the Pest side instead and watch the show from Széchenyi István tér — a worse angle, but you keep both. Otherwise skip it.<br><br><b>Money:</b> free."}
+];
+var SHOPS=[
+ {g:"SHOP",cat:"shop",t:"open · best",name:"Kelenföld station shops — right where you park",lat:47.46340,lon:19.02240,
+  price:"water ~400–600 HUF / 1.5 L",pay:"cash or card",d:"<b>Shops in railway stations are exempt from the holiday closure</b>, and Budapest-Kelenföld is a station — 100 m from where you leave the car. <b>Buy your water and snacks here at 15:35</b> while you're buying the travelcards. This is the single most convenient open shop of your whole evening, and you'd walk straight past it.<br><br><b>Money:</b> Station prices, so about double a supermarket: 1.5 L water 400–600 HUF, sandwich 1,200–1,800, coffee 700–1,000. Still the cheapest option open to you today, and you're walking past it."},
+ {g:"SHOP",cat:"shop",t:"open",name:"Déli pályaudvar shops",lat:47.47630,lon:19.02480,
+  price:"station prices",pay:"cash or card",d:"Another station, so also open on 20 Aug. Reachable on the M2 if you need something later. Small supermarket-style units plus a pharmacy in the concourse."},
+ {g:"SHOP",cat:"shop",t:"open",name:"Nyugati pályaudvar shops",lat:47.51070,lon:19.05770,
+  price:"station prices",pay:"cash or card",d:"Station shops, open on the holiday, and there's a shopping centre attached. The nearest reliable option to the Parliament side of the river if you end up over there after the show."}
+];
+var ENT=[
+ {cat:"ent",t:"17:00–01:30",name:"ELEKTRO RAKPART — Műegyetem rakpart  ← 11 min from your bed",lat:47.48120,lon:19.05780,
+  price:"FREE",pay:"bars take card",d:"<b>The find of the day.</b> The Buda embankment south of Liberty Bridge becomes an open-air club — big stage, LED walls, Gellért Hill and the river behind it. <b>900 m / 11 min from the hotel</b>, so it's the one late option you can fall out of.<br><br><b>Thu 20 Aug:</b> 17:00–19:50 DJ Reload · 19:50–21:30 <b>Christian Löffler</b> · 21:30–23:30 <b>MODESELEKTOR</b> (the Berlin duo, 20+ years at the top) · 23:30–01:30 Tolo + Falcao.<br><br><i>The play: watch the 21:00 show from the quay, walk home down the river (~45 min), cross Liberty Bridge and catch the end of Modeselektor plus Tolo &amp; Falcao. Free.</i><br><br>Note Nina Kraviz and Carl Craig play the 19th — the night before you arrive.<br><br><b>Money:</b> Free entry, both nights. Drinks at festival-bar prices, roughly 1,200–2,000 HUF a beer — dearer than the food street, cheaper than a Pest tourist bar."},
+ {cat:"ent",t:"21:30–01:30",name:"DISZKÓTÉR — Kossuth tér, free",lat:47.50650,lon:19.04630,
+  price:"FREE",pay:"—",d:"The square in front of Parliament turns into a dance floor straight after the fireworks. Deliberately broad — current hits plus older Hungarian favourites.<br><br>21:30–22:30 <b>Anima Sound System</b> DJ set with projections · 22:30–00:30 <b>JumoDaddy</b> + surprise guests · 00:30–01:30 Abertura &amp; Matyó.<br><br><b>Nearest thing to your viewing spot:</b> cross the Chain Bridge on foot, ~1.2 km / 15 min. Free.<br><br><b>Money:</b> Free, no registration, runs to 01:30."},
+ {cat:"ent",t:"10:00–01:00",name:"BEATS SZIGET — Margaret Island concerts",lat:47.52200,lon:19.04700,
+  price:"FREE",pay:"—",d:"Proper concerts, and the strongest bill of the day if you'd rather have music than the light show.<br><br>10:00 Zabszalma · <b>16:00 ДEVA</b> (Hungarian folk motifs over modern electronics) · 17:30 Random Trip — LGT Special · <b>19:00–20:20 Boban Marković Orkestar</b> (Balkan brass, impossible to stand still to) · <b>21:30–23:00 QUIMBY</b> (three decades of Hungarian alt-rock, expect mass singing) · 23:00–01:00 Infragandhi.<br><br><b>The conflict:</b> Boban Marković and Quimby both clash with the 21:00 show and your riverside spot. Pick one or the other — you can't have both. Also on the island: the <b>Fénykert</b> light garden in the Rose Garden, installations to walk through until dawn.<br><br><b>Money:</b> Free, including Quimby and Boban Marković. The Fénykert light garden is free too."},
+ {cat:"light",t:"20:00–01:00",name:"FÉNYKERT — light garden, Margaret Island",lat:47.52480,lon:19.04890,
+  price:"free",pay:"—",
+  d:"<b>Aug 20–22, 20:00–01:00, in the Rózsakert (Rose Garden).</b> Contemporary light installations, and a genuinely odd brief: several works make invisible things visible — the force of magnetic fields, the way nerve cells talk to each other — and some are interactive. There's a moon built out of light, a sun that appears in the night, and a fairy-tale light carpet you walk along.<br><br><b>The calm alternative to the riverside crush</b>, and it stays open to 01:00, so it also works <i>after</i> the show if you have the legs for the trip north.<br><br><b>Money:</b> free."},
+ {cat:"ent",t:"Aug 20–23",name:"MESTERSÉGEK ÜNNEPE — Buda Castle  ← check the ticket price",lat:47.49700,lon:19.03900,
+  price:"⚠ usually TICKETED — verify",pay:"card at the gate",d:"<b>Festival of Folk Arts, 40th edition, running all four of your days</b> — craft demonstrations, folk-art market, traditional music, this year built around pottery. The Protestáns Sokadalom runs alongside it with concerts and choirs.<br><br><b>Why it matters:</b> Friday's plan already walks Castle Hill at 12:30–14:15, so you land in the middle of this without changing anything. Buda Castle is the cultural centre of the holiday weekend.<br><br><b>Money:</b> <b>Correction to what I said earlier: don't assume this one is free.</b> The state's promise that every open-air programme on 20 August is free applies to the official festival sites; the Festival of Folk Arts is an independent event inside the Castle and normally charges entry (recent years around 3,000–3,500 HUF, under-6s free). <b>Check mesterseg.hu before Friday</b> — the Castle grounds themselves are free to walk either way."}
+];
+var MONEY=[
+ {cat:"atm",t:"① 15:35 · DO IT HERE",name:"ATM — Kelenföld station hall",lat:47.46370,lon:19.02280,
+  price:"interbank rate, no surcharge",pay:"card → HUF",
+  d:"<b>This is the withdrawal that matters. Everything else on this list is a backup.</b><br><br>Kelenföld is a working railway station, so the hall has ATMs and <b>they run on a public holiday when every exchange counter in the city is shut</b>. You are standing here anyway, buying travelcards and water, with the car 100 m away.<br><br><b>Look for a bank-branded machine: OTP, Erste, K&amp;H or CIB.</b> They dispense at the Visa/Mastercard interbank rate with no operator surcharge.<br><br><b>Take 50,000 Ft in ONE withdrawal — all three of you, the whole stay.</b> Your bank charges a foreign-withdrawal fee per transaction, so one big pull beats three small ones. Cash is for the food street, market stalls, ruin bars and toilets — card covers restaurants, museums and the card-only P+R.<br><br><b>Always choose HUF</b> when the screen offers your home currency."},
+ {cat:"atm",t:"② same place",name:"ATM — Kelenföld M4 concourse, Etele tér",lat:47.46320,lon:19.02150,
+  price:"interbank rate",pay:"card → HUF",
+  d:"Second cluster, in the metro concourse rather than the railway hall, 100 m from the first. <b>Use it if the station-hall machine is out of order or queued</b> — on a holiday afternoon with a festival on, machines near transport hubs do run dry.<br><br>Same rules: bank brands only, choose HUF. <i>Pin approximate — the concourse is large.</i>"},
+ {cat:"atm",t:"③ under the hotel",name:"ATM — Fővám tér M4 station",lat:47.48830,lon:19.05740,
+  price:"interbank rate",pay:"card → HUF",
+  d:"<b>The closest machine to your bed</b> — the M4 station concourse comes up at the hotel door. M4 is the new line and its stations are well equipped.<br><br><b>Use it as your top-up point</b> for the rest of the stay: Friday's market breakfast and lunch are cash, and so are the ruin bars. <i>Approximate — check both concourse exits.</i>"},
+ {cat:"atm",t:"④ 380 m · best cluster",name:"ATMs — Kálvin tér, real bank branches",lat:47.48940,lon:19.06160,
+  price:"interbank rate",pay:"card → HUF",
+  d:"<b>The densest cluster of genuine bank ATMs near your hotel</b>, five minutes up Vámház körút. Kálvin tér is a major junction with actual branches around it — OTP and others — so you get a choice of machines rather than one lonely box.<br><br><b>Branches are closed on the holiday but the machines work.</b> This is also where you get out on option B coming home tonight, so it costs you nothing to stop. <i>Pin marks the square; look at the building frontages.</i>"},
+ {cat:"atm",t:"⑤ near the show",name:"ATM — Batthyány tér M2 station",lat:47.50640,lon:19.03920,
+  price:"interbank rate",pay:"card → HUF",
+  d:"<b>78 m behind your viewing spot</b>, in the M2 station under the market hall. Worth knowing because it is the only machine within reach of the quay once you are in position.<br><br><b>But do not rely on it tonight.</b> With a 21:00 show and enormous crowds, machines at event-adjacent stations are the first to empty. <b>Draw at Kelenföld at 15:35 and you never need this one.</b>"},
+ {cat:"atm",t:"⑥ verify",name:"ATM — Szent Gellért tér M4",lat:47.48340,lon:19.05240,
+  price:"interbank rate",pay:"card → HUF",
+  d:"M4 station at the Buda end of Liberty Bridge, 400 m into tonight's walk. Likely to have a machine in the concourse. <b>Approximate — treat as a maybe, not a plan.</b>"},
+ {cat:"atm",t:"⑦ verify",name:"ATM — Clark Ádám tér / Várkert Bazár",lat:47.49790,lon:19.03990,
+  price:"interbank rate",pay:"card → HUF",
+  d:"<b>The one place tonight where you will actually want cash</b> — the food street is cash-first — and the least certain on this list. There are usually machines around Clark Ádám tér and the Várkert Bazár visitor areas, but <b>I would not bet dinner on it</b>.<br><br><b>Arrive with forints already in your pocket.</b> Approximate pin."},
+ {cat:"cash",t:"Fri, not Thu",name:"EXCHANGE COUNTERS — inland of Ferenciek tere",lat:47.49310,lon:19.05775,
+  price:"aim within 1–2% of mid-market",pay:"EUR notes → HUF",
+  d:"<b>If you are carrying euro notes rather than using a card, this is where to change them — on FRIDAY.</b> Every counter is shut today for the national holiday; they reopen Friday on Saturday-style hours.<br><br>The bureaux a few streets <i>inland</i> of Ferenciek tere and along Károly körút are the usual recommendation — <b>back from the tourist drag, which is exactly why their rates are better</b>.<br><br><b>Judge an office in ten seconds:</b> check the mid-market rate on your phone first (<b>360–364 HUF per €1</b> in mid-2026). A fair office is within <b>1–2%</b> of that. <b>Hungarian law sets a 0.3% minimum commission</b>, so &quot;NO COMMISSION&quot; means the markup is hidden in the rate. Ask for the exact forints you will receive before handing anything over.<br><br><b>At 362, €200 should come back as roughly 70,000 Ft.</b> Below 345 to the euro, walk away. <i>Pin is the area, not one shop.</i>"},
+ {cat:"clash",t:"never here",name:"DON'T change money here — Váci utca & the tourist streets",lat:47.49250,lon:19.05490,
+  price:"you lose 5–15%",pay:"—",
+  d:"<b>The three worst places to change euros in Budapest:</b> the airport, your hotel reception, and the shopfront bureaux on <b>Váci utca</b> and the streets around it.<br><br>Also on the list: anyone advertising <b>&quot;0% commission&quot;</b> in big letters, anyone who quotes a rate but will not state the final forint figure, and the <b>blue-and-yellow Euronet ATMs</b> that cluster exactly here. <b>A single 50,000 Ft withdrawal from a Euronet machine can cost you 2,000–3,000 Ft more than a bank one.</b><br><br>You will walk along Váci utca — it is between the hotel and the Basilica. Enjoy the street, ignore the money shops."}
+];
+var WALK=[[47.48800,19.05800],[47.48755,19.05745],[47.48700,19.05690],[47.48660,19.05640],[47.48626,19.05609],[47.48610,19.05480],[47.48594,19.05365],[47.48578,19.05245],[47.48562,19.05122],[47.48575,19.05040],[47.48610,19.04985],[47.48660,19.04940],[47.48700,19.04930],[47.48790,19.04870],[47.48880,19.04805],[47.48980,19.04730],[47.49080,19.04645],[47.49170,19.04550],[47.49230,19.04440],[47.49290,19.04350],[47.49336,19.04280],[47.49420,19.04220],[47.49520,19.04150],[47.49620,19.04070],[47.49720,19.04005],[47.49828,19.03957],[47.49930,19.03910],[47.50060,19.03885],[47.50200,19.03875],[47.50340,19.03875],[47.50470,19.03880],[47.50590,19.03885],[47.50670,19.03890],[47.50720,19.03900]];
+var HOMEWALK=WALK.slice().reverse();
+var M2=[[47.50651,19.03878],[47.50640,19.04080],[47.50625,19.04300],[47.50605,19.04630],[47.50440,19.04880],[47.50210,19.05130],[47.49980,19.05340],[47.49830,19.05430],[47.49750,19.05460]];
+var M3=[[47.49750,19.05460],[47.49620,19.05520],[47.49450,19.05650],[47.49310,19.05775],[47.49150,19.05930],[47.49010,19.06080],[47.48940,19.06160]];
+var M4=[[47.48940,19.06160],[47.48905,19.06060],[47.48865,19.05930],[47.48835,19.05800],[47.48830,19.05740]];
+/* arrival: Kelenföld P+R → M4 → Fővám tér */
+var M4ARR=[[47.46350,19.02250],[47.46660,19.03160],[47.47280,19.04020],[47.47760,19.04630],
+           [47.48340,19.05240],[47.48830,19.05740],[47.48800,19.05800]];
+
+/* ---------------- map ---------------- */
+var map=L.map('map',{scrollWheelZoom:true}).setView([47.4975,19.0470],14);
+var base=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+
+
+/* ---------------- icon set: inline SVG, prints cleanly ---------------- */
+var PATHS={
+  sight:'<path d="M3 21h18"/><path d="M5.5 21V10.5M9.8 21V10.5M14.2 21V10.5M18.5 21V10.5"/><path d="M12 3l9.5 5.5h-19L12 3z"/>',
+  cup:  '<path d="M4 7.5h12.5V13a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7.5z"/><path d="M16.5 9h2.2a2.4 2.4 0 0 1 0 4.8h-2.2"/><path d="M3 21h15"/>',
+  bag:  '<path d="M5.5 7.5h13l-1.1 11.6a1.6 1.6 0 0 1-1.6 1.4H8.2a1.6 1.6 0 0 1-1.6-1.4L5.5 7.5z"/><path d="M9 7.5V6a3 3 0 0 1 6 0v1.5"/>',
+  event:'<circle cx="12" cy="12" r="2.7"/><path d="M12 2.2v3.4M12 18.4v3.4M2.2 12h3.4M18.4 12h3.4M5.1 5.1l2.4 2.4M16.5 16.5l2.4 2.4M18.9 5.1l-2.4 2.4M7.5 16.5l-2.4 2.4"/>',
+  bed:  '<path d="M3 19v-7h12.5A4.5 4.5 0 0 1 20 16.5V19"/><path d="M3 12V6.5"/><path d="M3 19h18"/><circle cx="7.6" cy="9.3" r="1.9"/>',
+  car:  '<path d="M2.5 16.5v-4l2-5.5h15l2 5.5v4"/><path d="M2.5 12.5h19"/><circle cx="7" cy="16.8" r="1.7"/><circle cx="17" cy="16.8" r="1.7"/>',
+  train:'<rect x="5" y="2.8" width="14" height="13" rx="3.2"/><path d="M5.5 11h13"/><path d="M9 19l-1.6 2.2M15 19l1.6 2.2"/><path d="M9.5 16v3M14.5 16v3"/>',
+  music:'<path d="M9.5 18.5V6l10.5-2.2v11"/><circle cx="6.6" cy="18.6" r="2.9"/><circle cx="17" cy="15.9" r="2.9"/>',
+  eye:  '<path d="M2.2 12S6 6.2 12 6.2 21.8 12 21.8 12 18 17.8 12 17.8 2.2 12 2.2 12z"/><circle cx="12" cy="12" r="3.1"/>',
+  warn: '<path d="M12 3.6l9.4 16.3H2.6L12 3.6z"/><path d="M12 9.6v4.3"/><path d="M12 17v.12"/>',
+  cash: '<rect x="2.5" y="6.5" width="19" height="11" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 12h.1M17.9 12h.1"/>',
+  atm:  '<rect x="4.5" y="2.8" width="15" height="18.4" rx="2.4"/><rect x="7.5" y="5.8" width="9" height="5.5" rx="1"/><path d="M8 15h8M8 18h5"/>',
+  bulb: '<path d="M9.2 18.2h5.6"/><path d="M10.3 21h3.4"/><path d="M12 3.2a6 6 0 0 1 3.6 10.8c-.5.4-.8 1-.8 1.6v.6H9.2v-.6c0-.6-.3-1.2-.8-1.6A6 6 0 0 1 12 3.2z"/>'
+};
+function gl(kind,color,size){
+  return '<svg viewBox="0 0 24 24" width="'+size+'" height="'+size+'" fill="none" stroke="'+color+
+         '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+PATHS[kind]+'</svg>';
+}
+var GK={sight:'sight',bed:'bed',food:'cup',event:'event',shop:'bag',car:'car',metro:'train',ent:'music',alt:'eye',clash:'warn',light:'bulb',cash:'cash',atm:'atm'};
+var COL={sight:'#c0392b',food:'#c8781a',event:'#7d3c98',bed:'#e0247a',wc:'#2a7fb8',
+         metro:'#1a6aa8',opt:'#8a93a8',car:'#5d6470',shop:'#2e7d4f',ent:'#b0338e',alt:'#2f7d8c',clash:'#d64541',light:'#8a5fc0',cash:'#0f7b6c',atm:'#0f7b6c'};
+function ic(p){
+  if(p.cat==='wc'){                                     /* toilets: WC tag */
+    return L.divIcon({className:'',iconSize:[30,20],iconAnchor:[15,10],
+      html:'<div class="mk wc pill" style="width:30px;height:20px;font-size:10.5px;letter-spacing:.5px">WC</div>'});
+  }
+  if(p.cat==='shop'){                   /* shops: bag glyph */
+    return L.divIcon({className:'',iconSize:[28,28],iconAnchor:[14,14],
+      html:'<div class="mk '+p.cat+' sq" style="width:28px;height:28px">'+gl(GK[p.cat],'#fff',17)+'</div>'});
+  }
+  if(p.n){                                              /* numbered stop: number + category badge */
+    var k=GK[p.cat];
+    var badge=k?'<span class="g">'+gl(k,COL[p.cat],11)+'</span>':'';
+    var s=(p.cat==='bed')?37:32;
+    return L.divIcon({className:'',iconSize:[s,s],iconAnchor:[s/2,s/2],
+      html:'<div class="mk '+p.cat+'" style="width:'+s+'px;height:'+s+'px;font-size:'+(s>34?15.5:14)+'px">'+badge+p.n+'</div>'});
+  }
+  if(GK[p.cat]){                                        /* unnumbered POI: glyph only */
+    return L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
+      html:'<div class="mk '+p.cat+' sq" style="width:26px;height:26px">'+gl(GK[p.cat],'#fff',16)+'</div>'});
+  }
+  var lab=p.g||'';                                      /* metro M, options A/B/✕ */
+  return L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],
+    html:'<div class="mk '+p.cat+'" style="width:22px;height:22px;font-size:'+(lab.length>1?9:11)+'px">'+lab+'</div>'});
+}
+function pop(p){
+  var tag=p.price?'<div class="ptag"><b>'+p.price+'</b>'+
+      (p.pay&&p.pay!=='—'?'<span>'+p.pay+'</span>':'')+'</div>':'';
+  return '<b>'+(p.t?p.t+' &middot; ':'')+p.name+'</b>'+
+         (p.dist?'<br><span class="meta">'+p.dist+'</span>':'')+tag+'<br>'+p.d;
+}
+var G={route:L.layerGroup(),money:L.layerGroup(),ent:L.layerGroup(),shop:L.layerGroup(),food:L.layerGroup(),wc:L.layerGroup(),home:L.layerGroup(),opt:L.layerGroup()};
+
+/* walking legs cycle through a warm-to-cool ramp so consecutive legs are distinguishable */
+var WRAMP=['#e8590c','#f08c00','#d9a406','#82a114','#2f9e44','#0ca678','#1098ad','#1c7ed6','#4263eb','#7048e8','#ae3ec9','#d6336c'];
+var _wi=0;
+function wcol(){ var c=WRAMP[_wi%WRAMP.length]; _wi++; return c; }
+/* ================= CLICK A LEG TO LIGHT IT UP ================= */
+var _legs=[], _focus=null;
+function reg(main,casing,id,kind,nums){
+  _legs.push({id:id,kind:kind,m:main,c:casing,
+    ms:{color:main.options.color,weight:main.options.weight,opacity:main.options.opacity,dashArray:main.options.dashArray},
+    cs:casing?{color:casing.options.color,weight:casing.options.weight,opacity:casing.options.opacity}:null,
+    nums:nums||(String(id).match(/\d+/g)||[]).map(Number)});
+  main.on('click',function(){focusLeg(id);});
+  if(casing) casing.on('click',function(){focusLeg(id);});
+  return main;
+}
+function _dim(L){ L.m.setStyle({weight:2.5,opacity:.14,color:L.ms.color}); if(L.c) L.c.setStyle({opacity:0}); }
+function _lit(L,glow){
+  if(L.c) L.c.setStyle({color:glow,weight:L.ms.weight+13,opacity:.55});
+  L.m.setStyle({color:L.ms.color,weight:L.ms.weight+3.5,opacity:1,dashArray:L.ms.dashArray});
+  L.m.bringToFront();
+}
+function _reset(L){ L.m.setStyle(L.ms); if(L.c) L.c.setStyle(L.cs); }
+function focusLeg(id){
+  if(_focus===id){ clearFocus(); return; }
+  _focus=id;
+  var hit=null;
+  _legs.forEach(function(L){ if(L.id===id){ _lit(L,'#ff7a1a'); hit=L; } else _dim(L); });
+  if(hit){ try{ map.fitBounds(hit.m.getBounds(),{padding:[70,70],maxZoom:17}); }catch(e){} }
+  banner('Showing <b>'+String(id).replace(/&/g,'&amp;')+'</b> only');
+}
+function focusStop(n){
+  _focus='stop'+n;
+  var any=[];
+  _legs.forEach(function(L){ if(L.nums.indexOf(n)>=0){ _lit(L,'#ff7a1a'); any.push(L); } else _dim(L); });
+  if(any.length){ var b=any[0].m.getBounds(); any.slice(1).forEach(function(L){b.extend(L.m.getBounds());});
+    try{ map.fitBounds(b,{padding:[70,70],maxZoom:16}); }catch(e){} }
+  banner('Showing everything that touches <b>stop '+n+'</b>');
+}
+function clearFocus(){ _focus=null; _legs.forEach(_reset); banner(null); }
+var _bn=null;
+function banner(html){
+  if(!_bn){ _bn=L.control({position:'topleft'});
+    _bn.onAdd=function(){ var d=L.DomUtil.create('div','focusbar'); d.id='focusbar';
+      L.DomEvent.disableClickPropagation(d); return d; };
+    _bn.addTo(map); }
+  var el=document.getElementById('focusbar');
+  if(!el) return;
+  if(!html){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='block';
+  el.innerHTML=html+' &nbsp;<button onclick="clearFocus()">show the whole day</button>';
+}
+
+reg(L.polyline(M4ARR,{color:'#41a62a',weight:6,opacity:.9,dashArray:'1,0'}).addTo(G.route),null,'M4 \u00b7 1 \u2192 2','ride',[1,2])
+ .bindPopup("<b>Step 1 · M4 metro, Kelenföld P+R → Fővám tér</b><br>5 stops, 12 min, no changes. Buy the three 72-hour travelcards at the station machine before you go down to the platform.");
+walkLeg([[47.46340,19.02350],[47.46360,19.02320],[47.46390,19.02300]],
+  'Out of the P+R and into the <b>station hall</b> \u2014 65 m. Cash, tickets and snacks all happen here before you go down to the platform.','0 \u2192 1');
+walkChain(WALK,[2,3,4,5,6,7,8],[
+ 'Down V\u00e1mh\u00e1z k\u00f6r\u00fat to F\u0151v\u00e1m t\u00e9r, then <b>onto the bridge deck itself</b>.',
+ 'Across Liberty Bridge, 333 m, landing at Szent Gell\u00e9rt t\u00e9r \u2014 then turn <b>right</b> and drop onto the lower quay.',
+ 'North along the <b>car-free Buda lower quay</b>, water on your right, Gell\u00e9rt Hill above.',
+ 'Still on the quay to <b>D\u00f6brentei t\u00e9r</b>, the Buda foot of Elisabeth Bridge.',
+ 'A few hundred metres more into <b>V\u00e1rkert Baz\u00e1r</b> and the food street.',
+ 'Keep going north on the same quay, <b>under the Chain Bridge</b> at Clark \u00c1d\u00e1m t\u00e9r.',
+ 'Final stretch along Bem rakpart to <b>the spot</b>, opposite Parliament.']);
+reg(L.polyline(HOMEWALK,{color:'#8a93a8',weight:4,opacity:.85,dashArray:'2,7'}).addTo(G.home),null,'8 \u2192 2 on foot','walk',[8,2])
+ .bindPopup("<b>Or walk it — 3.3 km / ~41 min</b><br>The way you came, in reverse: back down the car-free quay and over Liberty Bridge, which lands you at the hotel door. Flat, lit, riverside. After the show this genuinely beats a crushed metro platform, and it costs nothing.");
+reg(L.polyline(M2,{color:'#e8332a',weight:5,opacity:.9}).addTo(G.home),null,'M2 \u00b7 8 \u2192 De\u00e1k','ride',[8,2]).bindPopup("<b>M2 (red)</b> Batthyány tér → Kossuth Lajos tér → Deák Ferenc tér<br>2 stops, ~4 min. It dives under the Danube right after Batthyány tér.");
+reg(L.polyline(M3,{color:'#0d4ea3',weight:5,opacity:.9}).addTo(G.home),null,'M3 \u00b7 De\u00e1k \u2192 K\u00e1lvin','ride',[8,2]).bindPopup("<b>M3 (blue)</b> Deák Ferenc tér → Ferenciek tere → Kálvin tér<br>2 stops, ~4 min. Long interchange walk at Deák — follow signs for Kőbánya-Kispest.");
+reg(L.polyline(M4,{color:'#41a62a',weight:5,opacity:.9}).addTo(G.home),null,'M4 \u00b7 K\u00e1lvin \u2192 2','ride',[8,2]).bindPopup("<b>M4 (green)</b> Kálvin tér → Fővám tér<br>1 stop, ~2 min, under Vámház körút. Exit comes up at your front door.");
+
+/* ---- walking-style badge, for walks that aren't drawn by walkLeg ---- */
+function walkBadge(pts,label,color,grp){
+  var _m=_len(pts);
+  var dtxt=(_m<1000?Math.round(_m/10)*10+' m':(_m/1000).toFixed(2)+' km')+
+           ' \u00b7 '+Math.max(1,Math.round(_m/1.35/60))+' min';
+  label=label+' \u00b7 '+dtxt;
+  var m=pts[Math.floor(pts.length/2)], w=22+label.length*6.4;
+  L.marker(m,{interactive:false,zIndexOffset:500,icon:L.divIcon({className:'',iconSize:[w,20],
+    iconAnchor:[w/2,10],html:'<div class="wb" style="color:'+color+';border-color:'+color+'">'+label+'</div>'})}).addTo(grp);
+}
+/* ---- line badges: subway icon + line number + the two stops the ride joins ---- */
+function lineBadge(pts,label,color,grp){
+  var m=pts[Math.floor(pts.length/2)];
+  var w=30+label.length*7;
+  var mk=L.marker(m,{interactive:false,zIndexOffset:400,icon:L.divIcon({className:'',
+    iconSize:[w,22],iconAnchor:[w/2,11],
+    html:'<div class="lb" style="background:'+color+'">'+gl('train','#fff',13)+label+'</div>'})});
+  mk.addTo(grp);
+}
+/* walking connectors for options B and C */
+L.polyline([[47.48940,19.06160],[47.48905,19.06020],[47.48870,19.05880],[47.48830,19.05740],[47.48800,19.05800]],
+  {color:'#5a6472',weight:3.5,opacity:.9,dashArray:'6,5'}).addTo(G.home)
+  .bindPopup("<b>Option B walk</b> — Kálvin tér → hotel, 380 m / 5 min straight down Vámház körút.");
+L.polyline([[47.49750,19.05460],[47.49560,19.05500],[47.49350,19.05560],[47.49150,19.05680],
+            [47.48980,19.05740],[47.48870,19.05790],[47.48800,19.05800]],
+  {color:'#5a6472',weight:3.5,opacity:.9,dashArray:'6,5'}).addTo(G.home)
+  .bindPopup("<b>Option C walk</b> — Deák Ferenc tér → hotel, 1.4 km / 17 min through the Belváros.");
+/* the sightline: your spot → the Parliament façade, 490 m across the water */
+L.polyline([[47.50720,19.03900],[47.50722,19.04566]],
+  {color:'#7d3c98',weight:2.5,opacity:.85,dashArray:'3,6'}).addTo(G.route)
+  .bindPopup("<b>Your sightline — 490 m</b><br>The Parliament façade is straight across the water from the spot. The projection is on that wall; the fireworks barges sit to your right, between Margaret Bridge and the Chain Bridge.");
+L.marker([47.50722,19.04566],{zIndexOffset:300,icon:L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
+  html:'<div class="mk event sq" style="width:26px;height:26px">'+gl('event','#fff',16)+'</div>'})})
+  .addTo(G.route).bindPopup("<b>PARLIAMENT — the screen</b><br>The 21:00 show is projected onto this façade. Kossuth tér behind it is the main event site and turns into the free Diszkótér after the fireworks.");
+/* organisers' recommended viewing stretch: Buda bank, Chain Bridge → Margaret Bridge */
+L.polyline([[47.49828,19.03957],[47.50050,19.03900],[47.50300,19.03890],[47.50500,19.03890],
+            [47.50720,19.03900],[47.50950,19.03900],[47.51150,19.03880]],
+  {color:'#7d3c98',weight:15,opacity:.20,lineCap:'butt'}).addTo(G.route)
+  .bindPopup("<b>The recommended viewing zone</b><br>Organisers name the Buda bank between the <b>Chain Bridge and Margaret Bridge</b> as the best view of the show — Parliament, the river and the Chain Bridge all in one frame. Your marked spot sits in the middle of it, and anywhere along this purple band works. Further south = fewer people, slightly flatter angle on the façade.");
+lineBadge(M2,'M2 \u00b7 8 \u2192 De\u00e1k','#e8332a',G.home);
+lineBadge(M3,'M3 \u00b7 De\u00e1k \u2192 K\u00e1lvin','#0d4ea3',G.home);
+lineBadge(M4,'M4 \u00b7 K\u00e1lvin \u2192 2','#41a62a',G.home);
+lineBadge(M4ARR,'M4 \u00b7 1 \u2192 2','#41a62a',G.route);
+walkBadge(HOMEWALK,'8 \u2192 2 on foot','#8a93a8',G.home);
+
+/* ---- keep coincident pins visible: numbered stops hold their true position,
+        anything landing on top of an already-placed pin walks outward on a spiral ---- */
+var _placed=[];
+function _m(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function spread(lat,lon,keep){
+  if(keep){_placed.push([lat,lon]);return [lat,lon];}
+  var p=[lat,lon],k=0;
+  while(_placed.some(function(q){return _m(p,q)<22;}) && k<40){
+    k++;
+    var ang=k*2.39996, rad=0.00030+0.00010*Math.floor(k/6);
+    p=[lat+rad*Math.cos(ang), lon+rad*1.45*Math.sin(ang)];
+  }
+  _placed.push(p); return p;
+}
+/* ---- ON FOOT: dashed, badged with the two stops each leg joins ---- */
+function _mm(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function _len(p){var t=0;for(var i=1;i<p.length;i++)t+=_mm(p[i-1],p[i]);return t;}
+function _near(p,ll){var bi=0,bd=1e9;for(var i=0;i<p.length;i++){var d=_mm(p[i],ll);if(d<bd){bd=d;bi=i;}}return bi;}
+function walkLeg(pts,label,badge){
+  if(!pts||pts.length<2) return;
+  var m=_len(pts);
+  var _c=L.polyline(pts,{color:'#fff',weight:11,opacity:.75}).addTo(G.route);
+  var _wc=wcol();
+  var _w=L.polyline(pts,{color:_wc,weight:5,opacity:.95,dashArray:'3,7',lineCap:'round'}).addTo(G.route);
+  reg(_w,_c,badge,'walk');
+  _w.bindPopup('<b>ON FOOT &nbsp;'+badge+'</b><br>'+label+'<br><br><b>'+
+      (m<1000?Math.round(m/10)*10+' m':(m/1000).toFixed(2)+' km')+
+      ' &middot; about '+Math.max(1,Math.round(m/1.35/60))+' min</b><br><br><i>Click the line to light it up on its own.</i>');
+  var dtxt=(m<1000?Math.round(m/10)*10+' m':(m/1000).toFixed(2)+' km')+
+            ' · '+Math.max(1,Math.round(m/1.35/60))+' min';
+  var lab=badge+' · '+dtxt;
+  var mid=pts[Math.floor(pts.length/2)], w=22+lab.length*6.4;
+  L.marker(mid,{interactive:false,zIndexOffset:500,icon:L.divIcon({className:'',iconSize:[w,20],
+    iconAnchor:[w/2,10],html:'<div class="wb" style="color:'+_wc+';border-color:'+_wc+'">'+lab+'</div>'})}).addTo(G.route);
+}
+function walkChain(pts,stops,notes){
+  var idx=stops.map(function(s){return _near(pts,[STOPS[s].lat,STOPS[s].lon]);});
+  if(idx[0]>2) walkLeg(pts.slice(0,idx[0]+1),'up to stop '+stops[0],'\u2192 '+stops[0]);
+  for(var i=0;i<stops.length-1;i++){
+    walkLeg(pts.slice(idx[i],idx[i+1]+1),
+      (notes&&notes[i])||(STOPS[stops[i]].name.split('\u2014')[0].trim()+' \u2192 '+STOPS[stops[i+1]].name.split('\u2014')[0].trim()),
+      stops[i]+' \u2192 '+stops[i+1]);
+  }
+  var last=idx[stops.length-1];
+  if(last<pts.length-3) walkLeg(pts.slice(last),'on from stop '+stops[stops.length-1],stops[stops.length-1]+' \u2192');
+}
+
+var markers={};
+function put(arr,grp,key){
+  arr.forEach(function(p,i){
+    var xy=spread(p.lat,p.lon,!!p.n);
+    var m=L.marker(xy,{icon:ic(p),zIndexOffset:(p.n?1200:200)}).bindPopup(pop(p));
+    m.addTo(G[grp]); markers[key+i]=m; p._xy=xy;
+  });
+}
+put(MONEY,'money','m'); put(STOPS,'route','s'); put(ENT,'ent','e'); put(SHOPS,'shop','p'); put(FOOD,'food','f'); put(WC,'wc','w');
+put(HOMEPT,'home','h'); put(OPTS,'opt','o');
+Object.keys(G).forEach(function(k){G[k].addTo(map)});
+L.control.layers(null,{
+  "The day, stops 0–8":G.route,
+  "ATMs, cash &amp; exchange":G.money,
+  "Music &amp; events tonight":G.ent,
+  "Shops open today":G.shop,
+  "Coffee &amp; food":G.food,
+  "Toilets":G.wc,
+  "Way home (metro + walk)":G.home,
+  "Fallback spot &amp; the clash":G.opt
+},{collapsed:false}).addTo(map);
+
+/* ---------------- side list ---------------- */
+document.getElementById('key').innerHTML=
+ '<span>'+gl('atm',COL.atm,15)+' cash / exchange</span>'+
+ '<span><b style="color:#e8590c">-</b><b style="color:#f08c00">-</b><b style="color:#2f9e44">-</b>'+
+   '<b style="color:#1c7ed6">-</b><b style="color:#7048e8">-</b> on foot, one colour per leg</span>'+
+ '<span>'+gl('sight',COL.sight,15)+' sight</span>'+
+ '<span>'+gl('cup',COL.food,15)+' coffee / food</span>'+
+ '<span>'+gl('bag',COL.shop,15)+' shop open today</span>'+
+ '<span>'+gl('event',COL.event,15)+' the show</span>'+
+ '<span>'+gl('music',COL.ent,15)+' music / events</span>'+
+ '<span>'+gl('bulb',COL.light,15)+' light art</span>'+
+ '<span>'+gl('eye',COL.alt,15)+' fallback spot</span>'+
+ '<span>'+gl('warn',COL.clash,15)+' clash</span>'+
+ '<span><b style="color:'+COL.wc+'">WC</b> toilet</span>'+
+ '<span>'+gl('train',COL.metro,15)+' metro</span>'+
+ '<span>'+gl('car',COL.car,15)+' the car</span>';
+var list=document.getElementById('list');
+function rows(arr,key,heading){
+  var h=document.createElement('h2'); h.textContent=heading; list.appendChild(h);
+  arr.forEach(function(p,i){
+    var r=document.createElement('div'); r.className='row';
+    var sw;
+    if(p.cat==='wc'){
+      sw='<div class="mk wc pill" style="width:30px;min-width:30px;height:20px;font-size:10px;margin-top:3px">WC</div>';
+    } else if(p.n){
+      var k=GK[p.cat];
+      sw='<div class="mk '+p.cat+'" style="width:24px;min-width:24px;height:24px;font-size:11px;margin-top:2px">'+
+         (k?'<span class="g" style="width:13px;height:13px;top:-5px;right:-5px">'+gl(k,COL[p.cat],9)+'</span>':'')+p.n+'</div>';
+    } else if(GK[p.cat]){
+      sw='<div class="mk '+p.cat+' sq" style="width:24px;min-width:24px;height:24px;margin-top:2px">'+gl(GK[p.cat],'#fff',15)+'</div>';
+    } else {
+      var lab=p.g||'';
+      sw='<div class="mk '+p.cat+'" style="width:22px;min-width:22px;height:22px;font-size:'+(lab.length>1?9:11)+'px;margin-top:3px">'+lab+'</div>';
+    }
+    r.innerHTML=sw+
+      '<div><div class="t" style="color:'+COL[p.cat]+'">'+p.t+(p.dist?' &nbsp;·&nbsp; '+p.dist:'')+
+      (p.price?' &nbsp;·&nbsp; <span class="pr">'+p.price+'</span>':'')+'</div>'+
+      '<div class="n">'+p.name+'</div><div class="d">'+
+      p.d.replace(/<[^>]+>/g,'').slice(0,120)+'…</div></div>';
+    r.onclick=function(){
+      document.querySelectorAll('.row').forEach(function(x){x.classList.remove('on')});
+      r.classList.add('on');
+      if(p.n!==undefined&&p.n!==null&&/^\d+$/.test(p.n)) focusStop(Number(p.n));
+      else { clearFocus(); map.setView(p._xy||[p.lat,p.lon],16,{animate:true}); }
+      markers[key+i].openPopup();
+    };
+    list.appendChild(r);
+  });
+}
+rows(STOPS,'s','The day, in order — 0 to 8');
+rows(MONEY,'m','ATMs, cash & exchange — euro to forint');
+rows(HOMEPT,'h','Getting home after the show');
+rows(ENT,'e','What else is on, 20 August');
+rows(SHOPS,'p','Shops open today');
+rows(WC,'w','Toilets');
+rows(FOOD,'f','Coffee & food nearby');
+rows(OPTS,'o','The fallback, and the one clash');
+map.fitBounds(L.polyline(WALK).getBounds(),{padding:[45,45]});
+
+function doPrint(){
+  var b=L.latLngBounds(WALK);
+  map.invalidateSize();
+  map.fitBounds(b,{padding:[20,20]});
+  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
+}
+window.addEventListener('beforeprint',function(){map.invalidateSize()});
+window.addEventListener('afterprint',function(){
+  map.invalidateSize(); map.fitBounds(L.polyline(WALK).getBounds(),{padding:[45,45]});
+});
+</script>
+</body>
+</html>

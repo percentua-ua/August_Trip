@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>День 5 — понеділок, 24 серпня 2026, Братислава і дорога додому</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1b2430;background:#fbfaf7}
+  #wrap{display:flex;height:100%}
+  #side{width:410px;min-width:410px;height:100%;overflow-y:auto;background:#fbfaf7;border-right:1px solid #e2ddd4;padding:18px 18px 40px}
+  #map{flex:1;height:100%}
+  h1{font-size:20px;letter-spacing:-.2px}
+  .sub{font-size:12.5px;color:#727e8c;margin:6px 0 14px;line-height:1.45}
+  .stat{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .stat div{background:#fff;border:1px solid #e2ddd4;border-radius:8px;padding:6px 9px;font-size:11px}
+  .stat b{display:block;font-size:14px;color:#2f6fb0}
+  button{font:inherit;font-size:12.5px;font-weight:600;background:#1b2430;color:#fff;border:0;
+         border-radius:8px;padding:9px 13px;cursor:pointer;width:100%;margin-bottom:14px}
+  button:hover{background:#2d3b4d}
+  .row{display:flex;gap:10px;padding:8px;border-radius:9px;cursor:pointer;align-items:flex-start}
+  .row:hover{background:#f2ede4}
+  .row.on{background:#f0ecf6}
+  .t{font-size:11.5px;font-weight:700;letter-spacing:.2px}
+  .n{font-size:13.5px;font-weight:600;line-height:1.3;margin:1px 0 2px}
+  .d{font-size:11.5px;color:#6b7785;line-height:1.42}
+  h2{font-size:10.5px;letter-spacing:1.1px;color:#8a93a8;text-transform:uppercase;margin:20px 0 4px;font-weight:700}
+  .warn{background:#fff6e6;border:1px solid #f0d9a8;border-radius:9px;padding:10px 11px;font-size:12px;line-height:1.5;margin-top:12px}
+  .warn.red{background:#fdecea;border-color:#f0bdb5}
+  .warn.blue{background:#eaf2f8;border-color:#b8d3e6}
+  .warn.green{background:#eef5f0;border-color:#cfe2d6}
+  .key{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:11.5px;color:#4b5560;margin-top:6px}
+  .key span{display:flex;align-items:center;gap:5px}
+  .pr{color:#1b6b45;font-weight:700}
+  .ptag{margin:7px 0 2px;padding:5px 8px;background:#eef5f0;border:1px solid #cfe2d6;
+        border-radius:7px;font-size:12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .ptag b{color:#1b6b45!important} .ptag span{color:#8a5a12;font-weight:700;font-size:11px}
+  .mk{position:relative;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;
+      justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.45);border:2.5px solid #fff}
+  .mk .g{position:absolute;top:-7px;right:-7px;background:#fff;border-radius:50%;
+         width:17px;height:17px;display:flex;align-items:center;justify-content:center;
+         box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .mk svg{display:block;flex:0 0 auto}
+  .sq{border-radius:5px}
+  .pill{border-radius:4px;border-width:2px}
+  .sight{background:#2f6fb0} .food{background:#c8781a} .event{background:#7d3c98}
+  .bed{background:linear-gradient(135deg,#ffb300 0%,#ff2d78 52%,#b620e0 100%);box-shadow:0 0 0 2px rgba(255,45,120,.30),0 2px 7px rgba(0,0,0,.45)} .wc{background:#2a7fb8} .metro{background:#1a6aa8} .car{background:#5d6470}
+  .shop{background:#2e7d4f} .ent{background:#b0338e} .view{background:#8a5a12}
+  .alt{background:#2f7d8c} .clash{background:#d64541} .light{background:#8a5fc0} .wine{background:#7d2e46}
+    .wb{white-space:nowrap;background:#fff;color:#2f6fb0;border:2px dashed #2f6fb0;border-radius:10px;font-size:9.5px;font-weight:700;
+      text-align:center;line-height:16px;height:20px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .focusbar{display:none;background:#1b2430;color:#fff;font-size:12.5px;font-weight:600;padding:7px 10px;
+      border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.35);max-width:330px}
+  .focusbar b{color:#ffb066}
+  .focusbar button{font:inherit;font-size:11.5px;font-weight:700;background:#ff7a1a;color:#1b2430;border:0;
+      border-radius:6px;padding:3px 8px;margin-left:4px;cursor:pointer;width:auto}
+  .lb{display:flex;align-items:center;gap:3px;color:#fff;font-weight:700;font-size:11px;
+      border-radius:7px;padding:2px 6px 2px 4px;border:2px solid #fff;white-space:nowrap;
+      box-shadow:0 1px 4px rgba(0,0,0,.45)}
+  .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
+  .leaflet-popup-content b{color:#2f6fb0}
+  .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
+  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+  @media print{
+    @page{size:A4 landscape;margin:8mm}
+    html,body{height:auto;background:#fff}
+    #wrap{display:block;height:auto}
+    button,.leaflet-control-zoom,.leaflet-control-attribution,.leaflet-control-layers{display:none!important}
+    #side{width:78mm;min-width:0;height:auto;overflow:visible;border:none;padding:0;float:left;font-size:9px}
+    #map{width:196mm;height:185mm;margin-left:80mm;border:1px solid #bbb}
+    h1{font-size:14px} .sub{font-size:8.5px;margin:4px 0 7px}
+    .stat{gap:3px;margin-bottom:7px} .stat div{padding:3px 5px;font-size:7.5px} .stat b{font-size:9.5px}
+    .row{padding:2.5px 0;break-inside:avoid} .n{font-size:9px;margin:0} .d{font-size:7.8px;line-height:1.3}
+    .t{font-size:7.8px} h2{font-size:7.5px;margin:8px 0 2px}
+    .warn{font-size:7.8px;padding:5px 6px;margin-top:5px;break-inside:avoid}
+    .key{font-size:7.5px;gap:2px 8px}
+    .mk{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="side">
+    <h1>День 5 &mdash; понеділок, 24 серпня 2026, Братислава і дорога додому</h1>
+    <div class="sub"><b>Тільки ранок у Bratislava (Братислава).</b> Виїзд із Vienna (Відень) о 06:00, порожнє старе місто о 07:10, брама замку о 08:00, поки там ще нікого, усе старе місто пішки до 08:45 &mdash; і геть о <b>09:00</b>. <b>Їсте один раз</b>, у номері перед виїздом із Vienna. Довгу дорогу додому після цього тут свідомо не намальовано.</div>
+    <div class="stat">
+      <div>Vienna → Bratislava<b>65 км</b></div>
+      <div>у дорозі<b>~55 хв</b></div>
+      <div>у Bratislava<b>2 год</b></div>
+      <div>їжа<b>один раз, у номері</b></div>
+      <div>пішки<b>1.7 км</b></div>
+      <div>замок + старе місто<b>безкоштовно</b></div>
+      <div>виїзд не пізніше<b>09:00</b></div>
+    </div>
+    <button onclick="doPrint()">Зберегти в PDF / друк &mdash; одна сторінка альбомно, разом із картою</button>
+    <div class="key" id="key"></div>
+    <div id="list"></div>
+    <div class="warn red"><b>Виїзд із Vienna (Відень) о 06:00 і виїзд із Bratislava (Братислава) не пізніше 09:00.</b> Ці два часи &mdash; уся дисципліна ранку. Двох годин тут досить на замок і старе місто; три вже з’їдають світло, потрібне вам на карпатські перевали в кінці дня, а це єдиний запас міцності в плані.</div>
+    <div class="warn" style="background:#fdf3e7;border-color:#f0d0a8"><b>Одна їжа, у номері, куплена в суботу.</b>
+    В Austria (Австрія) о 05:15 не працює ніщо, а <b>в неділю в країні зачинені всі магазини</b> &mdash; тому сніданок на понеділок купуєте <b>на два дні раніше</b>, у супермаркеті на Meidlinger Hauptstra&szlig;e (Майдлінґер Гауптштрасе).<br>
+    <b>На трьох:</b> хліб або булочки, масло, сир і шинка, йогурт, фрукти, кава і <b>3&ndash;4 літри води в машину</b>. Приблизно <b>&euro;15&ndash;20</b> проти &euro;30&ndash;40 у закладі.<br>
+    <b>Їсте 05:15&ndash;05:45, виїзд о 06:00.</b> Ось і вся причина робити це в номері.<br>
+    <b>Тож Bratislava (Братислава) &mdash; це огляд, а не їжа:</b> старе місто 45 хв, замок 40 хв і кава з собою, якщо захочете. Якщо ви <i>таки</i> хочете поїсти там, три найкращі місця позначено &mdash; але за дві години ви встигнете <b>або замок і повноцінний обід, або замок і старе місто, а не все разом.</b></div>
+    <div class="warn green"><b>Bratislava (Братислава) коштує вам майже нічого.</b> Це <b>65 км від Vienna (Відень)</b>, а звідси лише <b>25 км на південь до Rajka (Райка)</b> і ви на угорській автомагістралі &mdash; приблизно на <b>30 км і 25 хвилин</b> більше, ніж їхати прямо на Hegyeshalom (Гедєшгалом). За це ви отримуєте замок на світанку, безлюдне старе місто і коронаційний собор, приблизно за &euro;10 усього.</div>
+    <div class="warn"><b>Спершу старе місто, потім замок &mdash; і цей порядок не питання смаку.</b> <b>Територія Bratislavský hrad (Братиславський град) відкривається о 08:00</b> (щодня 08:00&ndash;22:00, підтверджено в Bratislava Tourist Board), тож приїхати до брами о 07:10 означало б просто стояти під нею. Вулиці старого міста відкриті всю ніч і о 07:10 справді безлюдні &mdash; це краща половина угоди. На замкову терасу ви виходите на відкритті, коли на ній нікого, а єдиний підйом припадає на середину прогулянки, а не на початок.<br><b>Історичний музей усередині коштує &euro;14 з людини й відкривається о 10:00</b> (щодня, крім вівторка, тож у ваш понеділок він працював би). Вас на той час уже немає &mdash; пропустіть. Тераса й Бароковий сад &mdash; ось у чому суть, і обидві безкоштовні.</div>
+    <div class="warn blue"><b>Скільки ранок у Bratislava (Братислава) насправді коштує вам трьом: &euro;10&ndash;23, а мінімум &mdash; &euro;0.</b><br><b>Словацька е-віньєтка &mdash; &euro;8.10</b> за 1 день, &euro;10.80 за 10 днів (офіційні ціни, eznamka.sk). Потрібна лише якщо виїдете на автомагістраль D. Ви <i>можете</i> заїхати з Kittsee&ndash;Jarovce (Кітзе&ndash;Яровце) і вийти на південь через Rusovce (Русовце) і &Ccaron;unovo (Чуново) звичайними дорогами й не платити нічого &mdash; але купіть однодобову онлайн увечері перед тим і більше про це не думайте.<br><b>Парковка, 2 години &mdash; від &euro;0 до &euro;3.</b> Стоянка <i>Gondova</i> (Гондова) у центрі біля Danube (Дунай): &euro;0.50/30 хв до 08:00, &euro;1/30 хв після, тож 07:00&ndash;09:00 &mdash; це <b>&euro;3.00</b>. <i>Tyr&scaron;&aacute;k 1</i> (Тиршак 1) на березі Petr&zcaron;alka (Петржалка) &mdash; <b>безкоштовно з 03:00</b>, але додає перехід моста пішки. Вулична парковка PAAS у старому місті &mdash; &euro;1.50&ndash;2/година в робочий день. Усе наземне &mdash; жодного обмежувача висоти для Prado.<br><b>Територія замку, Бароковий сад, тераси, Michalská brána (Михальська брама), Hlavné námestie (Головна площа), &Ccaron;umil (Чуміл), St Martin's (собор Св. Мартина) знадвору &mdash; усе безкоштовно.</b> Цього ранку немає жодного квитка, який треба було б купувати.<br><b>Опційно: кава з собою &euro;3&ndash;4 з кожного</b> (&euro;9&ndash;12 на трьох), громадські туалети &euro;0.50&ndash;1 з людини.<br><b>Slovakia (Словаччина) &mdash; це євро</b> &mdash; ваші картки в EUR платять із нульовою конвертацією, єдине місце в цій подорожі, де це так. Платіть за все карткою; словацька готівка вам не потрібна взагалі. Угорська віньєтка від 20 серпня ще чинна, а в австрійської залишилося кілька днів.</div>
+    <div class="warn" style="background:#f4f6f9;border-color:#ccd4e0"><b>Усе, що після Bratislava (Братислава), свідомо не нанесено на цю карту.</b> Одним рядком: Rajka (Райка) о 10:10, на M1, об’їзд Budapest (Будапешт) по <b>південному кільцю M0</b>, M3 до V&aacute;s&aacute;rosnam&eacute;ny (Вашарошнамень), кордон у <b>Beregsur&aacute;ny (Берегсурань)</b>, найсвіжіший водій на <b>перевалах Мукачево&ndash;Стрий</b> (дві з половиною години, а не дев’яносто хвилин, які обіцяє карта), вечеря у Львові, дома близько 22:45. <b>Заправляйтеся в Hungary (Угорщина)</b>, не в Austria (Австрія).</div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+var PATHS={
+  sight:'<path d="M3 21h18"/><path d="M5.5 21V10.5M9.8 21V10.5M14.2 21V10.5M18.5 21V10.5"/><path d="M12 3l9.5 5.5h-19L12 3z"/>',
+  cup:  '<path d="M4 7.5h12.5V13a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7.5z"/><path d="M16.5 9h2.2a2.4 2.4 0 0 1 0 4.8h-2.2"/><path d="M3 21h15"/>',
+  bag:  '<path d="M5.5 7.5h13l-1.1 11.6a1.6 1.6 0 0 1-1.6 1.4H8.2a1.6 1.6 0 0 1-1.6-1.4L5.5 7.5z"/><path d="M9 7.5V6a3 3 0 0 1 6 0v1.5"/>',
+  event:'<circle cx="12" cy="12" r="2.7"/><path d="M12 2.2v3.4M12 18.4v3.4M2.2 12h3.4M18.4 12h3.4M5.1 5.1l2.4 2.4M16.5 16.5l2.4 2.4M18.9 5.1l-2.4 2.4M7.5 16.5l-2.4 2.4"/>',
+  bed:  '<path d="M3 19v-7h12.5A4.5 4.5 0 0 1 20 16.5V19"/><path d="M3 12V6.5"/><path d="M3 19h18"/><circle cx="7.6" cy="9.3" r="1.9"/>',
+  car:  '<path d="M2.5 16.5v-4l2-5.5h15l2 5.5v4"/><path d="M2.5 12.5h19"/><circle cx="7" cy="16.8" r="1.7"/><circle cx="17" cy="16.8" r="1.7"/>',
+  train:'<rect x="5" y="2.8" width="14" height="13" rx="3.2"/><path d="M5.5 11h13"/><path d="M9 19l-1.6 2.2M15 19l1.6 2.2"/><path d="M9.5 16v3M14.5 16v3"/>',
+  music:'<path d="M9.5 18.5V6l10.5-2.2v11"/><circle cx="6.6" cy="18.6" r="2.9"/><circle cx="17" cy="15.9" r="2.9"/>',
+  eye:  '<path d="M2.2 12S6 6.2 12 6.2 21.8 12 21.8 12 18 17.8 12 17.8 2.2 12 2.2 12z"/><circle cx="12" cy="12" r="3.1"/>',
+  warn: '<path d="M12 3.6l9.4 16.3H2.6L12 3.6z"/><path d="M12 9.6v4.3"/><path d="M12 17v.12"/>',
+  bulb: '<path d="M9.2 18.2h5.6"/><path d="M10.3 21h3.4"/><path d="M12 3.2a6 6 0 0 1 3.6 10.8c-.5.4-.8 1-.8 1.6v.6H9.2v-.6c0-.6-.3-1.2-.8-1.6A6 6 0 0 1 12 3.2z"/>',
+  peak: '<path d="M2.5 19.5h19L14 5.5l-3.4 6.2-2.1-1.9L2.5 19.5z"/>',
+  wine: '<path d="M7.5 3h9l-.7 6a3.8 3.8 0 0 1-7.6 0L7.5 3z"/><path d="M12 12.8V19"/><path d="M8.6 21h6.8"/>',
+  bus:  '<rect x="3.5" y="4" width="17" height="12.5" rx="2.5"/><path d="M3.5 10.5h17"/><circle cx="7.5" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/><path d="M6 16.5v1M18 16.5v1"/>'
+};
+function gl(k,c,s){
+  return '<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="'+c+
+         '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+PATHS[k]+'</svg>';
+}
+var GK={sight:'sight',bed:'bed',food:'cup',event:'event',shop:'bag',car:'car',metro:'train',
+        ent:'music',alt:'eye',clash:'warn',light:'bulb',view:'peak',wine:'wine',bus:'bus'};
+var COL={sight:'#2f6fb0',food:'#c8781a',event:'#7d3c98',bed:'#e0247a',wc:'#2a7fb8',metro:'#1a6aa8',
+         car:'#5d6470',shop:'#2e7d4f',ent:'#b0338e',alt:'#2f7d8c',clash:'#d64541',light:'#8a5fc0',
+         view:'#8a5a12',wine:'#7d2e46',bus:'#1a6aa8'};
+var STOPS=[{"n": "0", "cat": "bed", "t": "05:15", "dist": "будильник 05:00", "name": "КВАРТИРА — єдина їжа цього ранку", "lat": 48.1845, "lon": 16.3335, "price": "~€15–20 на трьох", "pay": "куплено в суботу", "d": "<b>Сьогодні ви їсте один раз, і це саме тут.</b> Сніданок у номері о 05:15, з продуктів, куплених у <b>суботу</b> — бо в неділю всі магазини в Austria (Австрія) зачинені, а о 05:15 у понеділок не працює взагалі ніщо.<br><br><b>Список на трьох:</b> хліб або булочки, масло, сир і шинка, йогурт, фрукти, розчинна або фільтр-кава і <b>3–4 літри води в машину</b>. Приблизно <b>€15–20</b> у супермаркеті на Meidlinger Hauptstraße (Майдлінґер Гауптштрасе) проти €30–40 за те саме десь у закладі.<br><br><b>Чому в номері, а не в кав’ярні:</b> це купує вам <b>виїзд о 06:00</b>. Будь-який план, що починається з пошуку сніданку, зсуває вас на 07:30, а ця година знімається просто зі світла, потрібного вам на карпатські перевали в кінці дня.<br><br><b>Не встигли купити?</b> Магазини на <b>Bahnhof Wien Meidling</b> (вокзал Відень-Майдлінг) за 630 м працюють зранку й у неділю — €4–7 з людини.<br><br><b>Будильники на 05:00 · їсте 05:15–05:45 · машина завантажена · виїзд о 06:00.</b> Вулиці порожні, Vienna (Відень) позаду за п’ятнадцять хвилин. Купувати нічого: угорська віньєтка від 20 серпня ще чинна."}, {"n": "1", "cat": "car", "t": "07:00", "dist": "65 км · 55 хв", "name": "BRATISLAVA (БРАТИСЛАВА) — паркуєтесь біля старого міста", "lat": 48.145, "lon": 17.103, "price": "~€2–4 за 3 год", "pay": "картка", "d": "<b>65 км від Vienna (Відень), а за 25 км звідси ви вже на угорській автомагістралі.</b> Ось чому Bratislava (Братислава) того варта: об’їзд коштує приблизно 30 км і 25 хвилин проти дороги прямо на Hegyeshalom (Гедєшгалом).<br><br><b>Паркуйтеся в паркінгу, а не на вулиці.</b> Понеділок — робочий день, тож у старому місті парковка платна, а центр і так пішохідний. Паркінг Zochová (Зохова) стоїть під сходами до замку — саме там, де ви хочете почати. <i>Пін приблизний.</i><br><br><b>Slovakia (Словаччина) — це євро</b> — ваші картки в EUR працюють із нульовою конвертацією, єдине місце в цій подорожі, де це так.<br><br><b>⚠ Словацька е-віньєтка ~€12 (10 днів, eznamka.sk)</b>, якщо виїдете на автомагістралі D. До Bratislava можна дістатися і спуститися до Rajka (Райка) звичайними дорогами й обійтися без неї, але за €12 не варто й пробувати."}, {"n": 2, "cat": "sight", "t": "07:10", "dist": "петля 830 м · 45 хв", "name": "СТАРЕ МІСТО — порожні вулиці, Michalská brána (Михальська брама), Hlavné námestie (Головна площа), Čumil (Чуміл)", "lat": 48.1448, "lon": 17.1063, "price": "усе безкоштовно знадвору", "pay": "—", "d": "<b>Старе місто йде першим, і це свідомо: брама замку відкривається лише о 08:00.</b> О 07:10 вулиці ваші — кав’ярні ще виставляють стільці, жодних екскурсійних груп, низьке сонце вздовж провулків.<br><br><b>Michalská brána (Михальська брама)</b>, єдина збережена брама середньовічних мурів · <b>Hlavné námestie (Головна площа)</b> зі Старою ратушею і фонтаном Роланда · <b>Čumil (Чуміл)</b>, бронзовий робітник, що виглядає з люка, і найбільш фотографована річ у Slovakia (Словаччина) · <b>Dóm svätého Martina (собор Св. Мартина)</b>, де коронували одинадцять угорських монархів, зокрема Марію Терезію — золочена корона на його шпилі є копією тієї, що ви бачили в парламенті в п’ятницю.<br><br><b>Усе це безкоштовно знадвору, та й усередині так рано нічого не відкрито.</b> Візьміть каву з собою, якщо хочете — їжа вже була в номері о 05:15.<br><br><b>Ідіть із площі до 07:55</b> і піднімайтеся до замку на відкриття."}, {"n": 3, "cat": "view", "t": "08:00", "dist": "600 м угору · 40 хв", "name": "BRATISLAVSKÝ HRAD (БРАТИСЛАВСЬКИЙ ГРАД) — брама відкривається о 08:00, і ви перші", "lat": 48.142, "lon": 17.1, "price": "територія й тераса БЕЗКОШТОВНО", "pay": "—", "d": "<b>Територія замку: відкрито щодня 08:00–22:00, гуляти безкоштовно.</b> Перевірено в Bratislava Tourist Board — саме тому ранок вибудований у такому порядку. Будьте біля брами о 08:00, і подвір’я з терасами будуть ваші.<br><br>Білий блок на 80 м над Danube (Дунай), чотири кутові башти, відбудований у вигляді часів Марії Терезії. Те, за чим ви прийшли, — <b>південна тераса</b>: Danube, міст UFO і, ясного ранку, Austria (Австрія) й Hungary (Угорщина) одночасно з однієї точки. <b>Бароковий сад</b> за замком теж безкоштовний і зазвичай порожній.<br><br><b>Історичний музей усередині коштує €14 і відкривається о 10:00</b> (щодня, крім вівторка, тож у ваш понеділок він працював би) — але вас на той час уже немає. Пропустіть; суть у зовнішньому.<br><br><b>Вниз і в машину до 09:00.</b> Це число тримає карпатські перевали при світлі сьогодні ввечері. Далі 25 км на південь до Rajka (Райка) і на угорську автомагістраль."}];
+var FOOD=[{"cat": "food", "t": "відкрито з ~08:00", "name": "Bistro St. Germain — головна променада", "lat": 48.1435, "lon": 17.1078, "price": "~€10–14 з людини", "pay": "картка", "d": "<b>Вибір номер один.</b> На головній променаді старого міста, і його стабільно називають найкращим місцем для сніданку та бранчу в Bratislava (Братислава). Нормальна яєчня, добрий хліб, пристойна кава, швидкий сервіс — а це важливо, коли після нього у вас 480 км. <i>Пін приблизний.</i>"}, {"cat": "food", "t": "відкрито з ~08:00", "name": "Urban Bistro — старе місто", "lat": 48.145, "lon": 17.109, "price": "~€9–13 з людини", "pay": "картка", "d": "Другий заклад старого міста з дуже добрими відгуками на бранч. Беріть його, якщо в St. Germain черга — хоча в понеділок о 08:00 її не має бути ні там, ні там. <i>Пін приблизний.</i>"}, {"cat": "food", "t": "рівно 08:00", "name": "No 9 — спеціалісти зі сніданків", "lat": 48.146, "lon": 17.11, "price": "~€8–12 з людини", "pay": "картка", "d": "Місце, що працює зі сніданку до післяобіддя: ковбаски з яєчнею-скрембл, лате на вівсяному молоці, фортепіано у фоні, зал у стилі shabby chic. <b>Відкрито з 08:00</b>, і саме тому це найнадійніший варіант, якщо ви спускаєтеся просто із замку. <i>Пін приблизний.</i>"}];
+var ALTS=[{"cat": "alt", "t": "+15 хв", "name": "Modrý kostolík (Синій костел) — якщо хтось хоче ще одне", "lat": 48.1454, "lon": 17.122, "price": "знадвору безкоштовно", "pay": "—", "d": "Костел Св. Єлизавети, 1913 рік, ар-нуво, пофарбований <b>у пудрово-синій від низу до верху</b> — стіни, плитка, мозаїки, усе. Виглядає як торт, і в Центральній Європі немає нічого подібного.<br><br><b>15 хвилин на схід від Hlavné námestie (Головна площа)</b>, тож туди й назад це пів години. Беріть лише якщо сніданок був швидкий."}, {"cat": "alt", "t": "+20 хв", "name": "оглядовий майданчик UFO на мосту Nový most (Нови мост)", "lat": 48.1378, "lon": 17.1053, "price": "~€12", "pay": "картка", "d": "Ліфт пілоном моста 1972 року на оглядовий майданчик на 95 м над Danube (Дунай). <b>Платний, а замкова тераса дає порівнянну панораму безкоштовно</b> — але з майданчика видно старе місто і замок разом, чого із самого замку, звісно, не побачити.<br><br>500 м на південь від Dóm svätého Martina (собор Св. Мартина), тож це лише двадцять хвилин, якщо ви йдете з запасом. Пропустіть, якщо бранч затягнувся."}];
+var map=L.map('map',{scrollWheelZoom:true}).setView([48.6,20.5],13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+var G={route:L.layerGroup(),food:L.layerGroup(),alt:L.layerGroup(),metro:L.layerGroup()};
+function ic(p){
+  if(p.cat==='wc'){
+    return L.divIcon({className:'',iconSize:[30,20],iconAnchor:[15,10],
+      html:'<div class="mk wc pill" style="width:30px;height:20px;font-size:10.5px;letter-spacing:.5px">WC</div>'});
+  }
+  if(p.cat==='shop'){
+    return L.divIcon({className:'',iconSize:[28,28],iconAnchor:[14,14],
+      html:'<div class="mk shop sq" style="width:28px;height:28px">'+gl('bag','#fff',17)+'</div>'});
+  }
+  if(p.n){
+    var k=GK[p.cat];
+    var badge=k?'<span class="g">'+gl(k,COL[p.cat],11)+'</span>':'';
+    var s=(p.cat==='bed')?37:32;
+    return L.divIcon({className:'',iconSize:[s,s],iconAnchor:[s/2,s/2],
+      html:'<div class="mk '+p.cat+'" style="width:'+s+'px;height:'+s+'px;font-size:'+(s>34?15.5:14)+'px">'+badge+p.n+'</div>'});
+  }
+  return L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
+    html:'<div class="mk '+p.cat+' sq" style="width:26px;height:26px">'+gl(GK[p.cat],'#fff',16)+'</div>'});
+}
+function pop(p){
+  var tag=p.price?'<div class="ptag"><b>'+p.price+'</b>'+
+      (p.pay&&p.pay!=='-'?'<span>'+p.pay+'</span>':'')+'</div>':'';
+  return '<b>'+(p.t?p.t+' &middot; ':'')+p.name+'</b>'+
+         (p.dist?'<br><span class="meta">'+p.dist+'</span>':'')+tag+'<br>'+p.d;
+}
+var _placed=[];
+function _mp(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function spread(lat,lon,keep){
+  if(keep){_placed.push([lat,lon]);return [lat,lon];}
+  var p=[lat,lon],k=0;
+  while(_placed.some(function(q){return _mp(p,q)<22;}) && k<40){
+    k++; var ang=k*2.39996, rad=0.00030+0.00010*Math.floor(k/6);
+    p=[lat+rad*Math.cos(ang), lon+rad*1.45*Math.sin(ang)];
+  }
+  _placed.push(p); return p;
+}
+var WRAMP=['#e8590c','#f08c00','#2f9e44','#0ca678','#1c7ed6','#7048e8','#ae3ec9','#d6336c'];
+var _wi=0; function wcol(){var c=WRAMP[_wi%WRAMP.length];_wi++;return c;}
+var _legs=[], _focus=null;
+function reg(main,casing,id,kind){
+  _legs.push({id:id,kind:kind,m:main,c:casing,
+    ms:{color:main.options.color,weight:main.options.weight,opacity:main.options.opacity,dashArray:main.options.dashArray},
+    cs:casing?{color:casing.options.color,weight:casing.options.weight,opacity:casing.options.opacity}:null,
+    nums:(String(id).match(/\d+/g)||[]).map(Number)});
+  main.on('click',function(){focusLeg(id);});
+  if(casing) casing.on('click',function(){focusLeg(id);});
+  return main;
+}
+function _dim(L){L.m.setStyle({weight:2.5,opacity:.14,color:L.ms.color});if(L.c)L.c.setStyle({opacity:0});}
+function _lit(L,g){if(L.c)L.c.setStyle({color:g,weight:L.ms.weight+13,opacity:.55});
+  L.m.setStyle({color:L.ms.color,weight:L.ms.weight+3.5,opacity:1,dashArray:L.ms.dashArray});L.m.bringToFront();}
+function _rst(L){L.m.setStyle(L.ms);if(L.c)L.c.setStyle(L.cs);}
+function focusLeg(id){
+  if(_focus===id){clearFocus();return;}
+  _focus=id; var hit=null;
+  _legs.forEach(function(L){if(L.id===id){_lit(L,'#ff7a1a');hit=L;}else _dim(L);});
+  if(hit){try{map.fitBounds(hit.m.getBounds(),{padding:[70,70],maxZoom:16});}catch(e){}}
+  banner('Показано лише <b>'+String(id)+'</b>');
+}
+function focusStop(n){
+  _focus='stop'+n; var any=[];
+  _legs.forEach(function(L){if(L.nums.indexOf(n)>=0){_lit(L,'#ff7a1a');any.push(L);}else _dim(L);});
+  if(any.length){var b=any[0].m.getBounds();any.slice(1).forEach(function(L){b.extend(L.m.getBounds());});
+    try{map.fitBounds(b,{padding:[70,70],maxZoom:15});}catch(e){}}
+  banner('Показано все, що торкається <b>пункту '+n+'</b>');
+}
+function clearFocus(){_focus=null;_legs.forEach(_rst);banner(null);}
+var _bn=null;
+function banner(html){
+  if(!_bn){_bn=L.control({position:'topleft'});
+    _bn.onAdd=function(){var d=L.DomUtil.create('div','focusbar');d.id='focusbar';
+      L.DomEvent.disableClickPropagation(d);return d;};
+    _bn.addTo(map);}
+  var el=document.getElementById('focusbar'); if(!el) return;
+  if(!html){el.style.display='none';el.innerHTML='';return;}
+  el.style.display='block';
+  el.innerHTML=html+' &nbsp;<button onclick="clearFocus()">показати весь день</button>';
+}
+function _len(p){var t=0;for(var i=1;i<p.length;i++)t+=_mp(p[i-1],p[i]);return t;}
+function walkLeg(pts,label,badge){
+  if(!pts||pts.length<2)return;
+  var m=_len(pts), wc=wcol();
+  var _c=L.polyline(pts,{color:'#fff',weight:11,opacity:.75}).addTo(G.route);
+  var _w=L.polyline(pts,{color:wc,weight:5,opacity:.95,dashArray:'3,7',lineCap:'round'}).addTo(G.route);
+  reg(_w,_c,badge,'walk');
+  _w.bindPopup('<b>ПІШКИ &nbsp;'+badge+'</b><br>'+label+'<br><br><b>'+
+    (m<1000?Math.round(m/10)*10+' м':(m/1000).toFixed(2)+' км')+' &middot; приблизно '+
+    Math.max(1,Math.round(m/1.35/60))+' хв</b><br><br><i>Клацніть лінію, щоб підсвітити лише її.</i>');
+  
+  var dtxt=(m<1000?Math.round(m/10)*10+' м':(m/1000).toFixed(2)+' км')+
+           ' \u00b7 '+Math.max(1,Math.round(m/1.35/60))+' хв';
+  var lab=badge+' \u00b7 '+dtxt;
+  var mid=pts[Math.floor(pts.length/2)], w=22+lab.length*6.4;
+  L.marker(mid,{interactive:false,zIndexOffset:500,icon:L.divIcon({className:'',iconSize:[w,20],
+    iconAnchor:[w/2,10],html:'<div class="wb" style="color:'+wc+';border-color:'+wc+'">'+lab+'</div>'})}).addTo(G.route);
+}
+var markers={};
+function put(arr,grp,key){
+  arr.forEach(function(p,i){
+    var m=L.marker([p.lat,p.lon],{icon:ic(p),zIndexOffset:(p.n?1200:200)}).bindPopup(pop(p));
+    m.addTo(G[grp]); markers[key+i]=m;
+  });
+}
+function walk(pts,label){
+  L.polyline(pts,{color:'#fff',weight:10,opacity:.9}).addTo(G.route);
+  L.polyline(pts,{color:'#2f6fb0',weight:4.5,opacity:.95}).addTo(G.route).bindPopup('<b>'+label+'</b>');
+}
+var MC={U1:'#e2001a',U2:'#a862a4',U3:'#f28b00',U4:'#009b3a',U6:'#9d6b3f',BUS:'#1a6aa8',CAR:'#5d6470'};
+var _dn=0;
+function line(pts,tag,label,dash){
+  var o={color:MC[tag]||'#5d6470',weight:6,opacity:.92};
+  if(dash) o.dashArray=dash;
+  var _c=L.polyline(pts,{color:'#fff',weight:11,opacity:.6}).addTo(G.route);
+  var _m=L.polyline(pts,o).addTo(G.route);
+  _dn++; reg(_m,_c,'DRIVE '+_dn,'drive');
+  _m.bindPopup('<b>АВТО &nbsp;відрізок '+_dn+'</b><br>'+label+'<br><br><i>Клацніть лінію, щоб підсвітити лише її.</i>');
+}
+function lineBadge(pts,label,color,glyph){
+  var m=pts[Math.floor(pts.length/2)], w=30+label.length*7;
+  L.marker(m,{interactive:false,zIndexOffset:400,icon:L.divIcon({className:'',iconSize:[w,22],
+    iconAnchor:[w/2,11],html:'<div class="lb" style="background:'+color+'">'+gl(glyph||'train','#fff',13)+label+'</div>'})}).addTo(G.metro);
+}
+var list=document.getElementById('list');
+function rows(arr,key,heading){
+  var h=document.createElement('h2'); h.textContent=heading; list.appendChild(h);
+  arr.forEach(function(p,i){
+    var r=document.createElement('div'); r.className='row';
+    var sw;
+    if(p.cat==='wc'){
+      sw='<div class="mk wc pill" style="width:30px;min-width:30px;height:20px;font-size:10px;margin-top:3px">WC</div>';
+    } else if(p.n){
+      var k=GK[p.cat];
+      sw='<div class="mk '+p.cat+'" style="width:24px;min-width:24px;height:24px;font-size:11px;margin-top:2px">'+
+         (k?'<span class="g" style="width:13px;height:13px;top:-5px;right:-5px">'+gl(k,COL[p.cat],9)+'</span>':'')+p.n+'</div>';
+    } else {
+      sw='<div class="mk '+p.cat+' sq" style="width:24px;min-width:24px;height:24px;margin-top:2px">'+gl(GK[p.cat],'#fff',15)+'</div>';
+    }
+    r.innerHTML=sw+
+      '<div><div class="t" style="color:'+COL[p.cat]+'">'+p.t+(p.dist?' &nbsp;&middot;&nbsp; '+p.dist:'')+
+      (p.price?' &nbsp;&middot;&nbsp; <span class="pr">'+p.price+'</span>':'')+'</div>'+
+      '<div class="n">'+p.name+'</div><div class="d">'+
+      p.d.replace(/<[^>]+>/g,'').slice(0,120)+'\u2026</div></div>';
+    r.onclick=function(){
+      document.querySelectorAll('.row').forEach(function(x){x.classList.remove('on')});
+      r.classList.add('on');
+      if(p.n!==undefined&&/^\d+$/.test(p.n)) focusStop(Number(p.n));
+      else { clearFocus(); map.setView(p._xy||[p.lat,p.lon],15,{animate:true}); }
+      markers[key+i].openPopup();
+    };
+    list.appendChild(r);
+  });
+}
+function doPrint(){
+  map.invalidateSize();
+  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
+}
+window.addEventListener('beforeprint',function(){map.invalidateSize()});
+window.addEventListener('afterprint',function(){map.invalidateSize()});
+
+var W_IN=[[48.14500,17.10300],[48.14470,17.10420],[48.14462,17.10550],[48.14455,17.10650],[48.14450,17.10718]];
+var W_LOOP=[[48.14450,17.10718],[48.14428,17.10760],[48.14400,17.10800],[48.14360,17.10830],[48.14322,17.10800],[48.14300,17.10745],[48.14285,17.10690],[48.14262,17.10640],[48.14235,17.10600],[48.14208,17.10560],[48.14185,17.10520],[48.14200,17.10440],[48.14230,17.10370]];
+var W_UP=[[48.14230,17.10370],[48.14252,17.10290],[48.14285,17.10190],[48.14310,17.10105],[48.14290,17.10035],[48.14245,17.09985],[48.14205,17.09960],[48.14180,17.09990],[48.14200,17.10000]];
+var W_DOWN=[[48.14200,17.10000],[48.14260,17.10060],[48.14300,17.10130],[48.14338,17.10190],[48.14400,17.10250],[48.14500,17.10300]];
+
+walkLeg(W_IN,'Авто \u2192 <b>Michalsk\u00e1 br\u00e1na (Михальська брама)</b>. Рівно, дві хвилини, і за аркою починається старе місто.','1 \u2192 2');
+walkLeg(W_LOOP,'Усе старе місто однією петлею: Michalsk\u00e1 br\u00e1na \u2192 Hlavn\u00e9 n\u00e1mestie \u2192 \u010cumil \u2192 D\u00f3m sv\u00e4t\u00e9ho Martina. Тут ніде не потрібен квиток.','2 петля');
+walkLeg(W_UP,'Угору до замку на відкриття о 08:00 \u2014 сходи й пандус із Zámocká (Замоцка). Єдиний справжній підйом цього ранку, 60 м.','2 \u2192 3');
+walkLeg(W_DOWN,'Замок \u2192 назад униз до авто. Усе під ухил, і це остання ходьба за всю подорож.','3 \u2192 авто');
+put(STOPS,'route','s'); put(FOOD,'food','f'); put(ALTS,'alt','a');
+Object.keys(G).forEach(function(k){G[k].addTo(map)});
+L.control.layers(null,{
+  "ДЕНЬ 0&rarr;3 &mdash; прогулянка центром Bratislava (Братислава)":G.route,
+  "Якщо ви радше поїсте тут":G.food,
+  "Заміни та компроміс":G.alt
+},{collapsed:false}).addTo(map);
+
+document.getElementById('key').innerHTML=
+ '<span><b style="color:#1f6f8b">- - -</b> клацніть будь-яку лінію, щоб виділити її</span>'+
+ '<span><b style="color:#e8590c">-</b><b style="color:#2f9e44">-</b><b style="color:#1c7ed6">-</b> пішки по Bratislava</span>'+
+ '<span>'+gl('cup',COL.food,15)+' їжа (опційно)</span>'+
+ '<span>'+gl('peak',COL.view,15)+' панорама</span>'+
+ '<span>'+gl('bed',COL.bed,15)+' старт / додому</span>'+
+ '<span>'+gl('eye',COL.alt,15)+' опційно</span>'+
+ '<span>'+gl('warn',COL.clash,15)+' компроміс</span>';
+rows(STOPS,'s','День по порядку — від 0 до 3');
+rows(FOOD,'f','Якщо ви радше поїсте в Bratislava');
+rows(ALTS,'a','Варіанти, і чому не повний словацький маршрут');
+map.fitBounds(L.polyline(W_IN.concat(W_LOOP,W_UP,W_DOWN)).getBounds(),{padding:[60,60]});
+</script>
+</body>
+</html>

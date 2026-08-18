@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day 3 — Sat 22 Aug 2026, Budapest → Vienna</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1b2430;background:#fbfaf7}
+  #wrap{display:flex;height:100%}
+  #side{width:410px;min-width:410px;height:100%;overflow-y:auto;background:#fbfaf7;border-right:1px solid #e2ddd4;padding:18px 18px 40px}
+  #map{flex:1;height:100%}
+  h1{font-size:20px;letter-spacing:-.2px}
+  .sub{font-size:12.5px;color:#727e8c;margin:6px 0 14px;line-height:1.45}
+  .stat{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .stat div{background:#fff;border:1px solid #e2ddd4;border-radius:8px;padding:6px 9px;font-size:11px}
+  .stat b{display:block;font-size:14px;color:#b0790a}
+  button{font:inherit;font-size:12.5px;font-weight:600;background:#1b2430;color:#fff;border:0;
+         border-radius:8px;padding:9px 13px;cursor:pointer;width:100%;margin-bottom:14px}
+  button:hover{background:#2d3b4d}
+  .row{display:flex;gap:10px;padding:8px;border-radius:9px;cursor:pointer;align-items:flex-start}
+  .row:hover{background:#f2ede4}
+  .row.on{background:#f0ecf6}
+  .t{font-size:11.5px;font-weight:700;letter-spacing:.2px}
+  .n{font-size:13.5px;font-weight:600;line-height:1.3;margin:1px 0 2px}
+  .d{font-size:11.5px;color:#6b7785;line-height:1.42}
+  h2{font-size:10.5px;letter-spacing:1.1px;color:#8a93a8;text-transform:uppercase;margin:20px 0 4px;font-weight:700}
+  .warn{background:#fff6e6;border:1px solid #f0d9a8;border-radius:9px;padding:10px 11px;font-size:12px;line-height:1.5;margin-top:12px}
+  .warn.red{background:#fdecea;border-color:#f0bdb5}
+  .warn.blue{background:#eaf2f8;border-color:#b8d3e6}
+  .warn.green{background:#eef5f0;border-color:#cfe2d6}
+  .key{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:11.5px;color:#4b5560;margin-top:6px}
+  .key span{display:flex;align-items:center;gap:5px}
+  .pr{color:#1b6b45;font-weight:700}
+  .ptag{margin:7px 0 2px;padding:5px 8px;background:#eef5f0;border:1px solid #cfe2d6;
+        border-radius:7px;font-size:12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .ptag b{color:#1b6b45!important} .ptag span{color:#8a5a12;font-weight:700;font-size:11px}
+  .mk{position:relative;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;
+      justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.45);border:2.5px solid #fff}
+  .mk .g{position:absolute;top:-7px;right:-7px;background:#fff;border-radius:50%;
+         width:17px;height:17px;display:flex;align-items:center;justify-content:center;
+         box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .mk svg{display:block;flex:0 0 auto}
+  .sq{border-radius:5px}
+  .pill{border-radius:4px;border-width:2px}
+  .sight{background:#b0790a} .food{background:#c8781a} .event{background:#7d3c98}
+  .bed{background:linear-gradient(135deg,#ffb300 0%,#ff2d78 52%,#b620e0 100%);box-shadow:0 0 0 2px rgba(255,45,120,.30),0 2px 7px rgba(0,0,0,.45)} .wc{background:#2a7fb8} .metro{background:#1a6aa8} .car{background:#5d6470}
+  .shop{background:#2e7d4f} .ent{background:#b0338e} .view{background:#8a5a12}
+  .alt{background:#2f7d8c} .clash{background:#d64541} .light{background:#8a5fc0} .wine{background:#7d2e46}
+  .focusbar{display:none;background:#1b2430;color:#fff;font-size:12.5px;font-weight:600;
+      padding:7px 10px;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.35);max-width:330px}
+  .focusbar b{color:#ffb066}
+  .focusbar button{font:inherit;font-size:11.5px;font-weight:700;background:#ff7a1a;color:#1b2430;
+      border:0;border-radius:6px;padding:3px 8px;margin-left:4px;cursor:pointer;width:auto}
+  .focusbar button:hover{background:#ffa15c}
+    .wb{white-space:nowrap;background:#fff;color:#b0790a;border:2px dashed #b0790a;border-radius:10px;
+      font-size:9.5px;font-weight:700;text-align:center;line-height:16px;height:20px;
+      white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .lb{display:flex;align-items:center;gap:3px;color:#fff;font-weight:700;font-size:11px;
+      border-radius:7px;padding:2px 6px 2px 4px;border:2px solid #fff;white-space:nowrap;
+      box-shadow:0 1px 4px rgba(0,0,0,.45)}
+  .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
+  .leaflet-popup-content b{color:#b0790a}
+  .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
+  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+  @media print{
+    @page{size:A4 landscape;margin:8mm}
+    html,body{height:auto;background:#fff}
+    #wrap{display:block;height:auto}
+    button,.leaflet-control-zoom,.leaflet-control-attribution,.leaflet-control-layers{display:none!important}
+    #side{width:78mm;min-width:0;height:auto;overflow:visible;border:none;padding:0;float:left;font-size:9px}
+    #map{width:196mm;height:185mm;margin-left:80mm;border:1px solid #bbb}
+    h1{font-size:14px} .sub{font-size:8.5px;margin:4px 0 7px}
+    .stat{gap:3px;margin-bottom:7px} .stat div{padding:3px 5px;font-size:7.5px} .stat b{font-size:9.5px}
+    .row{padding:2.5px 0;break-inside:avoid} .n{font-size:9px;margin:0} .d{font-size:7.8px;line-height:1.3}
+    .t{font-size:7.8px} h2{font-size:7.5px;margin:8px 0 2px}
+    .warn{font-size:7.8px;padding:5px 6px;margin-top:5px;break-inside:avoid}
+    .key{font-size:7.5px;gap:2px 8px}
+    .mk{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="side">
+    <h1>Day 3 &mdash; Saturday 22 August</h1>
+    <div class="sub">Drive out at 08:15, parked in Vienna by 10:45, and then <b>the only good-weather afternoon you get</b>: Naschmarkt and its Saturday-only flea market, the Innere Stadt on foot, a free vintage-car parade on the Ring, and Imagine Dragons on a 300 m&sup2; screen at the Rathaus.</div>
+    <div class="stat"><div>drive<b>243 km</b></div><div>on foot<b>~5 km</b></div><div>U-Bahn rides<b>5</b></div><div>cost a head<b>~&euro;60</b></div><div>evening<b>free</b></div></div>
+    <button onclick="doPrint()">Save as PDF / print &mdash; one landscape page, map included</button>
+    <div class="key" id="key"></div>
+    <div id="list"></div>
+    <div class="warn" style="background:#f4f6f9;border-color:#ccd4e0"><b>Reading the map, and lighting up one leg at a time.</b> <b>Dashed = you walk</b>, and <b>each walking leg has its own colour</b> so consecutive legs never blur into one another &mdash; the badge on the line matches its colour and names the two stops it joins. <b>Solid = you ride</b>, in the transport line's real colour &mdash; and now <b>badged exactly the same way</b>: the line, and the two stops that leg joins.<br><b>Click any line and it lights up on its own</b> &mdash; everything else dims, the map zooms to it, and a bar appears top-left with a <b>show the whole day</b> button. Click the same line again to undo it.<br><b>Click a numbered stop in the list</b> and every leg touching that stop lights up &mdash; so clicking <b>11</b> shows you how you arrive at 11 and how you leave it, together.</div>
+    <div class="warn red"><b>Two things decide today.</b> <b>1 &mdash; the garage height:</b> the Prado is ~1.9 m and Vienna Tiefgaragen are commonly signed 1.80&ndash;2.00 m. <b>Confirm the Durchfahrtsh&ouml;he at Reschgasse before you leave Budapest</b>, and keep the free-street fallback in mind. <b>2 &mdash; the Austrian vignette</b> (10-day, &euro;12.80) must be live <i>before</i> you touch the A4.</div>
+    <div class="warn green"><b>You do not legally need to pay for parking this weekend.</b> Vienna's Kurzparkzone runs <b>Monday to Friday only</b>. You arrive Saturday, leave Monday 06:00, and Monday's charge doesn't restart until 09:00 &mdash; so the kerb is free the whole time. The garage buys certainty, security and shade, not compliance. Reschgasse itself is a <b>shopping street</b>, which does charge Sat 08:00&ndash;12:00 on the street &mdash; so if you go for the kerb, use <b>Mandlgasse</b>.</div>
+    <div class="warn" style="background:#fdf3e7;border-color:#f0d0a8"><b>Breakfast, twice, both markets.</b> No hotel breakfast either end, so: <b>07:00 the Great Market Hall</b> in Budapest for coffee and pastries from the bakery counters (Fakan&aacute;l's hot breakfast doesn't open until 09:00, so it's standing up), then <b>12:00 the Naschmarkt</b> in Vienna for the proper meal. Two of Europe's good markets in one morning, and the second one has the Saturday flea market attached.</div>
+    <div class="warn"><b>If Vienna turns hot:</b> <b>Mariahilfer Stra&szlig;e</b> is the city's big shopping street with <b>Gerngross</b> and <b>Steffl</b> on it, all air-conditioned and open Saturday until ~18:00 &mdash; and it runs between the MuseumsQuartier and Westbahnhof, so it is a short walk off your Innere Stadt loop. <b>Everything on it is shut Sunday.</b> Vienna is only 26 &deg;C though, so this is a wet-weather or tired-feet option more than a heat one.<br><br><b>Today is the only chance for two things.</b> The <b>Naschmarkt flea market runs Saturdays only</b>, and the whole market is closed Sunday. And <b>every shop in Austria shuts tomorrow</b> &mdash; buy water, breakfast fallbacks and the food for Monday's 1,000 km drive <b>today</b>.</div>
+    <div class="warn blue"><b>Tickets, and why the usual advice is wrong.</b> The <b>48- and 72-hour tickets were abolished on 1 January 2026</b>. Buy <b>two 24-hour tickets each (&euro;10.20)</b> at Niederhofstra&szlig;e, set the second to start 24 h later, and <b>stamp each one in the blue box at first use</b>. Unstamped is a <b>&euro;105</b> fine. Toilets here run about <b>&euro;0.50</b> and are better than Budapest's.</div>
+    <div class="warn green"><b>What today costs, per person.</b> Vienna tickets <b>&euro;20.40</b> for both days &middot; Naschmarkt lunch <b>~&euro;18</b> &middot; one attraction if you take it <b>&euro;9&ndash;21</b> &middot; dinner from the Rathausplatz stalls <b>~&euro;12&ndash;18</b>. <b>Classic Days, Rathausplatz, Stephansdom's nave, the Hofburg courtyards and the Graben are all free.</b> Roughly <b>&euro;50&ndash;70 a head</b>, plus the garage and the vignette per car. Prices are estimates except the tickets and the vignette.</div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+var PATHS={
+  sight:'<path d="M3 21h18"/><path d="M5.5 21V10.5M9.8 21V10.5M14.2 21V10.5M18.5 21V10.5"/><path d="M12 3l9.5 5.5h-19L12 3z"/>',
+  cup:  '<path d="M4 7.5h12.5V13a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7.5z"/><path d="M16.5 9h2.2a2.4 2.4 0 0 1 0 4.8h-2.2"/><path d="M3 21h15"/>',
+  bag:  '<path d="M5.5 7.5h13l-1.1 11.6a1.6 1.6 0 0 1-1.6 1.4H8.2a1.6 1.6 0 0 1-1.6-1.4L5.5 7.5z"/><path d="M9 7.5V6a3 3 0 0 1 6 0v1.5"/>',
+  event:'<circle cx="12" cy="12" r="2.7"/><path d="M12 2.2v3.4M12 18.4v3.4M2.2 12h3.4M18.4 12h3.4M5.1 5.1l2.4 2.4M16.5 16.5l2.4 2.4M18.9 5.1l-2.4 2.4M7.5 16.5l-2.4 2.4"/>',
+  bed:  '<path d="M3 19v-7h12.5A4.5 4.5 0 0 1 20 16.5V19"/><path d="M3 12V6.5"/><path d="M3 19h18"/><circle cx="7.6" cy="9.3" r="1.9"/>',
+  car:  '<path d="M2.5 16.5v-4l2-5.5h15l2 5.5v4"/><path d="M2.5 12.5h19"/><circle cx="7" cy="16.8" r="1.7"/><circle cx="17" cy="16.8" r="1.7"/>',
+  train:'<rect x="5" y="2.8" width="14" height="13" rx="3.2"/><path d="M5.5 11h13"/><path d="M9 19l-1.6 2.2M15 19l1.6 2.2"/><path d="M9.5 16v3M14.5 16v3"/>',
+  music:'<path d="M9.5 18.5V6l10.5-2.2v11"/><circle cx="6.6" cy="18.6" r="2.9"/><circle cx="17" cy="15.9" r="2.9"/>',
+  eye:  '<path d="M2.2 12S6 6.2 12 6.2 21.8 12 21.8 12 18 17.8 12 17.8 2.2 12 2.2 12z"/><circle cx="12" cy="12" r="3.1"/>',
+  warn: '<path d="M12 3.6l9.4 16.3H2.6L12 3.6z"/><path d="M12 9.6v4.3"/><path d="M12 17v.12"/>',
+  bulb: '<path d="M9.2 18.2h5.6"/><path d="M10.3 21h3.4"/><path d="M12 3.2a6 6 0 0 1 3.6 10.8c-.5.4-.8 1-.8 1.6v.6H9.2v-.6c0-.6-.3-1.2-.8-1.6A6 6 0 0 1 12 3.2z"/>',
+  peak: '<path d="M2.5 19.5h19L14 5.5l-3.4 6.2-2.1-1.9L2.5 19.5z"/>',
+  wine: '<path d="M7.5 3h9l-.7 6a3.8 3.8 0 0 1-7.6 0L7.5 3z"/><path d="M12 12.8V19"/><path d="M8.6 21h6.8"/>',
+  bus:  '<rect x="3.5" y="4" width="17" height="12.5" rx="2.5"/><path d="M3.5 10.5h17"/><circle cx="7.5" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/><path d="M6 16.5v1M18 16.5v1"/>'
+};
+function gl(k,c,s){
+  return '<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="'+c+
+         '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+PATHS[k]+'</svg>';
+}
+var GK={sight:'sight',bed:'bed',food:'cup',event:'event',shop:'bag',car:'car',metro:'train',
+        ent:'music',alt:'eye',clash:'warn',light:'bulb',view:'peak',wine:'wine',bus:'bus'};
+var COL={sight:'#b0790a',food:'#c8781a',event:'#7d3c98',bed:'#e0247a',wc:'#2a7fb8',metro:'#1a6aa8',
+         car:'#5d6470',shop:'#2e7d4f',ent:'#b0338e',alt:'#2f7d8c',clash:'#d64541',light:'#8a5fc0',
+         view:'#8a5a12',wine:'#7d2e46',bus:'#1a6aa8'};
+var STOPS=[{"n": "0", "cat": "food", "t": "07:00", "dist": "opens 06:00", "name": "Coffee and pastries — Great Market Hall", "lat": 47.48733, "lon": 19.05835, "price": "~1,500 HUF a head", "pay": "cash", "d": "Check out, then across the street one last time. The market opens at <b>06:00</b> and Saturday is its best day, but you're leaving at 07:40 so this is coffee and something baked, not shopping. <b>Buy the paprika and salami yesterday at lunch</b>, not now.<br><br><b>Money:</b> ~1,500 a head."}, {"n": "1", "cat": "metro", "t": "07:40", "dist": "5 stops · 12 min", "name": "M4 to Kelenföld for the car", "lat": 47.4883, "lon": 19.0574, "price": "0 extra", "pay": "—", "d": "M4 from Fővám tér back out to <b>Kelenföld vasútállomás</b>, where the car has been sitting since Thursday. Your 72-hour travelcard is still valid this morning — it started Thursday at ~15:35, so it runs to Sunday afternoon, but you won't need it after this.<br><br>Pay at the machine before you drive out: <b>~6,300 HUF, card only, no cash accepted.</b>"}, {"n": "2", "cat": "car", "t": "08:15", "dist": "243 km · ~2.5 h", "name": "DRIVE — Budapest → Vienna on the M1/A4", "lat": 47.4634, "lon": 19.0235, "price": "Austrian vignette €12.80", "pay": "card", "d": "<b>From Kelenföld you're on the M1 immediately</b> — no city driving in either direction, which is the whole reason the car was parked here.<br><br><b>The Austrian 10-day vignette (€12.80) must be active before you touch the A4.</b> Buy it at shop.asfinag.at or in the ASFINAG app — the 10-day is exempt from the 18-day waiting rule, so it's valid immediately — or at the last Hungarian petrol station. Without one: replacement toll on the spot plus a fine.<br><br><b>Fuel is cheaper in Hungary</b> (≈€1.58 vs €1.72 petrol) — fill before the border, taking a town exit rather than a motorway service area. Your Hungarian vignette from Thursday is still valid.<br><br>Leave 08:15, parked in Vienna by ~10:45."}, {"n": "3", "cat": "car", "t": "10:45", "dist": "pin approximate", "name": "PARKING — Tiefgarage Reschgasse (APCOA)", "lat": 48.1836, "lon": 16.33, "price": "~€15–25 / 24 h · verify", "pay": "card", "d": "<b>Reschgasse 24/26, 1120 Wien.</b> Underground, secure, shaded, and a few hundred metres from the flat — which is why you picked it over circling Meidling with a loaded car.<br><br><b>⚠ CHECK THE HEIGHT BEFORE YOU DRIVE IN.</b> The Prado is ~1.9 m and Vienna Tiefgaragen commonly sign <b>1.80–2.00 m</b>. Roof rails or a box put you over. Confirm the <i>Durchfahrtshöhe</i> on apcoa.at or at the entrance — if it's under 1.9 m, use the street instead (see the swap pin).<br><br><b>Worth knowing:</b> you are not legally obliged to pay for parking this weekend at all. Vienna's Kurzparkzone runs <b>Mon–Fri only</b>, so the kerb is free Saturday and Sunday, and Monday's charge doesn't restart until 09:00 — after you've left at 06:00. You're buying certainty and a roof, not compliance.<br><br><b>Money:</b> APCOA publishes tariffs on apcoa.at; Vienna district garages typically run €15–25 per 24 h. <b>Pin is approximate</b> — the street is right, confirm the entrance on arrival."}, {"n": "4", "cat": "bed", "t": "11:00", "dist": "~350 m", "name": "THE FLAT — Mandlgasse 18, 1120", "lat": 48.1845, "lon": 16.3335, "price": "already paid", "pay": "—", "d": "Meidling, District XII. Drop the bags and go — you have half a day of Vienna and it's the only afternoon you get.<br><br><b>Why this address is lucky:</b> U6 Niederhofstraße 250 m, U4 Längenfeldgasse 530 m, <b>2 U4 stops to Schönbrunn</b> for tomorrow morning, and Meidlinger Markt round the corner whose cafés open on Sunday when the whole country is shut.<br><br>Ask the host about a courtyard space while you're there — the building next door has them, so it's a normal arrangement in that block."}, {"n": "5", "cat": "metro", "t": "11:30", "dist": "buy 6 tickets", "name": "TICKETS — Niederhofstraße machine", "lat": 48.183, "lon": 16.3325, "price": "€10.20 each × 2 each", "pay": "cash or card", "d": "<b>Two 24-hour tickets each, €20.40 a head, €61.20 for the three of you.</b> Buy all six now at the station machine — multilingual, cash or card — and <b>set the second one to start 24 h after the first</b>, which the machine lets you do.<br><br><b>Stamp the first ticket in the small blue box before you travel.</b> Once, at the start of its 24 hours, not before each ride. Unstamped = no ticket = <b>€105 on the spot</b>.<br><br>Why two 24-hour tickets and not a 7-day: the 48- and 72-hour tickets were <b>abolished on 1 January 2026</b>, so most advice online is wrong. Digital is 50c cheaper but you're buying physically.<br><br><b>Buy both days now</b> — Sunday is a total shop-closure day and Trafiks are shut."}, {"n": "6", "cat": "food", "t": "12:00", "dist": "U6+U4, 4 stops", "name": "NASCHMARKT — lunch + the Saturday flea market", "lat": 48.1986, "lon": 16.3633, "price": "~€15–22 a head", "pay": "card mostly", "d": "U6 one stop to Längenfeldgasse, change to U4 towards Heiligenstadt, three stops to <b>Kettenbrückengasse</b> — you come up at the far end of the market.<br><br>Vienna's big food market: stalls to graze plus proper sit-down places at the Karlsplatz end. <b>And Saturday is the flea market day</b> — the Flohmarkt only runs Saturdays, at the Kettenbrückengasse end, and it's the real thing rather than a tourist stall.<br><br><b>This is the only chance you get:</b> Naschmarkt stalls are <b>closed on Sunday</b>, so it's today or not at all.<br><br><b>Money:</b> €15–22 for a decent lunch; the flea market is free to browse and cash-friendly."}, {"n": "7", "cat": "sight", "t": "14:00", "dist": "600 m · 8 min", "name": "Karlsplatz — Karlskirche + the Secession", "lat": 48.20049, "lon": 16.36988, "price": "square free · church ~€9.50", "pay": "card ok", "d": "Walk east from the market. <b>Karlskirche</b> (1737, Baroque, the two Trajan-style columns are the tell) and, 300 m back west, the <b>Secession Building</b> with its gilded dome — 'To every age its art, to art its freedom' over the door, and Klimt's Beethoven Frieze in the basement.<br><br><b>Money:</b> the square and the outside cost nothing. Karlskirche interior is ticketed (~€9.50, includes a lift up into the dome); the Secession is separate (~€12). Both skippable — you have a lot of Vienna ahead."}, {"n": "8", "cat": "sight", "t": "14:20", "dist": "450 m · 6 min", "name": "Staatsoper → Kärntner Straße", "lat": 48.20294, "lon": 16.36907, "price": "outside free · tour ~€13", "pay": "card ok", "d": "The <b>State Opera</b> (1869) — guided tours run when there's no rehearsal, but the building from the outside plus the loggia is enough on a half day. Then up <b>Kärntner Straße</b>, the main pedestrian spine, straight at the cathedral.<br><br><b>Money:</b> free to walk. Tours ~€13 and need timing you don't have today."}, {"n": "9", "cat": "sight", "t": "14:45", "dist": "600 m · 8 min", "name": "STEPHANSDOM", "lat": 48.20849, "lon": 16.37319, "price": "nave FREE · towers ~€6–7", "pay": "card ok", "d": "<b>The centre of Vienna, literally.</b> 136 m south tower, the zigzag Zsolnay-style tiled roof, and 700 years of building. <b>The nave is free to enter</b> — you only pay for the towers, the catacombs and the ticketed chancel area.<br><br><b>Which tower:</b> the <b>south tower is 343 steps and no lift</b> (~€6), the north tower has a lift (~€7) and a lower, arguably better view of the roof itself. On a 26 °C afternoon after a 2.5-hour drive, take the lift or skip both — you have Gloriette tomorrow.<br><br><b>Money:</b> free for the bit that matters."}, {"n": "10", "cat": "sight", "t": "15:15", "dist": "800 m · 10 min", "name": "Hofburg — via Graben", "lat": 48.2065, "lon": 16.36565, "price": "courtyards free · Sisi ~€21", "pay": "card ok", "d": "Down <b>Graben</b> (the plague column, the Loos-designed public toilets that are genuinely a listed sight) and into the <b>Hofburg</b> — the Habsburg winter palace, now a sprawl of courtyards, the Spanish Riding School, the National Library and the presidential offices.<br><br><b>The courtyards are free and are most of the pleasure.</b> The Imperial Apartments + Sisi Museum + Silver Collection combined ticket is ~€21 and takes 1.5 h.<br><br><b>Money:</b> free to wander; pick the interior only if you skip the Albertina."}, {"n": "11", "cat": "sight", "t": "16:00", "dist": "400 m · 5 min", "name": "Pick one — Albertina, Sisi, or a coffee house", "lat": 48.20452, "lon": 16.36831, "price": "Albertina ~€20 · coffee ~€8", "pay": "card ok", "d": "<b>Albertina:</b> Monet to Picasso, plus the Habsburg state rooms, in a palace on the old city wall. About €20, 1.5 h, and the best single art hit in walking distance.<br><br><b>Or the Hofburg/Sisi apartments</b> if you'd rather have the imperial story.<br><br><b>Or — and this is a real option — a proper coffee house.</b> Sitting down for an hour with a Melange and a slice of something, newspaper on a rack, no one hurrying you, is not killing time in Vienna: it's the thing itself. <b>Café Central</b> (grand, queue likely), <b>Sperl</b> (1880s fittings, shabbier, more genuine), <b>Prückel</b> (1950s, unrenovated).<br><br><b>Money:</b> a Melange and cake runs €8–12. Cheaper than the Albertina and you'll remember it as long."}, {"n": "12", "cat": "event", "t": "18:00", "dist": "you're already there", "name": "VIENNA CLASSIC DAYS — free parade on the Ring", "lat": 48.2062, "lon": 16.3618, "price": "FREE", "pay": "—", "d": "<b>Vintage cars parade the Ringstrasse from 18:00</b>, free to watch, and it happens exactly where you already are at the end of the Innere Stadt loop. Pre-war machinery through to 1970s classics, driven rather than trailered.<br><br>Stand anywhere along the Ring between the Opera and the Rathaus — the Burgring / Heldenplatz stretch gives you the parade with the Hofburg behind it.<br><br><b>Money:</b> free."}, {"n": "13", "cat": "event", "t": "19:30", "dist": "900 m · 11 min", "name": "RATHAUSPLATZ FILM FESTIVAL", "lat": 48.21073, "lon": 16.3573, "price": "FREE · food €6–12", "pay": "card ok", "d": "<b>Free entry, and the best-value evening in Vienna.</b> A 300 m² screen in front of the neo-Gothic city hall, with food and drink stalls from <b>11:00 to midnight</b> (kitchens to 23:00) — Austrian, Asian, Balkan, plus wine and beer.<br><br><b>Tonight, 20:30: Imagine Dragons — Live From The Hollywood Bowl</b>, with a 50-piece orchestra. The programme is concert films and opera rather than cinema.<br><br><b>It runs in rain</b> — only thunderstorms or hail cancel it. Bring a layer; it's 26 °C by day but the square cools.<br><br><b>Money:</b> free to sit; stalls €6–12 a plate, €4–6 a drink."}, {"n": "14", "cat": "metro", "t": "~22:45", "dist": "700 m + 2 lines · ~25 min", "name": "HOME — Volkstheater U3 → Westbahnhof → U6", "lat": 48.18265, "lon": 16.33205, "price": "on your 24 h ticket", "pay": "—", "d": "<b>Straight home from the film, no bar crawl tonight.</b> Walk <b>700 m south along the Ring to Volkstheater</b>, take the <b>U3 three stops to Westbahnhof</b>, change to the <b>U6</b> and ride three stops south to <b>Niederhofstraße</b> — then 250 m to the door. One change, about 25 minutes door to door.<br><br><b>The U3 closure doesn't touch this.</b> The shut stretch is <b>Hütteldorfer Straße–Westbahnhof</b>, west of where you board and get off, so Volkstheater → Westbahnhof runs normally.<br><br><b>If you'd rather walk it off:</b> 1.9 km west down Burggasse to <b>Burggasse-Stadthalle</b> gives you the U6 with <i>no</i> change at all — 23 minutes on foot instead of the U3 hop.<br><br><b>The U-Bahn runs all night on Saturdays</b>, so there is no last-train problem tonight — the one night of the trip where that's true. Tomorrow is Sunday, when it also runs all night.<br><br>Your first 24-hour ticket, started ~11:30 today, is still valid. <b>Money:</b> nothing extra."}];
+var ALTS=[{"cat": "alt", "t": "10:45 · swap", "name": "Street parking on Mandlgasse — free, if the garage won't take the car", "lat": 48.185, "lon": 16.3338, "price": "FREE Sat + Sun", "pay": "—", "d": "<b>The fallback if the Tiefgarage height beats you</b>, and legally just as good. Vienna's short-stay zone is <b>Mon–Fri 09:00–22:00 only</b>, so Saturday and Sunday are free everywhere, and Meidling is residential so spaces exist.<br><br><b>Two traps:</b> <b>shopping streets still charge Sat 08:00–12:00</b> — in Meidling that means Meidlinger Hauptstraße, Niederhofstraße, Pohlgasse, Rauchgasse, Tivoligasse and <b>Reschgasse</b>, and you arrive at 10:45, inside that window. So park on <b>Mandlgasse itself or a plain side street</b>. And <b>resident-only bays (Anrainerparkplätze) are permit-only at all times</b> — they're signposted; read the sign, not the kerb.<br><br><b>Move it before 09:00 Monday</b> — you leave at 06:00, so this is moot."}, {"cat": "alt", "t": "19:30 · swap", "name": "STUMM & LAUT — closing night, nearest to your bed", "lat": 48.1845, "lon": 16.3806, "price": "FREE", "pay": "—", "d": "<b>Tonight is the last night of it.</b> Historic silent films projected open-air with <b>live electronic music played over them</b>, in Helmut-Zilk-Park behind Wien Hauptbahnhof. Free.<br><br><b>Why it's tempting:</b> it's a couple of S-Bahn stops from <b>Bahnhof Wien Meidling</b>, which is 630 m from the flat — of every evening option on this trip, this is the one you can fall out of most easily. Programme at volxkino.at/stumm-und-laut.<br><br><b>The trade:</b> you give up Imagine Dragons on a 300 m² screen and the Rathausplatz stalls. Take this if the drive has flattened you and you want a short evening."}, {"cat": "alt", "t": "afternoon · swap", "name": "Kunsthistorisches — save it for Sunday", "lat": 48.20384, "lon": 16.36169, "price": "~€21", "pay": "card ok", "d": "You'll walk right past it on the Ring at 18:00 and be tempted. <b>Don't</b> — it's <b>closed on Mondays and open on Sundays</b>, and Sunday afternoon is when rain is forecast. It's the designated indoor block for tomorrow. Today is the only Vienna day with good weather and a parade; spend it outside."}, {"cat": "clash", "t": "the risk", "name": "Two things that could break today", "lat": 48.1859, "lon": 16.3343, "price": "—", "pay": "—", "d": "<b>1 · The garage height.</b> Everything about the arrival hinges on the Prado clearing the Tiefgarage. Check <i>Durchfahrtshöhe</i> before the trip, not at the barrier, and have the Mandlgasse fallback in mind.<br><br><b>2 · U3 is partly closed</b> — Hütteldorfer Straße to Westbahnhof, until the end of August, with replacement service. And the <b>S-Bahn trunk line</b> Floridsdorf–Praterstern is on replacement buses until early September. <b>Neither touches your U6/U4 routes from Meidling</b>, but it will confuse any app you ask for directions.<br><br><b>3 · Shopping streets charge Saturday morning</b> and you arrive at 10:45, inside the window — see the street-parking pin."}];
+var ENT=[{"cat": "ent", "t": "18:00", "name": "Vienna Classic Days on the Ringstrasse", "lat": 48.2045, "lon": 16.36, "price": "FREE", "pay": "—", "d": "Free vintage-car parade along the Ring from 18:00. Also billed as the Vienna Oldtimer Parade. Right at the end of your Innere Stadt loop, so it costs you no travel at all."}, {"cat": "ent", "t": "11:00–24:00", "name": "Rathausplatz — stalls all day, film at 20:30", "lat": 48.21073, "lon": 16.3573, "price": "FREE entry", "pay": "card ok", "d": "Stalls open from <b>11:00</b> and run to midnight, kitchens to 23:00 — so you can arrive earlier than 19:30 if the afternoon runs short. Tonight's screening is <b>Imagine Dragons — Live From The Hollywood Bowl</b> at 20:30 with a 50-piece orchestra. Runs in rain."}, {"cat": "ent", "t": "Aug 14–24", "name": "AFRIKA TAGE — Donauinsel, the only paid one", "lat": 48.243, "lon": 16.396, "price": "~€12.20–12.90 advance", "pay": "card", "d": "22nd edition, one of Europe's largest African festivals: live music, dance, crafts, fashion, food, daytime workshops. <b>Open Mon–Sat from 14:00, Sunday from 11:00, to midnight</b>, concerts from ~18:00 and headliners at 20:00. This year: Sona Jobarteh, Marla Glen, Valérie Ékoumé, Kasiva Mutua.<br><br><b>U6 direct from Niederhofstraße to Handelskai</b>, then 400 m over the Georg-Danzer-Steg — so it's easy from your door. Day tickets ~€12.20–12.90 in advance; at the door it was €10 before 16:00 and €20 after 17:00 last year. <b>The free days are the two Mondays, which aren't yours.</b><br><br>Neat combination: it's on the Donauinsel, so an afternoon on the free river beaches rolls straight into the festival."}, {"cat": "light", "t": "to Sept 12", "name": "Kino am Dach — rooftop cinema, in the bar district", "lat": 48.1996, "lon": 16.338, "price": "ticketed", "pay": "card", "d": "Rooftop screenings on the main library at Urban-Loritz-Platz, 1070. <b>Direct U6 from your door to Burggasse-Stadthalle</b>, and it puts you in the middle of the 7th-district bars afterwards. Ticketed. A quieter alternative to Rathausplatz if a 300 m² screen and a crowd isn't the mood."}];
+var SHOPS=[{"cat": "shop", "t": "Sat hours", "name": "Stock up TODAY — Sunday everything shuts", "lat": 48.1833, "lon": 16.3329, "price": "normal prices", "pay": "card fine", "d": "<b>The single most useful thing to know about Vienna this weekend.</b> Austria closes on Sundays — no supermarkets, no Trafiks, nothing. Whatever you want tomorrow (water for Schönbrunn at 08:00, breakfast fallback, snacks for Monday's 1,000 km drive) <b>buy it today</b>.<br><br>Meidlinger Markt stalls run Sat 06:00–18:00 and there are supermarkets along Meidlinger Hauptstraße. <b>Especially: water and food for Monday</b>, because you leave at 06:00 and nothing will be open."}, {"cat": "shop", "t": "06:00–18:00", "name": "Meidlinger Markt stalls", "lat": 48.1835, "lon": 16.3331, "price": "market prices", "pay": "mixed", "d": "Round the corner from the flat: <b>Mon–Fri 06:00–21:00, Sat 06:00–18:00, closed Sunday.</b> Today is the day for the full market — produce, cheese, sausage. Tomorrow only the cafés open.<br><br>Also here: <b>Meidlinger Alm</b>, Austrian mountain-hut food, Kasnocken and goulash, Sat 08:00–23:00 — a decent late dinner 200 m from your bed if you skip the 7th."}];
+var WC=[{"cat": "wc", "t": "reliable", "name": "Naschmarkt", "lat": 48.198, "lon": 16.364, "price": "~€0.50", "pay": "coins", "d": "Public toilets in the market. You'll be here two hours over lunch, so use them before you head into the Innere Stadt."}, {"cat": "wc", "t": "reliable", "name": "Karlsplatz U-Bahn", "lat": 48.20049, "lon": 16.36988, "price": "~€0.50", "pay": "coins", "d": "Big interchange with facilities. Vienna's public toilets are generally cleaner and better signed than Budapest's, and cost about €0.50."}, {"cat": "wc", "t": "listed sight", "name": "Graben — the Loos public toilets", "lat": 48.2087, "lon": 16.37, "price": "~€0.50", "pay": "coins", "d": "Genuinely worth seeing: Adolf Loos designed these underground facilities in 1904, and they're a protected monument in mahogany and brass. On the Graben, on your route between Stephansdom and the Hofburg. <b>The only toilet on this trip that is also an attraction.</b>"}, {"cat": "wc", "t": "reliable", "name": "Rathausplatz — event toilets", "lat": 48.21, "lon": 16.3576, "price": "free", "pay": "—", "d": "The film festival has its own facilities on the square, free, open while the stalls are."}, {"cat": "wc", "t": "reliable", "name": "Niederhofstraße U6", "lat": 48.183, "lon": 16.3325, "price": "~€0.50", "pay": "coins", "d": "Your home station. Worth knowing for a 23:00 return."}];
+var map=L.map('map',{scrollWheelZoom:true}).setView([48.199,16.352],13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+var G={route:L.layerGroup(),metro:L.layerGroup(),ent:L.layerGroup(),shop:L.layerGroup(),
+       wc:L.layerGroup(),alt:L.layerGroup()};
+
+/* walking legs cycle through a warm-to-cool ramp so consecutive legs are distinguishable */
+var WRAMP=['#e8590c','#f08c00','#d9a406','#82a114','#2f9e44','#0ca678','#1098ad','#1c7ed6','#4263eb','#7048e8','#ae3ec9','#d6336c'];
+var _wi=0;
+function wcol(){ var c=WRAMP[_wi%WRAMP.length]; _wi++; return c; }
+/* ================= CLICK A LEG TO LIGHT IT UP ================= */
+var _legs=[], _focus=null;
+function reg(main,casing,id,kind,nums){
+  _legs.push({id:id,kind:kind,m:main,c:casing,
+    ms:{color:main.options.color,weight:main.options.weight,opacity:main.options.opacity,dashArray:main.options.dashArray},
+    cs:casing?{color:casing.options.color,weight:casing.options.weight,opacity:casing.options.opacity}:null,
+    nums:nums||(String(id).match(/\d+/g)||[]).map(Number)});
+  main.on('click',function(){focusLeg(id);});
+  if(casing) casing.on('click',function(){focusLeg(id);});
+  return main;
+}
+function _dim(L){ L.m.setStyle({weight:2.5,opacity:.14,color:L.ms.color}); if(L.c) L.c.setStyle({opacity:0}); }
+function _lit(L,glow){
+  if(L.c) L.c.setStyle({color:glow,weight:L.ms.weight+13,opacity:.55});
+  L.m.setStyle({color:L.ms.color,weight:L.ms.weight+3.5,opacity:1,dashArray:L.ms.dashArray});
+  L.m.bringToFront();
+}
+function _reset(L){ L.m.setStyle(L.ms); if(L.c) L.c.setStyle(L.cs); }
+function focusLeg(id){
+  if(_focus===id){ clearFocus(); return; }
+  _focus=id;
+  var hit=null;
+  _legs.forEach(function(L){ if(L.id===id){ _lit(L,'#ff7a1a'); hit=L; } else _dim(L); });
+  if(hit){ try{ map.fitBounds(hit.m.getBounds(),{padding:[70,70],maxZoom:17}); }catch(e){} }
+  banner('Showing <b>'+String(id).replace(/&/g,'&amp;')+'</b> only');
+}
+function focusStop(n){
+  _focus='stop'+n;
+  var any=[];
+  _legs.forEach(function(L){ if(L.nums.indexOf(n)>=0){ _lit(L,'#ff7a1a'); any.push(L); } else _dim(L); });
+  if(any.length){ var b=any[0].m.getBounds(); any.slice(1).forEach(function(L){b.extend(L.m.getBounds());});
+    try{ map.fitBounds(b,{padding:[70,70],maxZoom:16}); }catch(e){} }
+  banner('Showing everything that touches <b>stop '+n+'</b>');
+}
+function clearFocus(){ _focus=null; _legs.forEach(_reset); banner(null); }
+var _bn=null;
+function banner(html){
+  if(!_bn){ _bn=L.control({position:'topleft'});
+    _bn.onAdd=function(){ var d=L.DomUtil.create('div','focusbar'); d.id='focusbar';
+      L.DomEvent.disableClickPropagation(d); return d; };
+    _bn.addTo(map); }
+  var el=document.getElementById('focusbar');
+  if(!el) return;
+  if(!html){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='block';
+  el.innerHTML=html+' &nbsp;<button onclick="clearFocus()">show the whole day</button>';
+}
+
+function ic(p){
+  if(p.cat==='wc'){
+    return L.divIcon({className:'',iconSize:[30,20],iconAnchor:[15,10],
+      html:'<div class="mk wc pill" style="width:30px;height:20px;font-size:10.5px;letter-spacing:.5px">WC</div>'});
+  }
+  if(p.cat==='shop'){
+    return L.divIcon({className:'',iconSize:[28,28],iconAnchor:[14,14],
+      html:'<div class="mk shop sq" style="width:28px;height:28px">'+gl('bag','#fff',17)+'</div>'});
+  }
+  if(p.n){
+    var k=GK[p.cat];
+    var badge=k?'<span class="g">'+gl(k,COL[p.cat],11)+'</span>':'';
+    var s=(p.cat==='bed')?37:32;                     /* home/hotel reads as the anchor */
+    return L.divIcon({className:'',iconSize:[s,s],iconAnchor:[s/2,s/2],
+      html:'<div class="mk '+p.cat+'" style="width:'+s+'px;height:'+s+'px;font-size:'+(s>34?15.5:14)+'px">'+badge+p.n+'</div>'});
+  }
+  return L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
+    html:'<div class="mk '+p.cat+' sq" style="width:26px;height:26px">'+gl(GK[p.cat],'#fff',16)+'</div>'});
+}
+function pop(p){
+  var tag=p.price?'<div class="ptag"><b>'+p.price+'</b>'+
+      (p.pay&&p.pay!=='-'?'<span>'+p.pay+'</span>':'')+'</div>':'';
+  return '<b>'+(p.t?p.t+' &middot; ':'')+p.name+'</b>'+
+         (p.dist?'<br><span class="meta">'+p.dist+'</span>':'')+tag+'<br>'+p.d;
+}
+/* ---- keep coincident pins visible: numbered stops hold their true position,
+        anything landing on top of an already-placed pin walks outward on a spiral ---- */
+var _placed=[];
+function _m(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function spread(lat,lon,keep){
+  if(keep){_placed.push([lat,lon]);return [lat,lon];}
+  var p=[lat,lon],k=0;
+  while(_placed.some(function(q){return _m(p,q)<22;}) && k<40){
+    k++;
+    var ang=k*2.39996, rad=0.00030+0.00010*Math.floor(k/6);
+    p=[lat+rad*Math.cos(ang), lon+rad*1.45*Math.sin(ang)];
+  }
+  _placed.push(p); return p;
+}
+/* ---- ON FOOT: dashed, badged with the two stops each leg joins ---- */
+function _mm(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function _len(p){var t=0;for(var i=1;i<p.length;i++)t+=_mm(p[i-1],p[i]);return t;}
+function _near(p,ll){var bi=0,bd=1e9;for(var i=0;i<p.length;i++){var d=_mm(p[i],ll);if(d<bd){bd=d;bi=i;}}return bi;}
+function walkLeg(pts,label,badge){
+  if(!pts||pts.length<2) return;
+  var m=_len(pts);
+  var _c=L.polyline(pts,{color:'#fff',weight:11,opacity:.75}).addTo(G.route);
+  var _wc=wcol();
+  var _w=L.polyline(pts,{color:_wc,weight:5,opacity:.95,dashArray:'3,7',lineCap:'round'}).addTo(G.route);
+  reg(_w,_c,badge,'walk');
+  _w.bindPopup('<b>ON FOOT &nbsp;'+badge+'</b><br>'+label+'<br><br><b>'+
+      (m<1000?Math.round(m/10)*10+' m':(m/1000).toFixed(2)+' km')+
+      ' &middot; about '+Math.max(1,Math.round(m/1.35/60))+' min</b><br><br><i>Click the line to light it up on its own.</i>');
+  var dtxt=(m<1000?Math.round(m/10)*10+' m':(m/1000).toFixed(2)+' km')+
+            ' · '+Math.max(1,Math.round(m/1.35/60))+' min';
+  var lab=badge+' · '+dtxt;
+  var mid=pts[Math.floor(pts.length/2)], w=22+lab.length*6.4;
+  L.marker(mid,{interactive:false,zIndexOffset:500,icon:L.divIcon({className:'',iconSize:[w,20],
+    iconAnchor:[w/2,10],html:'<div class="wb" style="color:'+_wc+';border-color:'+_wc+'">'+lab+'</div>'})}).addTo(G.route);
+}
+function walkChain(pts,stops,notes){
+  var idx=stops.map(function(s){return _near(pts,[STOPS[s].lat,STOPS[s].lon]);});
+  if(idx[0]>2) walkLeg(pts.slice(0,idx[0]+1),'up to stop '+stops[0],'\u2192 '+stops[0]);
+  for(var i=0;i<stops.length-1;i++){
+    walkLeg(pts.slice(idx[i],idx[i+1]+1),
+      (notes&&notes[i])||(STOPS[stops[i]].name.split('\u2014')[0].trim()+' \u2192 '+STOPS[stops[i+1]].name.split('\u2014')[0].trim()),
+      stops[i]+' \u2192 '+stops[i+1]);
+  }
+  var last=idx[stops.length-1];
+  if(last<pts.length-3) walkLeg(pts.slice(last),'on from stop '+stops[stops.length-1],stops[stops.length-1]+' \u2192');
+}
+
+var markers={};
+function put(arr,grp,key){
+  arr.forEach(function(p,i){
+    var xy=spread(p.lat,p.lon,!!p.n);
+    var m=L.marker(xy,{icon:ic(p),zIndexOffset:(p.n?1200:200)}).bindPopup(pop(p));
+    m.addTo(G[grp]); markers[key+i]=m; p._xy=xy;
+  });
+}
+
+var MC={M4:'#41a62a',U1:'#e2001a',U2:'#a862a4',U3:'#f28b00',U4:'#009b3a',U6:'#9d6b3f',BUS:'#1a6aa8',CAR:'#5d6470'};
+/* ---- YOU RIDE: solid, in the line's own colour, badged with the two stops it joins,
+        exactly like the walking legs, and clickable on its own ---- */
+function line(pts,tag,label,pair,dash,glyph){
+  var o={color:MC[tag]||'#1a6aa8',weight:5.5,opacity:.9};
+  if(dash) o.dashArray=dash;
+  var _c=L.polyline(pts,{color:'#fff',weight:o.weight+5,opacity:.6}).addTo(G.route);
+  var _m=L.polyline(pts,o).addTo(G.route);
+  var id=tag+(pair?' \u00b7 '+pair:'');
+  reg(_m,_c,id,'ride',pair?(pair.match(/\d+/g)||[]).map(Number):null);
+  _m.bindPopup('<b>'+(glyph==='car'?'BY CAR':glyph==='bus'?'BY BUS':'YOU RIDE')+' &nbsp;'+id+
+    '</b><br>'+label+'<br><br><i>Click the line to light it up on its own.</i>');
+  if(pair) lineBadge(pts,tag+' \u00b7 '+pair,o.color,glyph);
+}
+function lineBadge(pts,label,color,glyph){
+  var m=pts[Math.floor(pts.length/2)], w=30+label.length*7;
+  L.marker(m,{interactive:false,zIndexOffset:400,icon:L.divIcon({className:'',iconSize:[w,22],
+    iconAnchor:[w/2,11],html:'<div class="lb" style="background:'+color+'">'+gl(glyph||'train','#fff',13)+label+'</div>'})}).addTo(G.metro);
+}
+var list=document.getElementById('list');
+function rows(arr,key,heading){
+  var h=document.createElement('h2'); h.textContent=heading; list.appendChild(h);
+  arr.forEach(function(p,i){
+    var r=document.createElement('div'); r.className='row';
+    var sw;
+    if(p.cat==='wc'){
+      sw='<div class="mk wc pill" style="width:30px;min-width:30px;height:20px;font-size:10px;margin-top:3px">WC</div>';
+    } else if(p.n){
+      var k=GK[p.cat];
+      sw='<div class="mk '+p.cat+'" style="width:24px;min-width:24px;height:24px;font-size:11px;margin-top:2px">'+
+         (k?'<span class="g" style="width:13px;height:13px;top:-5px;right:-5px">'+gl(k,COL[p.cat],9)+'</span>':'')+p.n+'</div>';
+    } else {
+      sw='<div class="mk '+p.cat+' sq" style="width:24px;min-width:24px;height:24px;margin-top:2px">'+gl(GK[p.cat],'#fff',15)+'</div>';
+    }
+    r.innerHTML=sw+
+      '<div><div class="t" style="color:'+COL[p.cat]+'">'+p.t+(p.dist?' &nbsp;&middot;&nbsp; '+p.dist:'')+
+      (p.price?' &nbsp;&middot;&nbsp; <span class="pr">'+p.price+'</span>':'')+'</div>'+
+      '<div class="n">'+p.name+'</div><div class="d">'+
+      p.d.replace(/<[^>]+>/g,'').slice(0,120)+'\u2026</div></div>';
+    r.onclick=function(){
+      document.querySelectorAll('.row').forEach(function(x){x.classList.remove('on')});
+      r.classList.add('on');
+      if(p.n!==undefined&&p.n!==null&&/^\d+$/.test(p.n)) focusStop(Number(p.n));
+      else { clearFocus(); map.setView(p._xy||[p.lat,p.lon],16,{animate:true}); }
+      markers[key+i].openPopup();
+    };
+    list.appendChild(r);
+  });
+}
+function doPrint(){
+  map.invalidateSize();
+  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
+}
+window.addEventListener('beforeprint',function(){map.invalidateSize()});
+window.addEventListener('afterprint',function(){map.invalidateSize()});
+
+var W_MKT=[[47.48733,19.05835],[47.48800,19.05790],[47.48830,19.05740]];
+var M4_OUT=[[47.48830,19.05740],[47.48340,19.05240],[47.47760,19.04630],[47.47280,19.04020],[47.46660,19.03160],[47.46350,19.02250]];
+var DRIVE=[[47.46340,19.02350],[47.45900,19.00500],[47.44800,18.92000],[47.44000,18.80000],
+           [47.46500,18.60000],[47.52000,18.30000],[47.60000,18.05000],[47.68000,17.63500],
+           [47.78000,17.30000],[47.86000,17.16000],[47.92500,17.16330],[48.02000,16.90000],
+           [48.10000,16.70000],[48.15000,16.55000],[48.17000,16.44000],[48.18360,16.33000]];
+var W_PARK=[[48.18360,16.33000],[48.18400,16.33150],[48.18450,16.33350]];
+var W_TIX=[[48.18450,16.33350],[48.18380,16.33300],[48.18300,16.33250]];
+var U6_A=[[48.18300,16.33250],[48.18450,16.33350],[48.18590,16.33430]];
+var U4_A=[[48.18590,16.33430],[48.18800,16.34200],[48.19100,16.35100],[48.19500,16.35700],[48.19750,16.36150]];
+var W_CITY=[[48.19750,16.36150],[48.19810,16.36240],[48.19860,16.36330],[48.19905,16.36470],[48.19955,16.36620],[48.20000,16.36770],[48.20030,16.36890],[48.20049,16.36988],[48.20110,16.36960],[48.20200,16.36930],[48.20294,16.36907],[48.20380,16.36980],[48.20470,16.37050],[48.20560,16.37120],[48.20650,16.37200],[48.20740,16.37270],[48.20849,16.37319],[48.20860,16.37200],[48.20870,16.37060],[48.20845,16.36930],[48.20800,16.36815],[48.20730,16.36700],[48.20650,16.36565],[48.20590,16.36640],[48.20520,16.36735],[48.20452,16.36831],[48.20470,16.36700],[48.20510,16.36540],[48.20560,16.36380],[48.20620,16.36180],[48.20700,16.36080],[48.20790,16.35970],[48.20880,16.35880],[48.20970,16.35800],[48.21073,16.35730]];
+/* 13 \u2192 14 \u2014 Rathausplatz on foot to Volkstheater, U3 to Westbahnhof, U6 home */
+var W_HOME=[[48.21073,16.35730],[48.20950,16.35715],[48.20830,16.35760],[48.20700,16.35850],[48.20600,16.35930],[48.20500,16.35970]];
+var U3_H=[[48.20500,16.35970],[48.20250,16.35560],[48.19980,16.35100],[48.19850,16.34550],[48.19650,16.33850]];
+var U6_H=[[48.19650,16.33850],[48.19300,16.34050],[48.18590,16.33430],[48.18300,16.33250]];
+
+walkChain(W_MKT,[0,1],['Out of the market, 150 m to the F\u0151v\u00e1m t\u00e9r M4 entrance.']);
+walkChain(W_PARK,[3,4],['Out of the Tiefgarage and <b>~350 m to the flat with the bags</b>.']);
+walkChain(W_TIX,[4,5],['Flat \u2192 <b>Niederhofstra\u00dfe U6</b>, 250 m, to buy all six tickets.']);
+walkChain(W_CITY,[6,7,8,9,10,11,12,13],[
+ 'Out of the Naschmarkt east to <b>Karlsplatz</b>.',
+ 'Karlskirche \u2192 the <b>Staatsoper</b>, then up K\u00e4rntner Stra\u00dfe.',
+ 'K\u00e4rntner Stra\u00dfe straight at <b>Stephansdom</b>.',
+ 'Down <b>Graben</b> \u2014 plague column, Loos toilets \u2014 into the Hofburg.',
+ 'Through the Hofburg courtyards to the <b>Albertina</b>.',
+ 'Albertina \u2192 the <b>Ringstrasse</b> for the vintage-car parade.',
+ 'Along the Ring to <b>Rathausplatz</b>.']);
+walkLeg(W_HOME,'Rathausplatz \u2192 <b>Volkstheater U3</b>, 700 m south along the Ring \u2014 the last walking of the day.','13 \u2192 14');
+line(M4_OUT,'M4','<b>Budapest M4: Fővám tér → Kelenföld</b>, 5 stops, 12 min, no changes. Your 72-hour travelcard still covers it.','1 \u2192 2');
+line(DRIVE,'CAR','<b>Budapest → Vienna, 243 km, ~2.5 h on the M1/A4.</b> Austrian vignette live before you touch the A4; fill up in Hungary.','2 \u2192 3','12,7','car');
+line(U6_A,'U6','<b>Niederhofstraße → Längenfeldgasse</b>, 1 stop, then change to the U4.','5 \u2192 L\u00e4ngenfeldgasse');
+line(U4_A,'U4','<b>Längenfeldgasse → Kettenbrückengasse</b>, 3 stops, and you come up at the far end of the Naschmarkt.','L\u00e4ngenfeldgasse \u2192 6');
+line(U3_H,'U3','<b>Volkstheater → Westbahnhof</b>, 3 stops. The closed stretch of the U3 is west of Westbahnhof, so this hop runs normally.','13 \u2192 14');
+line(U6_H,'U6','<b>Westbahnhof → Niederhofstraße</b>, 3 stops, then 250 m to the door. Runs ALL NIGHT on Saturdays.','13 \u2192 14');
+put(STOPS,'route','s'); put(ENT,'ent','e'); put(SHOPS,'shop','p'); put(WC,'wc','w'); put(ALTS,'alt','a');
+Object.keys(G).forEach(function(k){G[k].addTo(map)});
+L.control.layers(null,{
+  "THE DAY 0&rarr;14 &mdash; drive, U-Bahn + walking, one chain":G.route,
+  "Events on 22 Aug":G.ent,
+  "Shops — stock up today":G.shop,
+  "Toilets":G.wc,
+  "Swaps &amp; warnings":G.alt
+},{collapsed:false}).addTo(map);
+
+document.getElementById('key').innerHTML=
+ '<span><b style="color:#e8590c">-</b><b style="color:#f08c00">-</b><b style="color:#2f9e44">-</b>'+
+   '<b style="color:#1c7ed6">-</b><b style="color:#7048e8">-</b> on foot, one colour per leg</span>'+
+ '<span>'+gl('sight',COL.sight,15)+' sight</span>'+
+ '<span>'+gl('cup',COL.food,15)+' food</span>'+
+ '<span>'+gl('event',COL.event,15)+' free event</span>'+
+ '<span>'+gl('bag',COL.shop,15)+' shop</span>'+
+ '<span>'+gl('music',COL.ent,15)+' what else is on</span>'+
+ '<span><b style="color:'+COL.wc+'">WC</b> toilet</span>'+
+ '<span>'+gl('train',COL.metro,15)+' U-Bahn</span>'+
+ '<span>'+gl('car',COL.car,15)+' the car</span>'+
+ '<span>'+gl('eye',COL.alt,15)+' swap</span>'+
+ '<span>'+gl('warn',COL.clash,15)+' watch out</span>';
+rows(STOPS,'s','The day, in order — 0 to 14');
+rows(ALTS,'a','Swaps, and what could break');
+rows(ENT,'e','What else is on, 22 August');
+rows(SHOPS,'p','Shops — stock up today, Sunday is shut');
+rows(WC,'w','Toilets');
+map.fitBounds(L.polyline(W_CITY.concat(W_HOME,U4_A,U6_A)).getBounds(),{padding:[40,40]});
+</script>
+</body>
+</html>

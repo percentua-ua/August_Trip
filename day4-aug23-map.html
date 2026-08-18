@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>День 4 — неділя, 23 серпня 2026, Відень</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1b2430;background:#fbfaf7}
+  #wrap{display:flex;height:100%}
+  #side{width:410px;min-width:410px;height:100%;overflow-y:auto;background:#fbfaf7;border-right:1px solid #e2ddd4;padding:18px 18px 40px}
+  #map{flex:1;height:100%}
+  h1{font-size:20px;letter-spacing:-.2px}
+  .sub{font-size:12.5px;color:#727e8c;margin:6px 0 14px;line-height:1.45}
+  .stat{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .stat div{background:#fff;border:1px solid #e2ddd4;border-radius:8px;padding:6px 9px;font-size:11px}
+  .stat b{display:block;font-size:14px;color:#4a7c3f}
+  button{font:inherit;font-size:12.5px;font-weight:600;background:#1b2430;color:#fff;border:0;
+         border-radius:8px;padding:9px 13px;cursor:pointer;width:100%;margin-bottom:14px}
+  button:hover{background:#2d3b4d}
+  .row{display:flex;gap:10px;padding:8px;border-radius:9px;cursor:pointer;align-items:flex-start}
+  .row:hover{background:#f2ede4}
+  .row.on{background:#f0ecf6}
+  .t{font-size:11.5px;font-weight:700;letter-spacing:.2px}
+  .n{font-size:13.5px;font-weight:600;line-height:1.3;margin:1px 0 2px}
+  .d{font-size:11.5px;color:#6b7785;line-height:1.42}
+  h2{font-size:10.5px;letter-spacing:1.1px;color:#8a93a8;text-transform:uppercase;margin:20px 0 4px;font-weight:700}
+  .warn{background:#fff6e6;border:1px solid #f0d9a8;border-radius:9px;padding:10px 11px;font-size:12px;line-height:1.5;margin-top:12px}
+  .warn.red{background:#fdecea;border-color:#f0bdb5}
+  .warn.blue{background:#eaf2f8;border-color:#b8d3e6}
+  .warn.green{background:#eef5f0;border-color:#cfe2d6}
+  .key{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:11.5px;color:#4b5560;margin-top:6px}
+  .key span{display:flex;align-items:center;gap:5px}
+  .pr{color:#1b6b45;font-weight:700}
+  .ptag{margin:7px 0 2px;padding:5px 8px;background:#eef5f0;border:1px solid #cfe2d6;
+        border-radius:7px;font-size:12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .ptag b{color:#1b6b45!important} .ptag span{color:#8a5a12;font-weight:700;font-size:11px}
+  .mk{position:relative;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;
+      justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.45);border:2.5px solid #fff}
+  .mk .g{position:absolute;top:-7px;right:-7px;background:#fff;border-radius:50%;
+         width:17px;height:17px;display:flex;align-items:center;justify-content:center;
+         box-shadow:0 1px 3px rgba(0,0,0,.35)}
+  .mk svg{display:block;flex:0 0 auto}
+  .sq{border-radius:5px}
+  .pill{border-radius:4px;border-width:2px}
+  .sight{background:#4a7c3f} .food{background:#c8781a} .event{background:#7d3c98}
+  .bed{background:linear-gradient(135deg,#ffb300 0%,#ff2d78 52%,#b620e0 100%);box-shadow:0 0 0 2px rgba(255,45,120,.30),0 2px 7px rgba(0,0,0,.45)} .wc{background:#2a7fb8} .metro{background:#1a6aa8} .car{background:#5d6470}
+  .shop{background:#2e7d4f} .ent{background:#b0338e} .view{background:#8a5a12}
+  .alt{background:#2f7d8c} .clash{background:#d64541} .light{background:#8a5fc0} .wine{background:#7d2e46}
+  .focusbar{display:none;background:#1b2430;color:#fff;font-size:12.5px;font-weight:600;
+      padding:7px 10px;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.35);max-width:330px}
+  .focusbar b{color:#ffb066}
+  .focusbar button{font:inherit;font-size:11.5px;font-weight:700;background:#ff7a1a;color:#1b2430;
+      border:0;border-radius:6px;padding:3px 8px;margin-left:4px;cursor:pointer;width:auto}
+  .focusbar button:hover{background:#ffa15c}
+    .wb{white-space:nowrap;background:#fff;color:#4a7c3f;border:2px dashed #4a7c3f;border-radius:10px;
+      font-size:9.5px;font-weight:700;text-align:center;line-height:16px;height:20px;
+      white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .lb{display:flex;align-items:center;gap:3px;color:#fff;font-weight:700;font-size:11px;
+      border-radius:7px;padding:2px 6px 2px 4px;border:2px solid #fff;white-space:nowrap;
+      box-shadow:0 1px 4px rgba(0,0,0,.45)}
+  .leaflet-popup-content{font-size:12.5px;line-height:1.5;width:290px!important}
+  .leaflet-popup-content b{color:#4a7c3f}
+  .leaflet-popup-content .meta{color:#727e8c;font-style:italic}
+  @media(max-width:900px){#wrap{flex-direction:column}#side{width:100%;min-width:0;height:auto;border-right:none;border-bottom:1px solid #e2ddd4}#map{height:70vh;min-height:420px}}
+  @media print{
+    @page{size:A4 landscape;margin:8mm}
+    html,body{height:auto;background:#fff}
+    #wrap{display:block;height:auto}
+    button,.leaflet-control-zoom,.leaflet-control-attribution,.leaflet-control-layers{display:none!important}
+    #side{width:78mm;min-width:0;height:auto;overflow:visible;border:none;padding:0;float:left;font-size:9px}
+    #map{width:196mm;height:185mm;margin-left:80mm;border:1px solid #bbb}
+    h1{font-size:14px} .sub{font-size:8.5px;margin:4px 0 7px}
+    .stat{gap:3px;margin-bottom:7px} .stat div{padding:3px 5px;font-size:7.5px} .stat b{font-size:9.5px}
+    .row{padding:2.5px 0;break-inside:avoid} .n{font-size:9px;margin:0} .d{font-size:7.8px;line-height:1.3}
+    .t{font-size:7.8px} h2{font-size:7.5px;margin:8px 0 2px}
+    .warn{font-size:7.8px;padding:5px 6px;margin-top:5px;break-inside:avoid}
+    .key{font-size:7.5px;gap:2px 8px}
+    .mk{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="side">
+    <h1>День 4 &mdash; неділя, 23 серпня 2026, Відень</h1>
+    <div class="sub">Австрія зачинена, тож день побудований навколо того, що працює. <b>Виходите з квартири о 07:00</b>, перекусити на вокзалі Meidling (Майдлінг) &mdash; єдине, що відкрито &mdash; далі <b>Sch&ouml;nbrunn (Шенбрунн), поки там порожньо</b>, сніданок на ринку о 09:45, безкоштовний джаз-бранч, музей, відкритий лише сьогодні &mdash; а потім на <b>Neustifter Kirtag</b> (Нойштіфтер Kirtag &mdash; сільське свято) у його безкоштовний останній вечір &mdash; і звідти прямо додому, бо понеділок починається о 05:20.</div>
+    <div class="stat"><div>пішки<b>~4.6 км</b></div><div>метро + автобус<b>6</b></div><div>з людини<b>~&euro;75</b></div><div>Sch&ouml;nbrunn<b>безкоштовно</b></div><div>Kirtag<b>безкоштовно</b></div></div>
+    <button onclick="doPrint()">Зберегти в PDF / друк &mdash; одна горизонтальна сторінка, разом із картою</button>
+    <div class="key" id="key"></div>
+    <div id="list"></div>
+    <div class="warn" style="background:#fdf3e7;border-color:#f0d0a8"><b>Сніданок у зачинену неділю: Meidlinger Markt (Майдлінгер маркт), 200 м від вас.</b> Сніданку в готелі немає, і жоден магазин в Австрії не працює &mdash; але <b>Ignaz &amp; Rosalia, ринкова кав’ярня, у неділю відкривається о 09:00</b> і подає сніданок до 12:00. Замовляйте <b>Marktfr&uuml;hst&uuml;ck</b>: багет, начинене виноградне листя, овечий сир, твердий сир, хорватська домашня колбаса, хумус, оливки. Або класику по-віденськи &mdash; кава, яйце в мішечок, хліб, масло, джем. <b>~&euro;35&ndash;50 на вас трьох.</b> Ринкові <i>прилавки</i> зачинені; кав’ярні відкриті 10:00&ndash;18:00. <b>Meidlinger Alm</b> на тому ж ринку &mdash; запасний варіант із 10:00.</div>
+    <div class="warn" style="background:#f4f6f9;border-color:#ccd4e0"><b>Як читати карту й підсвічувати по одному відрізку.</b> <b>Пунктир = ви йдете пішки</b>, і <b>кожен пішохідний відрізок має свій колір</b>, щоб сусідні відрізки не зливалися &mdash; бейдж на лінії має той самий колір і називає два пункти, які вона з’єднує. <b>Суцільна = ви їдете</b>, у справжньому кольорі лінії транспорту &mdash; і тепер <b>з таким самим бейджем</b>: лінія і два пункти, які цей відрізок з’єднує.<br><b>Клацніть будь-яку лінію, і вона підсвітиться сама</b> &mdash; решта пригасне, карта наблизиться до неї, а вгорі ліворуч з’явиться смужка з кнопкою <b>показати весь день</b>. Клацніть ту саму лінію ще раз, щоб скасувати.<br><b>Клацніть пронумерований пункт у списку</b> &mdash; і підсвітяться всі відрізки, що його торкаються: клацнувши <b>11</b>, ви разом побачите, як до 11 дістаєтеся і як звідти йдете.</div>
+    <div class="warn" style="background:#fdf3e7;border-color:#f0d0a8"><b>Де їсти в неділю, по порядку.</b>
+    <b>07:00 ви виходите з квартири</b>, і в Австрії нічого не відкрито &mdash; Ignaz &amp; Rosalia відчиняється лише о 09:00.<br>
+    <b>07:15 перша їжа: магазини на вокзалі Bahnhof Wien Meidling (Майдлінг)</b>, 630 м на південь. <b>Вокзальні магазини не підпадають під правило «у неділю все зачинено»</b>, тож це єдина надійна кава з випічкою поруч у цю годину &mdash; а Meidling ще й станція U6, тож по дорозі до Sch&ouml;nbrunn (Шенбрунн) це вам нічого не коштує.<br>
+    <b>Або пропустіть:</b> якщо ви, як і планували, купили в суботу хліб, фрукти й каву &mdash; поїжте в квартирі й ідіть замість цього на Niederhofstra&szlig;e (Нідерхофштрассе).<br>
+    <b>09:45 справжній сніданок: Ignaz &amp; Rosalia</b> на Meidlinger Markt, 200 м від вашого ліжка, у неділю відкрито 09:00&ndash;18:00. Замовляйте <i>Marktfr&uuml;hst&uuml;ck</i>. Це і є повноцінна їжа &mdash; вокзал лише пальне для підйому на Gloriette (Глоріетта).</div>
+    <div class="warn red"><b>Уся торгівля сьогодні зачинена, і це без винятків.</b> Ні супермаркетів, ні Trafik, ні ринкових прилавків. Ресторани, кав’ярні, музеї та наметки на Rathausplatz (Ратгаусплац) працюють. <b>Якщо ви не купили в суботу воду й їжу на завтрашні 1000 км дороги</b>, магазини на вокзалі <b>Bahnhof Wien Meidling</b> (630 м) &mdash; ваш єдиний реальний варіант: вокзальні магазини не підпадають під правило «у неділю все зачинено».</div>
+    <div class="warn" style="background:#f6ecf0;border-color:#dcbcc8"><b>Сьогодні останній вечір Neustifter Kirtag (Kirtag &mdash; сільське свято), а неділя тут безкоштовна.</b> 12:00&ndash;22:00, столики взагалі не бронюють, духовий оркестр із 12:00 і <b>Die Wuppa 17:00&ndash;21:00</b>. 650 м дороги у винному селі закрито для транспорту, столи Heuriger (Heuriger &mdash; винний двір) просто на вулиці, свято проводять із середини 1700-х, ритуали в списку UNESCO, 100 000 відвідувачів за чотири дні. <b>Прийти о 18:00 &mdash; застати найкраще.</b> Не їдьте автом &mdash; U6 до Nussdorfer Stra&szlig;e (Нусдорфер штрассе), далі автобус 35A, і те, і те за вашим квитком.</div>
+    <div class="warn"><b>Sch&ouml;nbrunn (Шенбрунн) до 10:00 &mdash; або ніколи.</b> Парк і підйом до Gloriette (Глоріетта) &mdash; <b>безкоштовно</b>, ви <b>за два пункти U4</b>, а до 11:00 це стає найлюднішим місцем Австрії. Це єдиний ранок подорожі, коли рано поставлений будильник справді щось дає. Інтер’єри палацу вимагають броні на час і ~&euro;32 &mdash; пропустіть без жалю.</div>
+    <div class="warn blue"><b>Музеї: сьогодні або ніколи.</b> <b>Kunsthistorisches (Музей історії мистецтв) у неділю відкритий, а в понеділок зачинений</b>, і на пообіддя прогнозують дощ &mdash; тому о 14:00 і стоїть блок під дахом. Найбільша у світі колекція Bruegel, плюс Vermeer, Vel&aacute;zquez і Kunstkammer. Плануйте 2&ndash;3 год. Belvedere (Бельведер) із <i>Поцілунком</i> Klimt &mdash; менша, дешевша й швидша заміна.</div>
+    <div class="warn" style="background:#fdecea;border-color:#f0bdb5"><b>&#9888; Завтра ви їдете 1000 км, старт о 06:00.</b> В Австрії норма 0.5 &permil;; <b>в Угорщині 0.00 &permil;</b>, а нею ви їдете 530 км. Хто сідає за кермо першим, той сьогодні п’є шприцер без вина. Спакуйте авто, домовтеся про черговість за кермом і зніміть усе з даху <b>перед</b> Kirtag, а не після.</div>
+    <div class="warn green"><b>Скільки коштує сьогоднішній день, з людини.</b> Транспорт <b>&euro;10.20</b> (ваш другий квиток на 24 години, прокомпостований зранку) &middot; сніданок в Ignaz &amp; Rosalia <b>~&euro;15</b> &middot; музей <b>~&euro;21</b> &middot; кава з тортом <b>~&euro;10</b> &middot; їжа й вино на Kirtag <b>~&euro;20</b>. <b>Парк Sch&ouml;nbrunn, Gloriette, джаз-бранч, «Фауст» і сам Kirtag &mdash; усе безкоштовно.</b> Приблизно <b>&euro;75 з людини</b>. Ціни музеїв приблизні &mdash; перевіряйте на вході. <b>Візьміть готівку на Kirtag</b>: не всі сільські наметки приймають картку.</div>
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+var PATHS={
+  sight:'<path d="M3 21h18"/><path d="M5.5 21V10.5M9.8 21V10.5M14.2 21V10.5M18.5 21V10.5"/><path d="M12 3l9.5 5.5h-19L12 3z"/>',
+  cup:  '<path d="M4 7.5h12.5V13a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7.5z"/><path d="M16.5 9h2.2a2.4 2.4 0 0 1 0 4.8h-2.2"/><path d="M3 21h15"/>',
+  bag:  '<path d="M5.5 7.5h13l-1.1 11.6a1.6 1.6 0 0 1-1.6 1.4H8.2a1.6 1.6 0 0 1-1.6-1.4L5.5 7.5z"/><path d="M9 7.5V6a3 3 0 0 1 6 0v1.5"/>',
+  event:'<circle cx="12" cy="12" r="2.7"/><path d="M12 2.2v3.4M12 18.4v3.4M2.2 12h3.4M18.4 12h3.4M5.1 5.1l2.4 2.4M16.5 16.5l2.4 2.4M18.9 5.1l-2.4 2.4M7.5 16.5l-2.4 2.4"/>',
+  bed:  '<path d="M3 19v-7h12.5A4.5 4.5 0 0 1 20 16.5V19"/><path d="M3 12V6.5"/><path d="M3 19h18"/><circle cx="7.6" cy="9.3" r="1.9"/>',
+  car:  '<path d="M2.5 16.5v-4l2-5.5h15l2 5.5v4"/><path d="M2.5 12.5h19"/><circle cx="7" cy="16.8" r="1.7"/><circle cx="17" cy="16.8" r="1.7"/>',
+  train:'<rect x="5" y="2.8" width="14" height="13" rx="3.2"/><path d="M5.5 11h13"/><path d="M9 19l-1.6 2.2M15 19l1.6 2.2"/><path d="M9.5 16v3M14.5 16v3"/>',
+  music:'<path d="M9.5 18.5V6l10.5-2.2v11"/><circle cx="6.6" cy="18.6" r="2.9"/><circle cx="17" cy="15.9" r="2.9"/>',
+  eye:  '<path d="M2.2 12S6 6.2 12 6.2 21.8 12 21.8 12 18 17.8 12 17.8 2.2 12 2.2 12z"/><circle cx="12" cy="12" r="3.1"/>',
+  warn: '<path d="M12 3.6l9.4 16.3H2.6L12 3.6z"/><path d="M12 9.6v4.3"/><path d="M12 17v.12"/>',
+  bulb: '<path d="M9.2 18.2h5.6"/><path d="M10.3 21h3.4"/><path d="M12 3.2a6 6 0 0 1 3.6 10.8c-.5.4-.8 1-.8 1.6v.6H9.2v-.6c0-.6-.3-1.2-.8-1.6A6 6 0 0 1 12 3.2z"/>',
+  peak: '<path d="M2.5 19.5h19L14 5.5l-3.4 6.2-2.1-1.9L2.5 19.5z"/>',
+  wine: '<path d="M7.5 3h9l-.7 6a3.8 3.8 0 0 1-7.6 0L7.5 3z"/><path d="M12 12.8V19"/><path d="M8.6 21h6.8"/>',
+  bus:  '<rect x="3.5" y="4" width="17" height="12.5" rx="2.5"/><path d="M3.5 10.5h17"/><circle cx="7.5" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/><path d="M6 16.5v1M18 16.5v1"/>'
+};
+function gl(k,c,s){
+  return '<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="'+c+
+         '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+PATHS[k]+'</svg>';
+}
+var GK={sight:'sight',bed:'bed',food:'cup',event:'event',shop:'bag',car:'car',metro:'train',
+        ent:'music',alt:'eye',clash:'warn',light:'bulb',view:'peak',wine:'wine',bus:'bus'};
+var COL={sight:'#4a7c3f',food:'#c8781a',event:'#7d3c98',bed:'#e0247a',wc:'#2a7fb8',metro:'#1a6aa8',
+         car:'#5d6470',shop:'#2e7d4f',ent:'#b0338e',alt:'#2f7d8c',clash:'#d64541',light:'#8a5fc0',
+         view:'#8a5a12',wine:'#7d2e46',bus:'#1a6aa8'};
+var STOPS=[{"n": "0", "cat": "bed", "t": "07:00", "dist": "звідси починаєте", "name": "КВАРТИРА — Mandlgasse 18, ранній підйом", "lat": 48.1845, "lon": 16.3335, "price": "—", "pay": "—", "d": "<b>Будильник на 06:40, вийти о 07:00.</b> Це той єдиний ранок, коли ранній підйом справді щось дає: парк Schönbrunn (Шенбрунн) безкоштовний і практично порожній до 10:00, а до 11:00 це найлюдніше місце Австрії.<br><br><b>Проблема неділі:</b> Австрія повністю зачинена, а Ignaz &amp; Rosalia на ринку — ваш справжній сніданок — відчиняється лише о <b>09:00</b>. Тож або з’їжте перед виходом щось куплене в суботу, або витратьте п’ятнадцять хвилин на пункт 1 по дорозі.<br><br><b>Перед виходом:</b> перевірте, що авто спаковане на завтрашній старт о 06:00, бо сьогодні ви повернетеся з винних сіл пізно."}, {"n": "1", "cat": "food", "t": "07:15", "dist": "630 м · 8 хв", "name": "ПЕРША ЇЖА — магазини Bahnhof Wien Meidling", "lat": 48.1793, "lon": 16.3317, "price": "~€4–7 з людини", "pay": "картка ок", "d": "<b>Єдина надійно відкрита їжа поруч о 07:00 в австрійську неділю.</b> Вокзальні магазини не підпадають під правило «у неділю все зачинено», а Bahnhof Wien Meidling (Майдлінг) &mdash; <b>630 м на південь від квартири</b>: пекарський прилавок, кава, іноді невеликий супермаркет.<br><br><b>Пропустіть це, якщо</b> ви, як і планували, купили в суботу хліб, фрукти й каву: поїжте в квартирі й ідіть замість цього на Niederhofstraße (Нідерхофштрассе, 250 м). <b>Ідіть, якщо</b> не купили або якщо ніхто не полізе на Gloriette (Глоріетта) натощак.<br><br><b>Ви нічого не втрачаєте</b> &mdash; Meidling це <b>ще й станція U6</b>, тож U6 на північ до Längenfeldgasse (Ленгенфельдгассе), далі U4 два пункти до Schönbrunn (Шенбрунн), точно як від Niederhofstraße.<br><br><b>Віденські пекарні також можуть відкриватися в неділю зранку</b> за винятками з правил торгівлі, тож на Meidlinger Hauptstraße може працювати якась <i>Bäckerei</i> &mdash; варто глянути мимохідь, але покладатися треба на вокзал.<br><br><b>Гроші:</b> вокзальні ціни, ~€4–7 з людини."}, {"n": "2", "cat": "sight", "t": "07:45", "dist": "2 пункти U4", "name": "SCHÖNBRUNN — парк, і приходьте рано", "lat": 48.18453, "lon": 16.31222, "price": "парк БЕЗКОШТОВНО", "pay": "—", "d": "<b>Ви за два пункти U4 звідси &mdash; це найбільша удача цієї квартири.</b> U6 до Längenfeldgasse (Ленгенфельдгассе), U4 у бік Hütteldorf, два пункти до Schönbrunn (Шенбрунн).<br><br><b>Парк відкривається рано й нічого не коштує</b>, і до 10:00 він буде майже повністю ваш &mdash; а до 11:00 це найлюдніше місце Австрії. Партер, фонтани, підстрижені алеї і велика чесність цього виду: палац величезний, жовтий і трохи абсурдний.<br><br><b>Інтер’єри палацу &mdash; на вибір</b>: Grand Tour це ~€32 за 40 залів і потребує броні на конкретний час. Пропустите &mdash; нічого не втратите; сам парк і є враження.<br><br><b>Гроші:</b> парк, партер і підйом до Gloriette (Глоріетта) &mdash; усе безкоштовно. Privy Garden, лабіринт і Palm House &mdash; окремі невеликі квитки."}, {"n": "3", "cat": "view", "t": "08:45", "dist": "900 м угору", "name": "GLORIETTE — безкоштовна панорама", "lat": 48.18063, "lon": 16.30594, "price": "підйом БЕЗКОШТОВНО", "pay": "—", "d": "<b>Підніміться схилом за палацом.</b> Десять хвилин, полого, а на вершині &mdash; Gloriette (Глоріетта): колонада 1775 року, збудована з каменю знесеного палацу й поставлена на гребені лише тому, що вид вимагав будівлі.<br><br><b>Найкраща панорама на Відень у самому місті</b>: цілий палац і партер розкладені під вами, а за ними місто. Усередині є кафе, а за терасу беруть невелику плату, <b>але вид знадвору &mdash; це той самий вид</b>.<br><br>О 08:45 у серпні тут тихо, прохолодно й порожньо. <b>Гроші:</b> безкоштовно."}, {"n": "4", "cat": "food", "t": "09:45", "dist": "U4 назад, 2 пункти", "name": "СНІДАНОК — Ignaz & Rosalia, Meidlinger Markt", "lat": 48.1833, "lon": 16.3329, "price": "~€12–17 з людини", "pay": "картка ок", "d": "<b>Ось чому сьогодні розташування квартири має значення.</b> Кожен магазин в Австрії зачинений, але ринкова кав’ярня <b>у неділю відкривається о 09:00</b> і подає сніданок до 12:00 &mdash; за 200 м від вашого ліжка.<br><br>Замовляйте <b>Marktfrühstück</b>: багет, начинене виноградне листя, овечий сир, твердий сир, хорватська домашня колбаса, хумус і оливки. Або класику по-віденськи: кава, яйце в мішечок, хліб, масло, джем. Одне з найдовших кавових меню в місті, а торти &mdash; від Konditorei Hüftgold із прилавків поруч.<br><br><b>Гроші:</b> €35–50 на вас трьох, залежно від того, платери чи простий віденський сет. Ринкові <i>прилавки</i> сьогодні зачинені; кав’ярні відкриті 10:00–18:00."}, {"n": "5", "cat": "metro", "t": "11:15", "dist": "U6, 4 пункти", "name": "До центру — U6 до Burggasse-Stadthalle", "lat": 48.183, "lon": 16.3325, "price": "прокомпостуйте квиток 2", "pay": "—", "d": "<b>Сьогодні у вас другий квиток на 24 години</b> &mdash; прокомпостуйте його в синій скриньці зараз, на початку цих 24 годин. Він довезе вас через увесь вечір і завтрашній виїзд о 06:00.<br><br>U6 на північ від Niederhofstraße (Нідерхофштрассе) до <b>Burggasse-Stadthalle</b> (Бурггассе-Штадтхалле), далі 900 м пішки на схід до Rathaus. Простіше, ніж U4 + U2, і висаджує вас у 7-му районі, куди ви ще повернетеся ввечері.<br><br><b>Зверніть увагу: U3 частково закрита</b> (Hütteldorfer Straße–Westbahnhof, до кінця серпня), а на магістральній лінії S-Bahn ходять автобуси-замінники. Ні те, ні те не стосується U6/U4."}, {"n": "6", "cat": "event", "t": "12:00", "dist": "900 м · 11 хв", "name": "БЕЗКОШТОВНИЙ ДЖАЗ-БРАНЧ — Rathausplatz", "lat": 48.21073, "lon": 16.3573, "price": "БЕЗКОШТОВНО · їжа €6–12", "pay": "картка ок", "d": "<b>12:00–14:00, безкоштовно, і це вирішує обід у неділю, коли все зачинено.</b> Живий джаз на сцені Rathausplatz (Ратгаусплац), наметки з їжею працюють &mdash; ви були тут учора ввечері на кіно, і вдень площа працює не гірше.<br><br>Сядьте, візьміть щось із наметки, послухайте. Це найцивілізованіші дві години, доступні сьогодні у Відні, і коштують вони лише стільки, скільки їжа.<br><br><b>Гроші:</b> вхід безкоштовний; €6–12 за порцію в наметках."}, {"n": "7", "cat": "sight", "t": "14:00", "dist": "700 м · 9 хв", "name": "БЛОК НА ВИПАДОК ДОЩУ — Kunsthistorisches Museum", "lat": 48.20384, "lon": 16.36169, "price": "~€21 · перевірте", "pay": "картка ок", "d": "<b>Сьогодні і тільки сьогодні це можливо.</b> KHM (Kunsthistorisches, Музей історії мистецтв) <b>у неділю відкритий, а в понеділок зачинений</b> &mdash; і на пообіддя прогнозують дощ, тож цей час поставлений свідомо, а не з лінощів.<br><br>Колекція Габсбургів у палаці, зведеному для неї на Ring: <b>найбільше у світі зібрання Bruegel</b> (разом із «Полюванням на снігу»), Vermeer, Velázquez, Rembrandt, Caravaggio і Kunstkammer імператорських дивовиж &mdash; серед них сільниця Cellini. Плануйте <b>2–3 години</b> й не намагайтеся побачити все.<br><br><b>Заміна на карті:</b> Belvedere (Бельведер), по <i>Поцілунок</i> Klimt.<br><br><b>Гроші:</b> ~€21, і варто перевірити актуальну ціну. У сходовій залі та під куполом можна постояти безкоштовно, ще до контролю квитків."}, {"n": "8", "cat": "food", "t": "17:00", "dist": "900 м · 11 хв", "name": "КАВА З ТОРТОМ, ЯК НАЛЕЖИТЬ — Café Sperl", "lat": 48.19882, "lon": 16.3597, "price": "~€8–12 з людини", "pay": "картка ок", "d": "<b>Це не затичка в програмі &mdash; це віденська інституція, і сьогодні саме той день.</b> Sperl відкрився у 1880-му й досі має оригінальне облаштування: гнута деревина, мармурові стільниці, більярдні столи, газети на дерев’яних тримачах і офіціанти, які дадуть вам спокій на дві години.<br><br><b>Старіше, обшарпаніше й справжніше за Central</b>, який показніший і має чергу. <b>Demel</b> &mdash; імператорський кондитер, якщо йдеться радше про торт, ніж про залу.<br><br>Замовте <b>Melange</b> і <b>Apfelstrudel</b> або Sachertorte. Не спішіть; уся суть у тому, щоб не спішити.<br><br><b>Гроші:</b> €8–12 з людини. Кав’ярні сьогодні відкриті, коли все інше зачинено."}, {"n": "9", "cat": "bus", "t": "17:45", "dist": "U6 + автобус 35A", "name": "ДО ВИННИХ СІЛ — U6 + 35A", "lat": 48.2214, "lon": 16.3509, "price": "за вашим квитком", "pay": "—", "d": "<b>U6 до Nussdorfer Straße (Нусдорфер штрассе), далі автобус 35A до Neustift am Walde (Нойштіфт-ам-Вальде).</b> Одна пересадка, звідки б ви не їхали, і обидва відрізки покриває ваш квиток на 24 години &mdash; у Відні тариф залежить від часу й зони, а не від відстані, тож виїзд у пагорби не коштує нічого додатково.<br><br>Альтернативний маршрут: S45 до Krottenbachstraße, далі той самий 35A.<br><br><b>Не їдьте автом</b> &mdash; дороги закриті через свято, а парковка суворо обмежена. Автобус буде повний, будьте готові."}, {"n": "10", "cat": "wine", "t": "18:00", "dist": "650 м свята", "name": "NEUSTIFTER KIRTAG — найкраще у Відні, і сьогодні воно закінчується", "lat": 48.2417, "lon": 16.2956, "price": "сьогодні БЕЗКОШТОВНО · без броні", "pay": "готівка в помочі", "d": "<b>650-метровий відтинок дороги у винних селах закривають для транспорту, і він стає ринковою та гастрономічною милею</b>, а столи Heuriger (Heuriger &mdash; винний двір) виносять просто на вулицю. Свято проводять із <b>середини 1700-х</b>, воно збирає понад <b>100 000 людей за чотири дні</b>, а підняття Hiatabaum і процесія з Hauerkrone з <b>2020 року в списку нематеріальної спадщини UNESCO</b>.<br><br><b>Це справжнє віденське винне свято, а не туристична версія &mdash; і воно припадає точно на ваші дати.</b><br><br><b>Неділя тут безкоштовна й остання, 12:00–22:00.</b> Fuhrgassl-Huber сьогодні взагалі не продає столів: усі просто приходять. Духовий <b>Frühschoppen із 12:00</b> (Blasmusik Großrußbach, Harry Prünster до 16:30), потім <b>Die Wuppa 17:00–21:00</b>.<br><br>Пройдіть цю милю, їжте з наметок, сідайте в тому Heuriger, де є місце. Молоде вино, Sturm (Sturm &mdash; молоде вино), якщо сезон уже дозволяє, духова музика &mdash; і ніхто не грає для вас у автентичність.<br><br><b>Гроші: увійти безкоштовно.</b> Окремі Heuriger беруть плату лише за заброньований стіл, а сьогодні їх немає. Вино та їжа за сільськими цінами &mdash; візьміть готівку, деякі наметки не приймають картку.<br><br><b>⚠ Нотатка водієві:</b> завтра о 06:00 ви вирушаєте до Рівного. Хто сідає за кермо першим, той п’є шприцер без вина &mdash; в Австрії норма 0.5 ‰, а в Угорщині <b>0.00</b>."}, {"n": "11", "cat": "bed", "t": "~22:15", "dist": "35A + U6, без об’їздів", "name": "ДОДОМУ — прямо назад, і пакуватися на 06:00", "lat": 48.1845, "lon": 16.3335, "price": "—", "pay": "—", "d": "<b>З винних сіл прямо додому &mdash; без останньої чарки, і це правильне рішення.</b> Die Wuppa закінчують о <b>21:00</b>, тож ідіть із милі близько <b>21:15</b>: <b>автобус 35A</b> униз до Nussdorfer Straße (Нусдорфер штрассе), потім <b>U6 на південь до Niederhofstraße</b> (Нідерхофштрассе) &mdash; одна лінія, без пересадок &mdash; і 250 м до дверей. Близько 45 хвилин, дома до <b>22:15</b>.<br><br><b>Чому не 7-й район:</b> об’їзд додає годину й кладе вас у ліжко о 01:00 перед <b>1000 км дороги зі старту о 06:00</b> через Карпати. Bukowski був би ще відкритий; це не те саме, що добра ідея.<br><br><b>Перед сном, по порядку:</b> авто спаковане · <b>вода та їжа на завтра</b> (куплені в суботу &mdash; сьогодні й о 06:00 нічого не відкрито) · черговість за кермом узгоджена · зняти все з даху, якщо користувалися Tiefgarage · будильники на <b>05:20</b>.<br><br><b>Ваша угорська віньєтка з четверга ще чинна</b>, тож зранку купувати нічого не треба."}];
+var ALTS=[{"cat": "alt", "t": "14:00 · заміна", "name": "Блок на випадок дощу Б — Belvedere, по «Поцілунок» Klimt", "lat": 48.19146, "lon": 16.38095, "price": "~€17 · перевірте", "pay": "картка ок", "d": "Upper Belvedere (Верхній Бельведер): <b><i>Поцілунок</i> Klimt</b>, а до того найбільша у світі колекція Klimt, Schiele, Kokoschka і бароковий палац із регулярним парком між двома корпусами.<br><br><b>Беріть це замість KHM, якщо</b> вам ближче одна знаменита картина й віденський модерн, ніж три години старих майстрів. Тут менше, швидше й дешевше, а парком можна гуляти безкоштовно. <b>Беріть KHM, якщо</b> хочете великий музей і Bruegel."}, {"cat": "alt", "t": "20:30 · заміна", "name": "«Фауст» на Rathausplatz — безкоштовно, якщо Kirtag задалеко", "lat": 48.21073, "lon": 16.3573, "price": "БЕЗКОШТОВНО", "pay": "—", "d": "<b><i>Фауст</i> Віденської державної опери на великому екрані, 20:30, безкоштовно.</b> Якщо виїзд у винні села здається завеликим напруженням у вечір перед 1000 км дороги, це варіант із мінімумом зусиль &mdash; ви й так на площі в обід, а додому &mdash; прямий U6.<br><br><b>Але:</b> Kirtag &mdash; 300-річне свято зі списку UNESCO, і сьогодні його останній вечір, а на Rathausplatz (Ратгаусплац) щось показують щовечора. Якщо витримаєте автобус &mdash; сідайте в автобус."}, {"cat": "alt", "t": "18:30 · заміна", "name": "Heuriger без далекої дороги — Weinstube Josefstadt", "lat": 48.21105, "lon": 16.35156, "price": "~€20–25 з людини", "pay": "картка ок", "d": "Piaristengasse 27, у 8-му районі. <b>Атмосфера Heuriger (Heuriger &mdash; винний двір) без виїзду з міста</b>: заплетений плющем двір, Grüner Veltliner і Blaufränkisch на розлив, нарізки й штрудель із прилавка.<br><br>Десять хвилин пішки від Rathaus, тож це чисто стає в кінець вашого пообіддя. Не те саме, що Neustift (Нойштіфт), але й зусиль у кілька разів менше."}, {"cat": "alt", "t": "пообіді", "name": "Frameout — безкоштовне кіно просто неба, MuseumsQuartier", "lat": 48.2033, "lon": 16.3593, "price": "БЕЗКОШТОВНО", "pay": "—", "d": "Безкоштовні документальні, артові та експериментальні фільми у дворі MuseumsQuartier, до 29 серпня. <b>MQ &mdash; поруч із Kunsthistorisches (Музей історії мистецтв)</b>, тож це чисто стає в кінець музейного блоку, якщо дощ уже пройшов і хочеться посидіти надворі з напоєм перед Kirtag."}, {"cat": "clash", "t": "пастки дня", "name": "Три речі про віденську неділю", "lat": 48.1859, "lon": 16.3343, "price": "—", "pay": "—", "d": "<b>1 · Уся торгівля зачинена.</b> Ні супермаркетів, ні Trafik, ні ринкових прилавків. Ресторани, кав’ярні, музеї та наметки на Rathausplatz (Ратгаусплац) працюють. Якщо ви не купили вчора воду й їжу на понеділок &mdash; це проблема: кухня квартири та Ignaz &amp; Rosalia ваші єдині варіанти.<br><br><b>2 · Naschmarkt (Нашмаркт) сьогодні мертвий.</b> Якщо пропустили його вчора &mdash; усе, проґавили.<br><br><b>3 · Kirtag і питання часу.</b> У неділю Kirtag працює <b>12:00–22:00, і це останній день</b>. Die Wuppa грають 17:00–21:00, тож прийти о 18:00 &mdash; застати найкраще; а якщо відкладете до 20:00, вам залишиться година й дорога автобусом додому."}];
+var ENT=[{"cat": "wine", "t": "12:00–22:00", "name": "Kirtag, повна програма — безкоштовний день, останній день", "lat": 48.241, "lon": 16.297, "price": "БЕЗКОШТОВНО", "pay": "готівка в помочі", "d": "<b>Frühschoppen із духовою музикою від 12:00</b> &mdash; Blasmusik Großrußbach і Harry Prünster до 16:30 &mdash; далі <b>Die Wuppa 17:00–21:00</b>. У неділю ніде на цій милі столів не бронюють: ви просто приходите й шукаєте місце.<br><br>Учора свято тривало 14:00–24:00 із DJ Berlü до 23:30, а стіл на шість осіб у Fuhrgassl-Huber коштував €285. <b>Сьогодні воно безкоштовне й без броні</b> &mdash; і так краще."}, {"cat": "ent", "t": "12:00–14:00", "name": "Rathausplatz — джаз-бранч, а о 20:30 «Фауст»", "lat": 48.21073, "lon": 16.3573, "price": "БЕЗКОШТОВНО", "pay": "картка ок", "d": "Сьогодні на одній площі дві безкоштовні речі: <b>джаз-бранч 12:00–14:00</b> з відкритими наметками і <b>«Фауст»</b> Віденської державної опери на екрані 300 м² о <b>20:30</b>. Наметки працюють з 11:00 до півночі, кухні до 23:00."}, {"cat": "ent", "t": "з 11:00", "name": "AFRIKA TAGE — Donauinsel (Донауінзель), у неділю відкривається раніше", "lat": 48.243, "lon": 16.396, "price": "~€12.20–12.90", "pay": "картка", "d": "<b>У неділю відкривається об 11:00</b>, а не о 14:00, і працює до півночі, концерти приблизно з 18:00. Жива музика, танці, ремесла, їжа; цього року Sona Jobarteh, Marla Glen, Valérie Ékoumé, Kasiva Mutua. <b>U6 прямо від ваших дверей до Handelskai</b> + 400 м.<br><br>Це на Donauinsel (Донауінзель), тож безкоштовні пляжі на річці плавно переходять у свято. <b>Але воно прямо конкурує з Kirtag</b>, і Kirtag закінчується сьогодні, а це триває до 24-го &mdash; вас тут уже не буде, тож це справді або одне, або інше."}, {"cat": "light", "t": "20:00–01:00", "name": "FÉNYKERT? Ні — це був Будапешт", "lat": 48.22947, "lon": 16.40946, "price": "безкоштовно", "pay": "—", "d": "Стоїть тут як нагадування, що <b>віденський аналог на сьогодні &mdash; це Donauinsel (Донауінзель)</b>: 21 км безкоштовних пляжів і барів на річці, U1 до Donauinsel, куди Відень справді ходить у спеку. Відкрито, безкоштовно й людно теплого неділішнього вечора.<br><br>Тихіша заміна для Kirtag, якщо автобус туди здається завеликим напруженням, і значно ближче за Neustift (Нойштіфт)."}];
+var SHOPS=[{"cat": "shop", "t": "ЗАЧИНЕНО", "name": "Уся торгівля — сьогодні зачинено, без винятків", "lat": 48.1835, "lon": 16.3331, "price": "—", "pay": "—", "d": "<b>Австрія в неділю зачиняється, і це без винятків:</b> ні супермаркетів, ні Trafik, ні ринкових прилавків, ні аптек, окрім чергової. Цей пін &mdash; Meidlinger Markt (Майдлінгер маркт), де <b>прилавки зачинені, але кав’ярні відкриті 10:00–18:00</b>.<br><br><b>Що працює:</b> ресторани, кав’ярні, музеї, наметки на Rathausplatz (Ратгаусплац) і магазини в аеропорту та на головних вокзалах.<br><br><b>Якщо потрібна вода на завтрашню дорогу, а в суботу ви її не купили</b>, ваші варіанти &mdash; кав’ярня, кран у квартирі або магазин на вокзалі Wien Meidling, за 630 м."}, {"cat": "shop", "t": "відкрито в нд", "name": "Bahnhof Wien Meidling — неділішня лазівка", "lat": 48.1793, "lon": 16.3317, "price": "вокзальні ціни", "pay": "картка ок", "d": "<b>Вокзальні магазини не підпадають під правило «у неділю все зачинено»</b>, а Wien Meidling (Майдлінг) &mdash; <b>за 630 м від квартири</b>. Це єдине реальне місце, де сьогодні можна купити воду, хліб чи перекус &mdash; а отже, ваша страховка на завтрашній старт о 06:00, якщо суботніх закупів не вистачило.<br><br>Розраховуйте приблизно на подвійні супермаркетні ціни. Але воно відкрите, дійти пішки можна, і це краще, ніж виїжджати через Угорщину з порожніми руками."}];
+var WC=[{"cat": "wc", "t": "надійно", "name": "Schönbrunn — територія палацу", "lat": 48.185, "lon": 16.314, "price": "~€0.50", "pay": "монети", "d": "Туалети у відвідувацьких зонах біля палацу та коло кафе на Gloriette (Глоріетта). Ви тут із 07:45, тож скористайтеся ними перед підйомом на схил."}, {"cat": "wc", "t": "надійно", "name": "Meidlinger Markt / Ignaz & Rosalia", "lat": 48.1833, "lon": 16.3329, "price": "для відвідувачів", "pay": "—", "d": "Ви сидите тут за сніданком понад годину &mdash; користуйтеся туалетом кав’ярні. Ринкові туалети можуть бути зачинені разом із прилавками."}, {"cat": "wc", "t": "безкоштовно", "name": "Rathausplatz — туалети на події", "lat": 48.21, "lon": 16.3576, "price": "безкоштовно", "pay": "—", "d": "На площі, поки працюють наметки, з 11:00 до півночі. Безкоштовно, а ви тут сьогодні двічі."}, {"cat": "wc", "t": "за вашим квитком", "name": "Kunsthistorisches Museum", "lat": 48.20384, "lon": 16.36169, "price": "безкоштовно з квитком", "pay": "—", "d": "Усередині, безкоштовно з квитком і чисто. Ви тут дві-три години &mdash; планувати нічого не треба."}, {"cat": "wc", "t": "перевірте", "name": "Neustift am Walde — туалети на святі", "lat": 48.2417, "lon": 16.2956, "price": "безкоштовно або ~€0.50", "pay": "монети", "d": "На святі зі 100 000 відвідувачів уздовж милі стоять тимчасові туалети, а Heuriger (Heuriger &mdash; винний двір) мають власні для гостей. <b>Скористайтеся ними перед тим, як сісти на 35A назад</b> &mdash; до міста їхати довго."}, {"cat": "wc", "t": "надійно", "name": "Niederhofstraße U6", "lat": 48.183, "lon": 16.3325, "price": "~€0.50", "pay": "монети", "d": "Домашня станція, для пізнього повернення."}];
+var map=L.map('map',{scrollWheelZoom:true}).setView([48.205,16.33],13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+var G={route:L.layerGroup(),metro:L.layerGroup(),ent:L.layerGroup(),shop:L.layerGroup(),
+       wc:L.layerGroup(),alt:L.layerGroup()};
+
+/* walking legs cycle through a warm-to-cool ramp so consecutive legs are distinguishable */
+var WRAMP=['#e8590c','#f08c00','#d9a406','#82a114','#2f9e44','#0ca678','#1098ad','#1c7ed6','#4263eb','#7048e8','#ae3ec9','#d6336c'];
+var _wi=0;
+function wcol(){ var c=WRAMP[_wi%WRAMP.length]; _wi++; return c; }
+/* ================= CLICK A LEG TO LIGHT IT UP ================= */
+var _legs=[], _focus=null;
+function reg(main,casing,id,kind,nums){
+  _legs.push({id:id,kind:kind,m:main,c:casing,
+    ms:{color:main.options.color,weight:main.options.weight,opacity:main.options.opacity,dashArray:main.options.dashArray},
+    cs:casing?{color:casing.options.color,weight:casing.options.weight,opacity:casing.options.opacity}:null,
+    nums:nums||(String(id).match(/\d+/g)||[]).map(Number)});
+  main.on('click',function(){focusLeg(id);});
+  if(casing) casing.on('click',function(){focusLeg(id);});
+  return main;
+}
+function _dim(L){ L.m.setStyle({weight:2.5,opacity:.14,color:L.ms.color}); if(L.c) L.c.setStyle({opacity:0}); }
+function _lit(L,glow){
+  if(L.c) L.c.setStyle({color:glow,weight:L.ms.weight+13,opacity:.55});
+  L.m.setStyle({color:L.ms.color,weight:L.ms.weight+3.5,opacity:1,dashArray:L.ms.dashArray});
+  L.m.bringToFront();
+}
+function _reset(L){ L.m.setStyle(L.ms); if(L.c) L.c.setStyle(L.cs); }
+function focusLeg(id){
+  if(_focus===id){ clearFocus(); return; }
+  _focus=id;
+  var hit=null;
+  _legs.forEach(function(L){ if(L.id===id){ _lit(L,'#ff7a1a'); hit=L; } else _dim(L); });
+  if(hit){ try{ map.fitBounds(hit.m.getBounds(),{padding:[70,70],maxZoom:17}); }catch(e){} }
+  banner('Показано лише <b>'+String(id).replace(/&/g,'&amp;')+'</b>');
+}
+function focusStop(n){
+  _focus='stop'+n;
+  var any=[];
+  _legs.forEach(function(L){ if(L.nums.indexOf(n)>=0){ _lit(L,'#ff7a1a'); any.push(L); } else _dim(L); });
+  if(any.length){ var b=any[0].m.getBounds(); any.slice(1).forEach(function(L){b.extend(L.m.getBounds());});
+    try{ map.fitBounds(b,{padding:[70,70],maxZoom:16}); }catch(e){} }
+  banner('Показано все, що торкається <b>пункту '+n+'</b>');
+}
+function clearFocus(){ _focus=null; _legs.forEach(_reset); banner(null); }
+var _bn=null;
+function banner(html){
+  if(!_bn){ _bn=L.control({position:'topleft'});
+    _bn.onAdd=function(){ var d=L.DomUtil.create('div','focusbar'); d.id='focusbar';
+      L.DomEvent.disableClickPropagation(d); return d; };
+    _bn.addTo(map); }
+  var el=document.getElementById('focusbar');
+  if(!el) return;
+  if(!html){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='block';
+  el.innerHTML=html+' &nbsp;<button onclick="clearFocus()">показати весь день</button>';
+}
+
+function ic(p){
+  if(p.cat==='wc'){
+    return L.divIcon({className:'',iconSize:[30,20],iconAnchor:[15,10],
+      html:'<div class="mk wc pill" style="width:30px;height:20px;font-size:10.5px;letter-spacing:.5px">WC</div>'});
+  }
+  if(p.cat==='shop'){
+    return L.divIcon({className:'',iconSize:[28,28],iconAnchor:[14,14],
+      html:'<div class="mk shop sq" style="width:28px;height:28px">'+gl('bag','#fff',17)+'</div>'});
+  }
+  if(p.n){
+    var k=GK[p.cat];
+    var badge=k?'<span class="g">'+gl(k,COL[p.cat],11)+'</span>':'';
+    var s=(p.cat==='bed')?37:32;                     /* home/hotel reads as the anchor */
+    return L.divIcon({className:'',iconSize:[s,s],iconAnchor:[s/2,s/2],
+      html:'<div class="mk '+p.cat+'" style="width:'+s+'px;height:'+s+'px;font-size:'+(s>34?15.5:14)+'px">'+badge+p.n+'</div>'});
+  }
+  return L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
+    html:'<div class="mk '+p.cat+' sq" style="width:26px;height:26px">'+gl(GK[p.cat],'#fff',16)+'</div>'});
+}
+function pop(p){
+  var tag=p.price?'<div class="ptag"><b>'+p.price+'</b>'+
+      (p.pay&&p.pay!=='-'?'<span>'+p.pay+'</span>':'')+'</div>':'';
+  return '<b>'+(p.t?p.t+' &middot; ':'')+p.name+'</b>'+
+         (p.dist?'<br><span class="meta">'+p.dist+'</span>':'')+tag+'<br>'+p.d;
+}
+/* ---- keep coincident pins visible: numbered stops hold their true position,
+        anything landing on top of an already-placed pin walks outward on a spiral ---- */
+var _placed=[];
+function _m(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function spread(lat,lon,keep){
+  if(keep){_placed.push([lat,lon]);return [lat,lon];}
+  var p=[lat,lon],k=0;
+  while(_placed.some(function(q){return _m(p,q)<22;}) && k<40){
+    k++;
+    var ang=k*2.39996, rad=0.00030+0.00010*Math.floor(k/6);
+    p=[lat+rad*Math.cos(ang), lon+rad*1.45*Math.sin(ang)];
+  }
+  _placed.push(p); return p;
+}
+/* ---- ON FOOT: dashed, badged with the two stops each leg joins ---- */
+function _mm(a,b){var R=6371000,r=Math.PI/180;
+  return 2*R*Math.asin(Math.sqrt(Math.pow(Math.sin((b[0]-a[0])*r/2),2)+
+    Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.pow(Math.sin((b[1]-a[1])*r/2),2)));}
+function _len(p){var t=0;for(var i=1;i<p.length;i++)t+=_mm(p[i-1],p[i]);return t;}
+function _near(p,ll){var bi=0,bd=1e9;for(var i=0;i<p.length;i++){var d=_mm(p[i],ll);if(d<bd){bd=d;bi=i;}}return bi;}
+function walkLeg(pts,label,badge){
+  if(!pts||pts.length<2) return;
+  var m=_len(pts);
+  var _c=L.polyline(pts,{color:'#fff',weight:11,opacity:.75}).addTo(G.route);
+  var _wc=wcol();
+  var _w=L.polyline(pts,{color:_wc,weight:5,opacity:.95,dashArray:'3,7',lineCap:'round'}).addTo(G.route);
+  reg(_w,_c,badge,'walk');
+  _w.bindPopup('<b>ПІШКИ &nbsp;'+badge+'</b><br>'+label+'<br><br><b>'+
+      (m<1000?Math.round(m/10)*10+' м':(m/1000).toFixed(2)+' км')+
+      ' &middot; приблизно '+Math.max(1,Math.round(m/1.35/60))+' хв</b><br><br><i>Клацніть лінію, щоб підсвітити лише її.</i>');
+  var dtxt=(m<1000?Math.round(m/10)*10+' м':(m/1000).toFixed(2)+' км')+
+            ' · '+Math.max(1,Math.round(m/1.35/60))+' хв';
+  var lab=badge+' · '+dtxt;
+  var mid=pts[Math.floor(pts.length/2)], w=22+lab.length*6.4;
+  L.marker(mid,{interactive:false,zIndexOffset:500,icon:L.divIcon({className:'',iconSize:[w,20],
+    iconAnchor:[w/2,10],html:'<div class="wb" style="color:'+_wc+';border-color:'+_wc+'">'+lab+'</div>'})}).addTo(G.route);
+}
+function walkChain(pts,stops,notes){
+  var idx=stops.map(function(s){return _near(pts,[STOPS[s].lat,STOPS[s].lon]);});
+  if(idx[0]>2) walkLeg(pts.slice(0,idx[0]+1),'до пункту '+stops[0],'\u2192 '+stops[0]);
+  for(var i=0;i<stops.length-1;i++){
+    walkLeg(pts.slice(idx[i],idx[i+1]+1),
+      (notes&&notes[i])||(STOPS[stops[i]].name.split('\u2014')[0].trim()+' \u2192 '+STOPS[stops[i+1]].name.split('\u2014')[0].trim()),
+      stops[i]+' \u2192 '+stops[i+1]);
+  }
+  var last=idx[stops.length-1];
+  if(last<pts.length-3) walkLeg(pts.slice(last),'далі від пункту '+stops[stops.length-1],stops[stops.length-1]+' \u2192');
+}
+
+var markers={};
+function put(arr,grp,key){
+  arr.forEach(function(p,i){
+    var xy=spread(p.lat,p.lon,!!p.n);
+    var m=L.marker(xy,{icon:ic(p),zIndexOffset:(p.n?1200:200)}).bindPopup(pop(p));
+    m.addTo(G[grp]); markers[key+i]=m; p._xy=xy;
+  });
+}
+
+var MC={'35A':'#1a6aa8',U1:'#e2001a',U2:'#a862a4',U3:'#f28b00',U4:'#009b3a',U6:'#9d6b3f',BUS:'#1a6aa8',CAR:'#5d6470'};
+/* ---- YOU RIDE: solid, in the line's own colour, badged with the two stops it joins,
+        exactly like the walking legs, and clickable on its own ---- */
+function line(pts,tag,label,pair,dash,glyph){
+  var o={color:MC[tag]||'#1a6aa8',weight:5.5,opacity:.9};
+  if(dash) o.dashArray=dash;
+  var _c=L.polyline(pts,{color:'#fff',weight:o.weight+5,opacity:.6}).addTo(G.route);
+  var _m=L.polyline(pts,o).addTo(G.route);
+  var id=tag+(pair?' \u00b7 '+pair:'');
+  reg(_m,_c,id,'ride',pair?(pair.match(/\d+/g)||[]).map(Number):null);
+  _m.bindPopup('<b>'+(glyph==='bus'?'АВТОБУС':'ЇДЕТЕ')+' &nbsp;'+id+
+    '</b><br>'+label+'<br><br><i>Клацніть лінію, щоб підсвітити лише її.</i>');
+  if(pair) lineBadge(pts,tag+' \u00b7 '+pair,o.color,glyph);
+}
+function lineBadge(pts,label,color,glyph){
+  var m=pts[Math.floor(pts.length/2)], w=30+label.length*7;
+  L.marker(m,{interactive:false,zIndexOffset:400,icon:L.divIcon({className:'',iconSize:[w,22],
+    iconAnchor:[w/2,11],html:'<div class="lb" style="background:'+color+'">'+gl(glyph||'train','#fff',13)+label+'</div>'})}).addTo(G.metro);
+}
+var list=document.getElementById('list');
+function rows(arr,key,heading){
+  var h=document.createElement('h2'); h.textContent=heading; list.appendChild(h);
+  arr.forEach(function(p,i){
+    var r=document.createElement('div'); r.className='row';
+    var sw;
+    if(p.cat==='wc'){
+      sw='<div class="mk wc pill" style="width:30px;min-width:30px;height:20px;font-size:10px;margin-top:3px">WC</div>';
+    } else if(p.n){
+      var k=GK[p.cat];
+      sw='<div class="mk '+p.cat+'" style="width:24px;min-width:24px;height:24px;font-size:11px;margin-top:2px">'+
+         (k?'<span class="g" style="width:13px;height:13px;top:-5px;right:-5px">'+gl(k,COL[p.cat],9)+'</span>':'')+p.n+'</div>';
+    } else {
+      sw='<div class="mk '+p.cat+' sq" style="width:24px;min-width:24px;height:24px;margin-top:2px">'+gl(GK[p.cat],'#fff',15)+'</div>';
+    }
+    r.innerHTML=sw+
+      '<div><div class="t" style="color:'+COL[p.cat]+'">'+p.t+(p.dist?' &nbsp;&middot;&nbsp; '+p.dist:'')+
+      (p.price?' &nbsp;&middot;&nbsp; <span class="pr">'+p.price+'</span>':'')+'</div>'+
+      '<div class="n">'+p.name+'</div><div class="d">'+
+      p.d.replace(/<[^>]+>/g,'').slice(0,120)+'\u2026</div></div>';
+    r.onclick=function(){
+      document.querySelectorAll('.row').forEach(function(x){x.classList.remove('on')});
+      r.classList.add('on');
+      if(p.n!==undefined&&p.n!==null&&/^\d+$/.test(p.n)) focusStop(Number(p.n));
+      else { clearFocus(); map.setView(p._xy||[p.lat,p.lon],16,{animate:true}); }
+      markers[key+i].openPopup();
+    };
+    list.appendChild(r);
+  });
+}
+function doPrint(){
+  map.invalidateSize();
+  setTimeout(function(){ map.invalidateSize(); setTimeout(function(){window.print()},900); },400);
+}
+window.addEventListener('beforeprint',function(){map.invalidateSize()});
+window.addEventListener('afterprint',function(){map.invalidateSize()});
+
+var W_SCH=[[48.18690,16.31240],[48.18590,16.31235],[48.18500,16.31228],[48.18453,16.31222],[48.18390,16.31110],[48.18320,16.30990],[48.18245,16.30870],[48.18165,16.30745],[48.18100,16.30655],[48.18063,16.30594]];
+var W_START=[[48.18450,16.33350],[48.18330,16.33290],[48.18190,16.33245],[48.18060,16.33200],[48.17930,16.33170]];
+var U6_UP=[[48.17930,16.33170],[48.18120,16.33210],[48.18300,16.33250],[48.18450,16.33340],[48.18590,16.33430]];
+var U4_SCH=[[48.18590,16.33430],[48.18640,16.32600],[48.18690,16.31240]];
+var W_MKT=[[48.18300,16.33250],[48.18320,16.33270],[48.18330,16.33290],[48.18450,16.33350]];
+var U6_IN=[[48.18300,16.33250],[48.18590,16.33430],[48.19100,16.33550],[48.19600,16.33700],[48.20090,16.33900]];
+var W_RAT=[[48.20090,16.33900],[48.20135,16.34110],[48.20195,16.34330],[48.20265,16.34540],[48.20355,16.34745],[48.20465,16.34950],[48.20585,16.35145],[48.20715,16.35325],[48.20845,16.35480],[48.20965,16.35615],[48.21073,16.35730]];
+var W_KHM=[[48.21073,16.35730],[48.20950,16.35800],[48.20825,16.35875],[48.20700,16.35955],[48.20575,16.36040],[48.20470,16.36115],[48.20384,16.36169]];
+var W_SPERL=[[48.20384,16.36169],[48.20290,16.36135],[48.20185,16.36095],[48.20080,16.36055],[48.19975,16.36010],[48.19882,16.35970]];
+var U6_OUT=[[48.19882,16.35970],[48.20090,16.33900],[48.20800,16.34100],[48.21500,16.34500],[48.22140,16.35090]];
+var BUS35A=[[48.22140,16.35090],[48.22800,16.34200],[48.23300,16.32800],[48.23700,16.31500],[48.24000,16.30300],[48.24170,16.29560]];
+var U6_HOME=[[48.22140,16.35090],[48.21500,16.34500],[48.20800,16.34100],[48.20090,16.33900],[48.19100,16.33550],[48.18590,16.33430],[48.18300,16.33250]];
+var U6_BAR=[[48.22140,16.35090],[48.21500,16.34600],[48.20800,16.34150],[48.20330,16.33960],[48.20090,16.33900]];
+var W_BAR4=[[48.20090,16.33900],[48.20140,16.34350],[48.20190,16.34800],[48.20250,16.35250],[48.20343,16.35723]];
+var U6_LATE=[[48.20343,16.35723],[48.20200,16.35100],[48.20090,16.33900],[48.19600,16.33700],[48.19100,16.33550],[48.18590,16.33430],[48.18300,16.33250]];
+var W_BED=[[48.18300,16.33250],[48.18380,16.33300],[48.18450,16.33350]];
+
+walkLeg(W_START,'З квартири 630 м на південь до <b>Bahnhof Wien Meidling</b> (Майдлінг) \u2014 єдине місце, де в неділю о цій годині є їжа. <b>Пропустіть і йдіть на Niederhofstra\u00dfe (Нідерхофштрассе, 250 м)</b>, якщо поїли в квартирі.','0 \u2192 1');
+line(U6_UP,'U6','<b>Bahnhof Meidling \u2192 Niederhofstra\u00dfe \u2192 L\u00e4ngenfeldgasse</b> (Ленгенфельдгассе), 2 пункти на північ, далі пересадка на U4. Дорога та сама, з якої станції не починайте.','1 \u2192 L\u00e4ngenfeldgasse');
+walkChain(W_SCH,[2,3],['Із метро Sch\u00f6nbrunn (Шенбрунн) U4, через браму й через партер, а тоді <b>вгору схилом до Gloriette (Глоріетта)</b> \u2014 десять хвилин, полого й безкоштовно.']);
+walkChain(W_MKT,[4],['Niederhofstra\u00dfe (Нідерхофштрассе) \u2192 <b>Meidlinger Markt</b> (Майдлінгер маркт) на сніданок, потім квартира. Усе в межах 350 м.']);
+walkLeg(W_RAT,'Burggasse-Stadthalle (Бурггассе-Штадтхалле) \u2192 <b>Rathausplatz</b> (Ратгаусплац) на безкоштовний джаз-бранч.','5 \u2192 6');
+walkLeg(W_KHM,'Rathausplatz (Ратгаусплац) \u2192 <b>Kunsthistorisches</b> (Музей історії мистецтв), уздовж Ring.','6 \u2192 7');
+walkLeg(W_SPERL,'KHM \u2192 <b>Caf\u00e9 Sperl</b> (кафе Sperl) на каву з тортом, як належить.','7 \u2192 8');
+walkLeg(W_BED,'Niederhofstra\u00dfe (Нідерхофштрассе) \u2192 квартира, 250 м. Пакуйтеся на 06:00.','10 \u2192 11 (спати)');
+line(U4_SCH,'U4','<b>Längenfeldgasse (Ленгенфельдгассе) → Schönbrunn (Шенбрунн)</b>, 2 пункти. Уся причина вставати о 07:00.','L\u00e4ngenfeldgasse \u2192 2');
+line(U6_IN,'U6','<b>Niederhofstraße (Нідерхофштрассе) → Burggasse-Stadthalle (Бурггассе-Штадтхалле)</b>, 4 пункти, зранку до центру.','5 \u2192 6');
+line(U6_OUT,'U6','<b>Gumpendorfer Straße (Гумпендорфер штрассе) → Nussdorfer Straße (Нусдорфер штрассе)</b> — U6 на північ, до винних сіл.','8 \u2192 9');
+line(BUS35A,'35A','<b>Автобус 35A: Nussdorfer Straße (Нусдорфер штрассе) → Neustift am Walde (Нойштіфт-ам-Вальде).</b> Входить у ваш квиток на 24 години — у Відні тариф залежить від часу, а не від відстані.','9 \u2192 10','9,6','bus');
+line(U6_HOME,'U6','<b>Nussdorfer Straße (Нусдорфер штрассе) → Niederhofstraße (Нідерхофштрассе)</b>, прямо додому, без зупинки в 7-му районі. У неділю ходить усю ніч.','10 \u2192 11');
+put(STOPS,'route','s'); put(ENT,'ent','e'); put(SHOPS,'shop','p'); put(WC,'wc','w'); put(ALTS,'alt','a');
+Object.keys(G).forEach(function(k){G[k].addTo(map)});
+L.control.layers(null,{
+  "ДЕНЬ 0&rarr;11 &mdash; метро, автобус + пішки, один ланцюг":G.route,
+  "Події 23 серпня":G.ent,
+  "У неділю все зачинено":G.shop,
+  "Туалети":G.wc,
+  "Заміни &amp; попередження":G.alt
+},{collapsed:false}).addTo(map);
+
+document.getElementById('key').innerHTML=
+ '<span><b style="color:#e8590c">-</b><b style="color:#f08c00">-</b><b style="color:#2f9e44">-</b>'+
+   '<b style="color:#1c7ed6">-</b><b style="color:#7048e8">-</b> пішки, свій колір на кожен відрізок</span>'+
+ '<span>'+gl('sight',COL.sight,15)+' пам’ятка</span>'+
+ '<span>'+gl('peak',COL.view,15)+' панорама</span>'+
+ '<span>'+gl('wine',COL.wine,15)+' Kirtag</span>'+
+ '<span>'+gl('cup',COL.food,15)+' їжа / кава</span>'+
+ '<span>'+gl('event',COL.event,15)+' безкоштовна подія</span>'+
+ '<span>'+gl('bag',COL.shop,15)+' магазини (майже всі зачинені)</span>'+
+ '<span><b style="color:'+COL.wc+'">WC</b> туалети</span>'+
+ '<span>'+gl('train',COL.metro,15)+' метро (U-Bahn)</span>'+
+ '<span>'+gl('bus',COL.bus,15)+' автобус 35A</span>'+
+ '<span>'+gl('eye',COL.alt,15)+' заміна</span>'+
+ '<span>'+gl('warn',COL.clash,15)+' увага</span>';
+rows(STOPS,'s','День по порядку — від 0 до 11');
+rows(ALTS,'a','Заміни та неділішні пастки');
+rows(ENT,'e','Що ще відбувається, 23 серпня');
+rows(SHOPS,'p','У неділю все зачинено — і одна лазівка');
+rows(WC,'w','Туалети');
+map.fitBounds(L.polyline(W_SCH.concat(U6_IN,W_RAT,BUS35A,U4_SCH)).getBounds(),{padding:[40,40]});
+</script>
+</body>
+</html>
